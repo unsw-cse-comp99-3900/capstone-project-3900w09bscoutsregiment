@@ -20,7 +20,7 @@ const db = mongoose.connection;
 
 // Routes
 app.get('/', (req, res) => {
-  res.send('Hello from Express');
+  res.send('Hello from Express , this isss backend');
 });
 
 // app.put('/', async (req, res) => {
