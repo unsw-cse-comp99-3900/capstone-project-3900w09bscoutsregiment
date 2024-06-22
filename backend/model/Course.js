@@ -8,6 +8,8 @@ const courseSchema = new Schema({
     type: String,
     required: true
   },
+  year: Number,
+  term: Number,
   outcomes: [{text: {type: String, required: true}}]
 });
 
