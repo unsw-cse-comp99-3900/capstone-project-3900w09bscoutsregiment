@@ -12,5 +12,5 @@ COPY . .
 
 EXPOSE 5000
 
-# CMD ["node", "index.ts"]
-CMD ["npm", "run", "dev"]
+CMD ["node", "index.ts"]
+# CMD ["npm", "run", "dev"]
