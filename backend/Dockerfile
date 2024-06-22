@@ -10,6 +10,7 @@ COPY . .
 
 #ENV PORT=8080
 
-EXPOSE 3001
+EXPOSE 5000
 
-CMD ["node", "index.ts"]
+# CMD ["node", "index.ts"]
+CMD ["npm", "run", "dev"]
