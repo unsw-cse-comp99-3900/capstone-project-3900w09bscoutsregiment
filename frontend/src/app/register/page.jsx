@@ -1,4 +1,4 @@
-export default function Login() {
+export default function Register() {
   return (
     <>
       <div>COTAM</div>
@@ -21,11 +21,11 @@ export default function Login() {
                   className="block text-white text-[2rem] font-bold mb-2"
                   htmlFor="password"
                 >
-                  Log in
+                  Sign Up
                 </label>
                 <input
                   name="email-address"
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 placeholder-blue-400 leading-tight focus:outline-none focus:shadow-outline"
+                  className="shadow appearance-none border rounded w-full py-2 px-3 placeholder-blue-400 leading-tight focus:outline-none focus:shadow-outline"
                   id="email-address"
                   type="text"
                   placeholder="Email address"
@@ -37,10 +37,21 @@ export default function Login() {
               <div className="mb-6">
                 <input
                   name="password"
-                  className="shadow appearance-none border border-500 rounded w-full py-2 px-3 text-gray-700 placeholder-blue-400 mb-3"
+                  className="shadow appearance-none border border-500 rounded w-full py-2 px-3 placeholder-blue-400 mb-3"
                   id="password"
                   type="password"
                   placeholder="Password"
+                />
+              </div>
+
+              {/* confirm password */}
+              <div className="mb-6">
+                <input
+                  name="password"
+                  className="shadow appearance-none border border-500 rounded w-full py-2 px-3 mb-3 placeholder-blue-400"
+                  id="password"
+                  type="password"
+                  placeholder="Confirm Password"
                 />
               </div>
 
@@ -51,7 +62,7 @@ export default function Login() {
                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 pb-3: rounded focus:outline-none focus:shadow-outline"
                   type="button"
                 >
-                  Login
+                  Register
                 </button>
               </div>
             </form>

@@ -6,6 +6,7 @@ export default function Page() {
       COTAM
       <div>
         <Link href = "/login"> Login </Link>
+        <Link href = "/register"> Register </Link>
       </div>
     </div>
     </>
