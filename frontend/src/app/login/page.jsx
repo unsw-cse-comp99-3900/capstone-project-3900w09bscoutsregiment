@@ -1,10 +1,30 @@
+'use client'; // needed for useState to work
+import React from 'react';
 export default function Login() {
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  let port = 8000;
+
+  // backend stuff
+  const login = async () => {
+    const response = await fetch(`http://localhost:${port}/api/auth/login`, {
+      method: 'POST',
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+      headers: {
+        'Content-type': 'application/json',
+      },
+    });
+    const data = await response.json();
+    console.log(data);
+  };
+
   return (
     <>
-      <div>COTAM</div>
       <div
         id="container"
-        // onClick={handleOnClose}
         className="absolute top-0 left-0 h-screen w-screen bg-black/30 flex justify-center items-center"
       >
         <div className="p-2">
@@ -29,6 +49,9 @@ export default function Login() {
                   id="email-address"
                   type="text"
                   placeholder="Email address"
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                  }}
                   // multiple
                 />
               </div>
@@ -41,6 +64,9 @@ export default function Login() {
                   id="password"
                   type="password"
                   placeholder="Password"
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                  }}
                 />
               </div>
 
@@ -50,6 +76,7 @@ export default function Login() {
                   id="submit"
                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 pb-3: rounded focus:outline-none focus:shadow-outline"
                   type="button"
+                  onClick={login}
                 >
                   Login
                 </button>

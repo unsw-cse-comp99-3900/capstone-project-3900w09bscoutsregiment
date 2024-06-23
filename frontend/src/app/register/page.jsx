@@ -1,10 +1,34 @@
+'use client';
+import React from 'react';
 export default function Register() {
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const [confirmPassword, setConfirmPassword] = React.useState('');
+  let port = 8000; // change later
+
+  // backend stuff starts here
+  const register = async () => {
+    if (password !== confirmPassword) {
+      alert('Passwords do not match');
+    } else {
+      const response = await fetch(`http://localhost:${port}/api/auth/signup`, {
+        method: 'POST',
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+        headers: {
+          'Content-type': 'application/json',
+        },
+      });
+      const data = await response.json();
+    }
+  };
   return (
     <>
       <div>COTAM</div>
       <div
         id="container"
-        // onClick={handleOnClose}
         className="absolute top-0 left-0 h-screen w-screen bg-black/30 flex justify-center items-center"
       >
         <div className="p-2">
@@ -29,6 +53,9 @@ export default function Register() {
                   id="email-address"
                   type="text"
                   placeholder="Email address"
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                  }}
                   // multiple
                 />
               </div>
@@ -41,6 +68,9 @@ export default function Register() {
                   id="password"
                   type="password"
                   placeholder="Password"
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                  }}
                 />
               </div>
 
@@ -52,6 +82,9 @@ export default function Register() {
                   id="password"
                   type="password"
                   placeholder="Confirm Password"
+                  onChange={(e) => {
+                    setConfirmPassword(e.target.value);
+                  }}
                 />
               </div>
 
@@ -61,6 +94,7 @@ export default function Register() {
                   id="submit"
                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 pb-3: rounded focus:outline-none focus:shadow-outline"
                   type="button"
+                  onClick={register}
                 >
                   Register
                 </button>
