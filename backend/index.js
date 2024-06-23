@@ -24,6 +24,16 @@ app.get('/', (req, res) => {
   res.send('Hello from Express , this isss backend');
 });
 
+app.get('/course/:code/:year/:term/', async (req, res) => {
+  const query = Course.find({});
+  query.find({code: req.params.code});
+  query.find({year: Number(req.params.year)});
+  query.find({term: termToggle(req.params.term)});
+  const course = await query.exec();
+  res.send(JSON.stringify(course));
+  // res.send('nothing');
+});
+
 app.get('/courses', async (req, res) => {
   const query = Course.find({});
   if (req.query.search != null) {
