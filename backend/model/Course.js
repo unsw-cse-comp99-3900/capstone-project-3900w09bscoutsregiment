@@ -9,7 +9,7 @@ const courseSchema = new Schema({
     required: true
   },
   year: Number,
-  term: Number,
+  term: String,
   outcomes: [String]
 });
 
