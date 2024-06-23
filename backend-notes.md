@@ -1,3 +1,11 @@
+# Course Search Interface
+
+## Getting a list of courses
+
+Currently done by querying `/courses?search=foo&year=2024&term=T2`, this should 
+search for `foo` as a substring of either the course title or code, alongside the 
+year and term restrictions.
+
 # Terms
 
 We want to be able to track terms, but terms are more complicated than 
