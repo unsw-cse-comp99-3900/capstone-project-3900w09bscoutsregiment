@@ -18,7 +18,7 @@ try {
 for (const i in obj.response.results) {
   const res = obj.response.results[i];
   try {
-    fs.writeFileSync(process.argv[3], res.integrat_coursecode + '\n', {flag: 'a'});
+    fs.writeFileSync(process.argv[3], res.integrat_coursecode + res.integrat_term.replace(/\s+/g, '') + '\n', {flag: 'a'});
   } catch (err) {
     console.error(err);
   }
