@@ -1,10 +1,11 @@
 'use client';
 import React from 'react';
 export default function Register() {
+  const [name, setName] = React.useState('');
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [confirmPassword, setConfirmPassword] = React.useState('');
-  let port = 8000; // change later
+  let port = 5000; // change later
 
   // backend stuff starts here
   const register = async () => {
@@ -14,8 +15,10 @@ export default function Register() {
       const response = await fetch(`http://localhost:${port}/api/auth/signup`, {
         method: 'POST',
         body: JSON.stringify({
+          name,
           email,
           password,
+          confirmPassword
         }),
         headers: {
           'Content-type': 'application/json',
@@ -60,6 +63,21 @@ export default function Register() {
                 />
               </div>
 
+              {/* name */}
+              <div className="mb-6">
+                <input
+                  color='#ff0000'
+                  name="name"
+                  className="shadow appearance-none border border-500 rounded w-full py-2 px-3 placeholder-blue-400 mb-3"
+                  id="name"
+                  type="name"
+                  placeholder="Name"
+                  onChange={(e) => {
+                    setName(e.target.value);
+                  }}
+                />
+              </div>
+
               {/* password */}
               <div className="mb-6">
                 <input
@@ -79,7 +97,7 @@ export default function Register() {
                 <input
                   name="password"
                   className="shadow appearance-none border border-500 rounded w-full py-2 px-3 mb-3 placeholder-blue-400"
-                  id="password"
+                  id="confirm-password"
                   type="password"
                   placeholder="Confirm Password"
                   onChange={(e) => {
