@@ -1,9 +1,13 @@
 'use client'; // needed for useState to work
 import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFacebook, faGoogle } from '@fortawesome/free-brands-svg-icons';
+import Link from 'next/link';
+
 export default function Login() {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
-  let port = 5000;
+  let port = 8000;
 
   // backend stuff
   const login = async () => {
@@ -25,7 +29,7 @@ export default function Login() {
     <>
       <div
         id="container"
-        className="absolute top-0 left-0 h-screen w-screen bg-black/30 flex justify-center items-center"
+        className="absolute top-0 left-0 h-screen w-screen bg-blue-600 flex justify-center items-center"
       >
         <div className="p-2">
           <div className="flex justify-start w-[500px] p-[30px]">
@@ -71,15 +75,40 @@ export default function Login() {
               </div>
 
               {/* submit */}
-              <div className="flex items-center justify-between pb-4">
+              <div className="flex items-center justify-between pb-2">
                 <button
                   id="submit"
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 pb-3: rounded focus:outline-none focus:shadow-outline"
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold w-full italic py-3 px-4 pb-3: rounded focus:outline-none focus:shadow-outline"
                   type="button"
                   onClick={login}
                 >
                   Login
                 </button>
+              </div>
+              <div className="flex items-center justify-evenly">
+                <a className="flex items-center border-solid border-2 border-white/40 bg-black rounded-sm px-4 py-2">
+                  <span className="mr-2">
+                    <FontAwesomeIcon icon={faFacebook} />
+                  </span>
+                  <span className="">Facebook</span>
+                </a>
+                <a className="flex items-center border-solid border-2 border-white/40 bg-black rounded-sm px-4 py-2">
+                  <span className="mr-2">
+                    <FontAwesomeIcon icon={faGoogle} />
+                  </span>
+                  <span className="">Google</span>
+                </a>
+              </div>
+              <div className="pt-8 flex items-center justify-center">
+                <a className="underline" href="/">
+                  Forgot Password
+                </a>
+              </div>
+              <div className="flex items-center justify-center gap-2">
+                <p> Don't have an account yet?</p>
+                <Link href="/register" style={{ textDecoration: 'underline' }}>
+                  Sign up
+                </Link>
               </div>
             </form>
           </div>
