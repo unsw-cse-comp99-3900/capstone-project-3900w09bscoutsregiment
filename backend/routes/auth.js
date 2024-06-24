@@ -58,6 +58,7 @@ authRouter.post('/login', async (req, res) => {
 
     return res.json({ token });
   } catch (error) {
+    console.log();
     return res.status(500).json({ message: 'Server error' });
   }
 });

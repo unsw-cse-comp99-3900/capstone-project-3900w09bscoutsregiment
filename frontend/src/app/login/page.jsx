@@ -3,7 +3,7 @@ import React from 'react';
 export default function Login() {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
-  let port = 8000;
+  let port = 5000;
 
   // backend stuff
   const login = async () => {

@@ -11,10 +11,13 @@ app.use(express.json());
 app.use(cors());
 
 // MongoDB connection
-mongoose.connect('mongodb://localhost:27017/Users', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+mongoose.connect(
+  'mongodb+srv://alixaz031:TZZzJPXi1e8HN61E@3900database.owuq2ud.mongodb.net/',
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  }
+);
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
