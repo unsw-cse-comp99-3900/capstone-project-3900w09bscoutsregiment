@@ -31,8 +31,7 @@ app.get('/course/:code/:year/:term/', async (req, res) => {
   query.find({year: Number(req.params.year)});
   query.find({term: termToggle(req.params.term)});
   const course = await query.exec();
-  res.send(JSON.stringify(course));
-  // res.send('nothing');
+  res.json(course);
 });
 
 app.get('/courses', async (req, res) => {
@@ -54,7 +53,7 @@ app.get('/courses', async (req, res) => {
   query.select(['title', 'code', 'term', 'year']);
   const courses = await query.exec();
   console.log(courses);
-  res.send(JSON.stringify(courses));
+  res.json(courses);
 });
 
 db.once('open', async () => {
