@@ -1,3 +1,5 @@
+import dotenv from 'dotenv';
+dotenv.config();
 import express from 'express';
 import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
@@ -52,13 +54,15 @@ authRouter.post('/login', async (req, res) => {
       return res.status(400).json({ message: 'Invalid email or password' });
     }
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+    console.log(process.env);
+
+    const token = jwt.sign({ id: user._id }, `${process.env.JWT_SECRET_KEY}`, {
       expiresIn: '1h',
     });
 
     return res.json({ token });
   } catch (error) {
-    console.log();
+    console.log(error);
     return res.status(500).json({ message: 'Server error' });
   }
 });
