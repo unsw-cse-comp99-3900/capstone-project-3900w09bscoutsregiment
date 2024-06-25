@@ -91,7 +91,30 @@ app.post('/add-course', async (req, res) => {
 });
 
 app.post('/delete-course', async (req, res) => {
-
+  const userId = req.body.userId;
+  if (userId == null) {
+    // we have a problem here i think
+    throw new Error('Need a user to add to');
+  }
+  const userExists = (await User.exists({_id: userId}).exec()) != null;
+  if (!userExists) {
+    throw new Error('User id doesn\'t exist in db');
+  }
+  const courseId = req.body.courseId;
+  if (courseId == null) {
+    // we also have a problem here
+    throw new Error('Need a course to add to the user');
+  }
+  const courseExists = (await Course.exists({_id: courseId}).exec()) != null;
+  if (!courseExists) {
+    throw new Error('User id doesn\'t exist in db');
+  }
+  const userHasCourse = await HasCourse.exists({userId: userId, courseId: courseId}).exec();
+  if (userHasCourse == null) {
+    throw new Error('Shouldn\'t be able to delete a course from a list it is not in');
+  }
+  const result = await HasCourse.deleteOne({_id: userHasCourse._id}).exec();
+  res.json(result);
 });
 
 db.once('open', async () => {
