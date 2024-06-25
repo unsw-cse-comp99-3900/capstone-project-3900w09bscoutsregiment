@@ -1,6 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const Course = require('./model/Course');
+const User = require('./model/User');
+const HasCourse = require('./model/HasCourse');
 const app = express();
 const port = 5000;
 const { termEq, termToggle, termIsSmall } = require('./controllers/termFns');
@@ -50,10 +52,46 @@ app.get('/courses', async (req, res) => {
       query.find({year: year});
     }
   }
-  query.select(['title', 'code', 'term', 'year']);
+  query.select(['_id', 'title', 'code', 'term', 'year']);
   const courses = await query.exec();
   console.log(courses);
   res.json(courses);
+});
+
+app.post('/add-course', async (req, res) => {
+  const userId = req.body.userId;
+  if (userId == null) {
+    // we have a problem here i think
+    throw new Error('Need a user to add to');
+  }
+  const userExists = (await User.exists({_id: userId}).exec()) != null;
+  if (!userExists) {
+    throw new Error('User id doesn\'t exist in db');
+  }
+  const courseId = req.body.courseId;
+  if (courseId == null) {
+    // we also have a problem here
+    throw new Error('Need a course to add to the user');
+  }
+  const courseExists = (await Course.exists({_id: courseId}).exec()) != null;
+  if (!courseExists) {
+    throw new Error('User id doesn\'t exist in db');
+  }
+  const userHasCourse = (await HasCourse.exists({userId: userId, courseId: courseId}).exec()) != null;
+  if (userHasCourse) {
+    throw new Error('User should not have the same one twice');
+  }
+  const result = await HasCourse.create({
+    userId: userId,
+    courseId: courseId,
+    favorite: false
+  });
+  console.log(res);
+  res.send('ok');
+});
+
+app.post('/delete-course', async (req, res) => {
+
 });
 
 db.once('open', async () => {
