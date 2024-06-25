@@ -8,6 +8,7 @@ export default function Page() {
         <Link href = "/login"> Login </Link>
         <Link href = "/register"> Register </Link>
         <Link href = "/Components/HomePage"> HomePage </Link>
+        <Link href="/listingCourses">Courses</Link>
       </div>
     </div>
     </>
