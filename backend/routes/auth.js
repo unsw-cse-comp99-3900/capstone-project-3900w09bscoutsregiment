@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config();
 import express from 'express';
-import User from '../models/User.js';
+import User from '../model/User.js';
 import jwt from 'jsonwebtoken';
 
 const authRouter = express.Router();

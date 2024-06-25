@@ -24,7 +24,7 @@ termMap.set('Hexamester 5', 'H1');
 termMap.set('Hexamester 6', 'H1');
 termMap.set('Summer', 'Summer');
 
-const termEq = (t1, t2) => {
+export const termEq = (t1, t2) => {
   if (!termMap.has(t1) || !termMap.has(t2)) {
     return false;
   }
@@ -37,12 +37,11 @@ const termEq = (t1, t2) => {
   return false;
 };
 
-const termToggle = (term) => {
+export const termToggle = (term) => {
   return termMap.get(term);
 };
 
-const termIsSmall = (term) => {
+export const termIsSmall = (term) => {
   return (term.length == 2 && termMap.has(term));
 }
 
-module.exports = { termEq, termToggle, termIsSmall };

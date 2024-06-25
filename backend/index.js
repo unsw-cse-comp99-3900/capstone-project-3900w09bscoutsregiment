@@ -4,16 +4,16 @@ import express from 'express';
 import mongoose from 'mongoose';
 import authRouter from './routes/auth.js';
 import cors from 'cors';
-import Course from './model/Course';
+import Course from './model/Course.js';
 // const Course = require('./model/Course');
-import User from './model/User';
-import HasCourse from './model/HasCourse';
+import User from './model/User.js';
+import HasCourse from './model/HasCourse.js';
 // const User = require('./model/User');
 // const HasCourse = require('./model/HasCourse');
 
 const app = express();
 const port = 5000;
-const { termEq, termToggle, termIsSmall } = require('./controllers/termFns');
+import { termEq, termToggle, termIsSmall } from './controllers/termFns.js';
 
 // Middleware
 app.use(express.json());
