@@ -10,7 +10,8 @@ app.use(express.json());
 
 // MongoDB connection
 try { 
-  mongoose.connect('mongodb://localhost:27017/mydatabase', {
+ //  mongoose.connect('mongodb://localhost:27017/mydatabase', {
+  mongoose.connect('mongodb+srv://alixaz031:TZZzJPXi1e8HN61E@3900database.owuq2ud.mongodb.net/', {
   });
 } catch (err) {
   console.log(err);
@@ -52,6 +53,7 @@ app.get('/courses', async (req, res) => {
   }
   query.select(['title', 'code', 'term', 'year']);
   const courses = await query.exec();
+  console.log(courses);
   res.send(JSON.stringify(courses));
 });
 
