@@ -1,6 +1,6 @@
 FROM node:20
 
-RUN npm install -g nodemon
+#RUN npm install -g nodemon
 
 WORKDIR /app
 
@@ -12,6 +12,6 @@ COPY . .
 
 #ENV PORT=8080
 
-EXPOSE 3001
+EXPOSE 5000
 
 CMD ["npm", "run", "dev"]
