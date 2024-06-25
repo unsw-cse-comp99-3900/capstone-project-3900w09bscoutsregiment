@@ -1,25 +1,23 @@
-// const { register } = require('./testdb.js');
-// const express = require('express');
-// const mongoose = require('mongoose');
 import express from 'express';
 import mongoose from 'mongoose';
-import { register } from './testdb.js';
+import authRouter from './routes/auth.js';
+import cors from 'cors';
 
 const app = express();
 const port = 5000;
 
 // Middleware
 app.use(express.json());
+app.use(cors());
 
 // MongoDB connection
-//mongodb://localhost:27017/
-//mongodb://mongo:27017/
-mongoose.connect('mongodb://localhost:27017/User').then(() => {
-  console.log('Connected to MongoDB');
-}).catch(err => {
-  console.error('Error connecting to MongoDB:', err);
-  // process.exit(1); 
-});;
+mongoose.connect(
+  'mongodb+srv://alixaz031:TZZzJPXi1e8HN61E@3900database.owuq2ud.mongodb.net/',
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  }
+);
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -32,9 +30,10 @@ app.get('/', (req, res) => {
   res.send('Hello from Express , this isss backend');
 });
 
-const router = express.Router();
-router.post("/createuser", register);
-
+// This line sets up routing for the /api/auth endpoint.
+// sign up and log in pages should be directed to
+// localhost:{PORT}/api/auth/signup or localhost:{PORT}/api/auth/login
+app.use('/api/auth', authRouter);
 
 app.listen(port, () => {
   console.log(`Backend running at http://localhost:${port}`);
