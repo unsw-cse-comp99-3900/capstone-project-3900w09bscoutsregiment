@@ -127,7 +127,7 @@ export default function Register() {
                   <span className="mr-2">
                     <FontAwesomeIcon icon={faGoogle} />
                   </span>
-                  <span className="">Google</span>
+                  <span className="text-white">Google</span>
                 </a>
                 <OAuth></OAuth>
               </div>

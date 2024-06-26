@@ -17,7 +17,7 @@ body {
   display: flex;
   align-items: center;
   padding: 10px;
-  background-color: #007bff;
+  background-color: rgb(36,99,235);
   color: white;
 }
 
@@ -39,7 +39,7 @@ body {
 .header .profile-button, .header .previous-button {
   padding: 5px 10px;
   background-color: white;
-  color: #007bff;
+  color: rgb(36,99,235);
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -72,13 +72,17 @@ body {
   overflow-y: auto;
 }
 
+.input-search {
+  color: black;
+}
+
 .add-course-button {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
   padding: 10px;
-  background-color: #007bff;
+  background-color: rgb(36,99,235);
   color: white;
   border: none;
   cursor: pointer;
@@ -129,7 +133,7 @@ body {
 }
 
 .action-button:hover {
-  color: #007bff;
+  color: rgb(36,99,235);
 }
 
 .icon {
@@ -230,7 +234,7 @@ body {
 .analysis-button {
   margin-top: 10px; /* Adjust as needed */
   padding: 8px 16px;
-  background-color: #007bff;
+  background-color: rgb(36,99,235);
   color: white;
   border: none;
   border-radius: 5px;
