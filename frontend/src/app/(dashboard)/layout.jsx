@@ -12,7 +12,7 @@ const CoursesLayout = ({ children }) => {
 
   return (
     <div>
-        <nav className="bg-blue-600 px-4 py-2 flex justify-between items-center font-bold">
+        <nav className="bg-blue-600 px-4 py-2 flex justify-between items-center font-bold fixed w-full">
             <div className="flex items-center">
               <div className="bg-white rounded-md w-8 h-8 mr-3"></div>
               <span className="text-white text-xl font-bold">COTAM</span>
