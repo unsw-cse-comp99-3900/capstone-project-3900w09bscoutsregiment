@@ -2,10 +2,11 @@ import express from 'express';
 import Course from '../model/Course.js';
 import User from '../model/User.js';
 import HasCourse from '../model/HasCourse.js';
+import { termEq, termToggle, termIsSmall } from '../controllers/termFns.js';
 
 const courseRouter = express.Router();
 
-courseRouter.get('/course/:code/:year/:term', async (req, res) => {
+courseRouter.get('/:code/:year/:term', async (req, res) => {
   const query = Course.find({});
   query.find({code: req.params.code});
   query.find({year: Number(req.params.year)});
@@ -14,7 +15,7 @@ courseRouter.get('/course/:code/:year/:term', async (req, res) => {
   res.json(course);
 });
 
-courseRouter.get('/courses', async (req, res) => {
+courseRouter.get('/list', async (req, res) => {
   const query = Course.find({});
   if (req.query.search != null) {
     const searchTerm = new RegExp(req.query.search, "i");
@@ -36,28 +37,26 @@ courseRouter.get('/courses', async (req, res) => {
   res.json(courses);
 });
 
-courseRouter.post('/add-course', async (req, res) => {
+courseRouter.post('/add', async (req, res) => {
   const userId = req.body.userId;
   if (userId == null) {
-    // we have a problem here i think
-    throw new Error('Need a user to add to');
+    return res.status(400).json({ message: 'Provided userId is null' });
   }
   const userExists = (await User.exists({_id: userId}).exec()) != null;
   if (!userExists) {
-    throw new Error('User id doesn\'t exist in db');
+    return res.status(400).json({ message: 'Provided userId is not a user in the db' });
   }
   const courseId = req.body.courseId;
   if (courseId == null) {
-    // we also have a problem here
-    throw new Error('Need a course to add to the user');
+    return res.status(400).json({ message: 'Provided courseId is null' });
   }
   const courseExists = (await Course.exists({_id: courseId}).exec()) != null;
   if (!courseExists) {
-    throw new Error('User id doesn\'t exist in db');
+    return res.status(400).json({ message: 'Provided courseId is not a course in the db' });
   }
   const userHasCourse = (await HasCourse.exists({userId: userId, courseId: courseId}).exec()) != null;
   if (userHasCourse) {
-    throw new Error('User should not have the same one twice');
+    return res.status(400).json({ message: 'userId courseId pair already exists' });
   }
   const result = await HasCourse.create({
     userId: userId,
@@ -68,9 +67,9 @@ courseRouter.post('/add-course', async (req, res) => {
   res.send('ok');
 });
 
-courseRouter.post('/delete-course', async (req, res) => {
+courseRouter.post('/delete', async (req, res) => {
 
 });
 
 
-export default coruseRouter;
+export default courseRouter;

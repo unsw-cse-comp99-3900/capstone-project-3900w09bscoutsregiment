@@ -8,7 +8,6 @@ import courseRouter from './routes/course.js';
 
 const app = express();
 const port = 5000;
-import { termEq, termToggle, termIsSmall } from './controllers/termFns.js';
 
 // Middleware
 app.use(express.json());
