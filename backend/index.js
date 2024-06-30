@@ -4,12 +4,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import authRouter from './routes/auth.js';
 import cors from 'cors';
-import Course from './model/Course.js';
-// const Course = require('./model/Course');
-import User from './model/User.js';
-import HasCourse from './model/HasCourse.js';
-// const User = require('./model/User');
-// const HasCourse = require('./model/HasCourse');
+import courseRouter from './routes/course.js';
 
 const app = express();
 const port = 5000;
@@ -40,37 +35,6 @@ app.get('/', (req, res) => {
 // sign up and log in pages should be directed to
 // localhost:{PORT}/api/auth/signup or localhost:{PORT}/api/auth/login
 app.use('/api/auth', authRouter);
-
-app.get('/course/:code/:year/:term/', async (req, res) => {
-  const query = Course.find({});
-  query.find({code: req.params.code});
-  query.find({year: Number(req.params.year)});
-  query.find({term: termToggle(req.params.term)});
-  const course = await query.exec();
-  res.json(course);
-});
-
-app.get('/courses', async (req, res) => {
-  const query = Course.find({});
-  if (req.query.search != null) {
-    const searchTerm = new RegExp(req.query.search, "i");
-    query.find({$or: [{title: searchTerm}, {code: searchTerm}]});
-  }
-  if (req.query.term != null && termIsSmall(req.query.term)) {
-    const term = termToggle(req.query.term);
-    query.find({term: term});
-  }
-  if (req.query.year != null) {
-    const year = Number(req.query.year);
-    if (year !== NaN) {
-      query.find({year: year});
-    }
-  }
-  query.select(['_id', 'title', 'code', 'term', 'year']);
-  const courses = await query.exec();
-  console.log(courses);
-  res.json(courses);
-});
 
 app.post('/add-course', async (req, res) => {
   const userId = req.body.userId;
