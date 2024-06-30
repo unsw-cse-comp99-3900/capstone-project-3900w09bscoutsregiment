@@ -1,7 +1,6 @@
 import express from 'express';
 import Course from '../model/Course.js';
 import User from '../model/User.js';
-import HasCourse from '../model/HasCourse.js';
 import { termEq, termToggle, termIsSmall } from '../controllers/termFns.js';
 
 const courseRouter = express.Router();
@@ -15,7 +14,7 @@ courseRouter.get('/:code/:year/:term', async (req, res) => {
   res.json(course);
 });
 
-courseRouter.get('/list', async (req, res) => {
+courseRouter.get('/all', async (req, res) => {
   const query = Course.find({});
   if (req.query.search != null) {
     const searchTerm = new RegExp(req.query.search, "i");
@@ -37,6 +36,10 @@ courseRouter.get('/list', async (req, res) => {
   res.json(courses);
 });
 
+courseRouter.get('/list/:user', async (req, res) => {
+  
+});
+
 courseRouter.post('/add', async (req, res) => {
   const userId = req.body.userId;
   if (userId == null) {
@@ -54,21 +57,37 @@ courseRouter.post('/add', async (req, res) => {
   if (!courseExists) {
     return res.status(400).json({ message: 'Provided courseId is not a course in the db' });
   }
-  const userHasCourse = (await HasCourse.exists({userId: userId, courseId: courseId}).exec()) != null;
-  if (userHasCourse) {
-    return res.status(400).json({ message: 'userId courseId pair already exists' });
+  const userList = await User.findOne({_id: userId}, 'courses').exec();
+  console.log(userList);
+  if (userList.courses.includes(courseId)) {
+    return res.status(400).json({ message: 'User already added course' });
   }
-  const result = await HasCourse.create({
-    userId: userId,
-    courseId: courseId,
-    favorite: false
-  });
-  console.log(res);
+  userList.courses.push(courseId);
+  const result = await User.updateOne({_id: userId}, {courses: userList.courses}).exec();
+  console.log(result);
   res.send('ok');
 });
 
 courseRouter.post('/delete', async (req, res) => {
-
+  const userId = req.body.userId;
+  if (userId == null) {
+    return res.status(400).json({ message: 'Provided userId is null' });
+  }
+  const courseId = req.body.courseId;
+  if (courseId == null) {
+    return res.status(400).json({ message: 'Provided courseId is null' });
+  }
+  const userList = await User.findOne({_id: userId}, 'courses').exec();
+  console.log(userList.courses);
+  const newList = new Array();
+  for (const i in userList.courses) {
+    if (userList.courses[i].toString() != courseId) {
+      newList.push(userList.courses[i]);
+    }
+  }
+  const result = await User.updateOne({_id: userId}, {courses: newList}).exec();
+  console.log(result);
+  res.send('ok');
 });
 
 

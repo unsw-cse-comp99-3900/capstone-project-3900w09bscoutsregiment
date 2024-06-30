@@ -13,6 +13,7 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  courses: [mongoose.ObjectId]
 });
 
 // This is a pre-save hook which hashes the user's
