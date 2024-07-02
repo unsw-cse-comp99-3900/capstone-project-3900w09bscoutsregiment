@@ -2,45 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
-/* :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 0, 0, 0;
-  --background-end-rgb: 255, 255, 255;
-} */
+.login-background {
+  background: linear-gradient(to bottom, #004699, #0075FF);
+  background-size: cover;
+  background-position: center;
 
-/* @media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+  background-position: center top fixed;
+  height: 43vh;
+  border-bottom-left-radius: 6em;
+  border-bottom-right-radius: 6em;
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-/* } */
-/* 
-body {
-  background-color: white;
-  margin: 0;
-  padding: 0;
-  border: 0;
-} */
-/* @layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-} */
+.custom-login-hr {
+  border: none;
+  border-top: 2px solid #0075FF;
+  color: #333;
+  overflow: visible;
+  text-align: center;
+  position: relative;
 
-/*
-input,
-select,
-textarea {
-  color: #ff0000;
-} */
+
+}
+
+.custom-login-hr::after {
+  background: #ffffff;
+  content: '\00a0 OR \00a0';
+  position: relative;
+  top: -12px;
+}
