@@ -2,6 +2,7 @@ import express from 'express';
 import Course from '../model/Course.js';
 import User from '../model/User.js';
 import { termEq, termToggle, termIsSmall } from '../controllers/termFns.js';
+import { validIdString } from '../controllers/idFns.js';
 
 const courseRouter = express.Router();
 
@@ -37,7 +38,32 @@ courseRouter.get('/all', async (req, res) => {
 });
 
 courseRouter.get('/list/:user', async (req, res) => {
-  
+  if (!validIdString(req.params.user)) {
+    return res.status(400).json({ message: 'user is not a valid ObjectId' });
+  }
+  const user = await User.findOne({_id: req.params.user}).exec();  
+  if (user == null) {
+    return res.status(400).json({ message: 'Provided user does not exists' });
+  }
+  const searchList = new Array();
+  for (const course of user.courses) {
+    searchList.push({_id: course.courseId});
+  }
+  const courseList = await Course.find({$or: searchList}, '_id code year term').exec();
+  const output = new Array();
+  for (const course of courseList) {
+    const tempCourse = user.courses.find((elem) => elem.courseId.toString() == course._id.toString());
+    output.push({
+      courseId: course._id,
+      code: course.code,
+      year: course.year,
+      term: course.term,
+      favorite: tempCourse.favorite,
+      colour: tempCourse.colour
+    });
+  }
+  console.log(output);
+  return res.json(output);
 });
 
 courseRouter.post('/add', async (req, res) => {
@@ -62,7 +88,7 @@ courseRouter.post('/add', async (req, res) => {
   if (userList.courses.includes(courseId)) {
     return res.status(400).json({ message: 'User already added course' });
   }
-  userList.courses.push(courseId);
+  userList.courses.push({courseId: courseId, colour: "02b0f5", favorite: false});
   const result = await User.updateOne({_id: userId}, {courses: userList.courses}).exec();
   console.log(result);
   res.send('ok');
@@ -80,9 +106,9 @@ courseRouter.post('/delete', async (req, res) => {
   const userList = await User.findOne({_id: userId}, 'courses').exec();
   console.log(userList.courses);
   const newList = new Array();
-  for (const i in userList.courses) {
-    if (userList.courses[i].toString() != courseId) {
-      newList.push(userList.courses[i]);
+  for (const e of userList.courses) {
+    if (e.courseId.toString() != courseId) {
+      newList.push(e);
     }
   }
   const result = await User.updateOne({_id: userId}, {courses: newList}).exec();
