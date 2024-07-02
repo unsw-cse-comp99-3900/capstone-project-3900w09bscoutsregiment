@@ -1,14 +1,24 @@
-'use client'; // needed for useState to work
+'use client';
+
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faGoogle } from '@fortawesome/free-brands-svg-icons';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation'
 import OAuth from '../components/OAuth';
 
 export default function Login() {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   let port = 5000;
+  
+  // Ensure stay logged in
+  const router = useRouter();
+  const token = window.localStorage.getItem('token') || null
+  if (token !== null) {
+    router.push('/courses');
+    return
+  }
 
   // backend stuff
   const login = async () => {
@@ -23,7 +33,12 @@ export default function Login() {
       },
     });
     const data = await response.json();
-    console.log(data);
+    if (response.ok) {
+      window.localStorage.setItem('token', data.token)
+      router.push('/courses');
+    } else {
+      console.error(data.message);
+    }
   };
 
   return (
