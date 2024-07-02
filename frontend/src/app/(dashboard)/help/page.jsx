@@ -1,10 +1,9 @@
 import Link from 'next/link';
 
-
 const Helps = () => {
   return (
-    <div className="bg-white">
-      <div className="bg-gray-200 p-20 flex flex-col items-center justify-center">
+    <div className="bg-white pt-12">
+      <div className="bg-blue-100 p-20 flex flex-col items-center justify-center">
         <span className="font-semibold text-4xl">How can we help?</span>
         <input 
           type="text"
