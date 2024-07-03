@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 import authRouter from './routes/auth.js';
 import cors from 'cors';
 import courseRouter from './routes/course.js';
+import { loadFile } from './controllers/analyseFns.js';
 
 const app = express();
 const port = 5000;
@@ -39,6 +40,7 @@ app.use('/api/course', courseRouter);
 
 db.once('open', async () => {
   console.log('Connected to MongoDB');
+  loadFile('./verbs.txt');
   app.listen(port, () => {
     console.log(`Backend running at http://localhost:${port}`);
   });
