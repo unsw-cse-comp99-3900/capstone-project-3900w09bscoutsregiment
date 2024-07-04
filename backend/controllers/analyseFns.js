@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+// import chartjs from 'chart.js/auto';
 
 const verbMap = new Map();
 const categories = new Array();
@@ -80,7 +81,7 @@ const analyseOutcome = (outcome) => {
 //   "categoryName": [
 //     {
 //       colour: ...(hexadecimal)
-//       width: ...(percentage of full length bar)
+//       count: ...(percentage of full length bar)
 //       courses: [
 //         { _id: ..., code: ..., outcomes: ["...", "..."] },
 //       ]
@@ -100,7 +101,7 @@ const analyseCourses = (courseList) => {
         out[analysis].push(
           {
             colour: course.colour,
-            width: 0,
+            count: 1,
             courses: [{_id: course._id, code: course.code, outcomes: [outcome]}]}
         );
         continue;
@@ -112,28 +113,8 @@ const analyseCourses = (courseList) => {
         );
         continue;
       }
+      colourBlock.count += 1;
       innerCourse.outcomes.push(outcome);
-    }
-  }
-  var maxCount = 0;
-  for (const [category, blocks] of Object.entries(out)) {
-    var count = 0;
-    for (const b of blocks) {
-      for (const c of b.courses) {
-        count += c.outcomes.length;
-      }
-    }
-    if (count > maxCount) {
-      maxCount = count;
-    }
-  }
-  for (const [category, blocks] of Object.entries(out)) {
-    for (const b of blocks) {
-      var count = 0;
-      for (const c of b.courses) {
-        count += c.outcomes.length;
-      }
-      b.width = count / maxCount;
     }
   }
   return out;
