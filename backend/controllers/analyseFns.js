@@ -25,7 +25,8 @@ const loadFile = (name) => {
         }
       }
     }
-    console.log(verbMap);
+    categories.push('none');
+    // console.log(verbMap);
   } catch (err) {
     console.err(err);
   };
@@ -56,10 +57,65 @@ const analyseOutcome = (outcome) => {
     }
   });
   if (highest == 0) {
-    return undefined;
+    return 'none';
   }
   return outCategory;
   // console.log(scoreMap);
 };
 
-export default {loadFile, analyseOutcome};
+// Expects input to be of the form
+// [
+//   {
+//     _id: ...
+//     code: ...
+//     colour: ...
+//     outcomes: [
+//       "...",
+//       "..."
+//     ]
+//   },
+// ]
+// output will have the form
+// {
+//   "categoryName": [
+//     {
+//       colour: ...(hexadecimal)
+//       width: ...(percentage of full length bar)
+//       courses: [
+//         { _id: ..., code: ..., outcomes: ["...", "..."] },
+//       ]
+//     }
+//   ]
+// }
+const analyseCourses = (courseList) => {
+  const out = new Array();
+  for (const c of categories) {
+    out[c] = new Array(); 
+  }
+  for (const course of courseList) {
+    for (const outcome of course.outcomes) {
+      const analysis = analyseOutcome(outcome);
+      const colourBlock = out[analysis].find((x) => x.colour == course.colour);
+      if (colourBlock == undefined) {
+        out[analysis].push(
+          {
+            colour: course.colour,
+            width: 0,
+            courses: [{_id: course._id, code: course.code, outcomes: [outcome]}]}
+        );
+        continue;
+      }
+      const innerCourse = colourBlock.courses.find((x) => x._id == course._id);
+      if (innerCourse == undefined) {
+        colourBlock.courses.push(
+          {_id: course._id, code: course.code, outcomes: [outcome]}
+        );
+        continue;
+      }
+      innerCourse.outcomes.push(outcome);
+    }
+  }
+  return out;
+};
+
+export default {loadFile, analyseOutcome, analyseCourses};
