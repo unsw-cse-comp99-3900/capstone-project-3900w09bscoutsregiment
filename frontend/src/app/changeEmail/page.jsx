@@ -3,23 +3,24 @@ import React from 'react';
 import Link from 'next/link';
 
 export default function ChangeEmail() {
-  const [email, setEmail] = React.useState('');
+  const [oldEmail, setOldEmail] = React.useState('');
+  const [newEmail, setNewEmail] = React.useState('');
+
   let port = 5000;
 
-  // backend stuff
-  // TODO: CHANGE THIS TO FORGOT PASSWORD
-  const newEmail = async () => {
-    const response = await fetch(`http://localhost:${port}/api/auth/send`, {
-      // change endpoints
-      method: 'POST',
+  const handleUpdateEmail = async () => {
+    const response = await fetch(`http://localhost:${port}/api/profile/update/email`, {
+      method: 'PUT',
       body: JSON.stringify({
-        email,
-        password,
+        oldEmail,
+        newEmail,
       }),
       headers: {
         'Content-type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
     });
+
     const data = await response.json();
     console.log(data);
   };
@@ -34,18 +35,28 @@ export default function ChangeEmail() {
         >
           <div className="mb-5 relative top-32">
             <label className="block text-white text-[4rem] font-bold mb-5">
-              Change Email
+              Update Email
             </label>
             <input
-              name="email-address"
+              name="old-email-address"
+              className="shadow appearance-none border rounded w-full py-3 px-2 text-gray-700 placeholder-blue-400 leading-tight focus:outline-none focus:shadow-outline"
+              id="email-address"
+              type="text"
+              placeholder="Enter your old email address"
+              onChange={(e) => {
+                setOldEmail(e.target.value);
+              }}
+            />
+
+            <input
+              name="new-email-address"
               className="shadow appearance-none border rounded w-full py-3 px-2 text-gray-700 placeholder-blue-400 leading-tight focus:outline-none focus:shadow-outline"
               id="email-address"
               type="text"
               placeholder="Enter your new email address"
               onChange={(e) => {
-                setEmail(e.target.value);
+                setNewEmail(e.target.value);
               }}
-              // multiple
             />
           </div>
 
@@ -55,9 +66,9 @@ export default function ChangeEmail() {
               id="submit"
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold w-1/3 italic py-2 px-4 pb-3: rounded focus:outline-none focus:shadow-outline mb-5"
               type="button"
-              onClick={newEmail}
+              onClick={handleUpdateEmail}
             >
-              Send Confirmation
+              Submit
             </button>
           </div>
           <div className="flex items-center justify-center relative top-52">
