@@ -30,3 +30,23 @@ export const loadFile = (name) => {
     console.err(err);
   };
 };
+
+export const analyseOutcome = (outcome) => {
+  const scoreMap = new Map();
+  for (const c of categories) {
+    scoreMap.set(c, 0);
+  }
+  const words = outcome.split(' ').map((x) => x.replace(/\W/g, ''));
+  for (const w of words) {
+    const cs = verbMap.get(w.toLowerCase());
+    if (cs == undefined) {
+      continue;
+    }
+    for (const c of cs) {
+      console.log(w + ' category: ' + c);
+      scoreMap.set(c, scoreMap.get(c) + 1);
+    }
+  }
+  console.log(scoreMap);
+};
+
