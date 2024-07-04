@@ -43,20 +43,20 @@ export default function Login() {
 
   return (
     <div>
-      <div id="top-content" className='text-white w-full bg-primary-theme-db flex justify-between px-4'>
+      <div
+        id="top-content"
+        className="text-white w-full bg-primary-theme-db flex justify-between px-4"
+      >
         <span className="m-1 p-1 font-bold text-2xl">COTAM</span>
       </div>
-      <div className='login-background'>
+      <div className="login-background">
         <form
           name="publish-form"
           id="form"
-          className=" w-1/3 justify-center mx-auto pt-3" // POSTIION MUST BE ABOSLUTE
+          className=" w-1/3 justify-center mx-auto pt-3 relative top-36" // POSTIION MUST BE ABOSLUTE therein lies the question, why?
         >
           <div className="mb-4">
-            <label
-              className="block text-white text-[2rem] font-bold mb-2"
-              htmlFor="password"
-            >
+            <label className="block text-white text-[4rem] font-bold mb-2">
               Log in
             </label>
             <input
@@ -68,7 +68,7 @@ export default function Login() {
               onChange={(e) => {
                 setEmail(e.target.value);
               }}
-            // multiple
+              // multiple
             />
           </div>
 
@@ -90,14 +90,14 @@ export default function Login() {
           <div className="items-center justify-between">
             <button
               id="submit"
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold w-full italic py-2 px-4 pb-3: rounded focus:outline-none focus:shadow-outline"
+              className="bg-blue-500 hover:bg-blue-700 text-white text-lg font-bold w-full italic py-2 px-4 pb-3: rounded focus:outline-none focus:shadow-outline"
               type="button"
               onClick={login}
             >
               Log in
             </button>
-            <div className='p-5'>
-              <hr className='custom-login-hr '></hr>
+            <div className="p-5">
+              <hr className="custom-login-hr "></hr>
             </div>
           </div>
           {/* other login options */}
@@ -106,14 +106,20 @@ export default function Login() {
           </div>
           {/* forgot password */}
           <div className="pt-8 flex items-center justify-center">
-            <a className="underline" href="/">
-              Forgot Password
-            </a>
+            <Link
+              href="/forgotPassword"
+              style={{ textDecoration: 'underline', color: '#1d4ed8' }}
+            >
+              Forgot your password?
+            </Link>
           </div>
           {/* sign up */}
           <div className="flex items-center justify-center gap-2">
             <p> Don't have an account yet?</p>
-            <Link href="/register" style={{ textDecoration: 'underline' }}>
+            <Link
+              href="/register"
+              style={{ textDecoration: 'underline', color: '#1d4ed8' }}
+            >
               Sign up
             </Link>
           </div>

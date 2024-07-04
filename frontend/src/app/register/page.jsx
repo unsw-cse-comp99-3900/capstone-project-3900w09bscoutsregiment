@@ -50,7 +50,10 @@ export default function Register() {
   };
   return (
     <div>
-      <div id="top-content" className='text-white w-full bg-primary-theme-db flex justify-between px-4'>
+      <div
+        id="top-content"
+        className="text-white w-full bg-primary-theme-db flex justify-between px-4"
+      >
         <span className="m-1 p-1 font-bold text-2xl">COTAM</span>
       </div>
       <div className="login-background">
@@ -58,12 +61,12 @@ export default function Register() {
         <form
           name="publish-form"
           id="form"
-          className=" w-1/3 justify-center mx-auto pt-3"
+          className=" w-1/3 justify-center mx-auto pt-3 relative top-16"
         >
           {/* email */}
           <div className="mb-2">
             <label
-              className="block text-white text-[2rem] font-bold my-0"
+              className="block text-white text-[4rem] font-bold my-0"
               htmlFor="password"
             >
               Sign Up
@@ -77,7 +80,7 @@ export default function Register() {
               onChange={(e) => {
                 setEmail(e.target.value);
               }}
-            // multiple
+              // multiple
             />
           </div>
 
