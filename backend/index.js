@@ -5,7 +5,7 @@ import mongoose from 'mongoose';
 import authRouter from './routes/auth.js';
 import cors from 'cors';
 import courseRouter from './routes/course.js';
-import { loadFile, analyseOutcome } from './controllers/analyseFns.js';
+import analyseFns from './controllers/analyseFns.js';
 
 const app = express();
 const port = 5000;
@@ -40,8 +40,10 @@ app.use('/api/course', courseRouter);
 
 db.once('open', async () => {
   console.log('Connected to MongoDB');
-  loadFile('./verbs.txt');
-  analyseOutcome('Describe biomaterial classes, their general properties, and predict how specific materials may be affected by physiological conditions');
+  analyseFns.loadFile('./verbs.txt');
+  // console.log(analyseOutcome('Describe biomaterial classes, their general properties, and predict how specific materials may be affected by physiological conditions'));
+  // console.log(analyseOutcome('Develop the basis for a material with specified flow and dynamic properties using key ingredients like polymers, particles, and emulsifiers.'));
+  // console.log(analyseOutcome('Analyse experimental data on product properties to deliver quantitative measures of product performance.'));
   app.listen(port, () => {
     console.log(`Backend running at http://localhost:${port}`);
   });

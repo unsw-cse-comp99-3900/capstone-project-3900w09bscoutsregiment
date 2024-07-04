@@ -3,7 +3,7 @@ import fs from 'node:fs';
 const verbMap = new Map();
 const categories = new Array();
 
-export const loadFile = (name) => {
+const loadFile = (name) => {
   try {
     const data = fs.readFileSync(name, 'utf8');
     const lines = data.split('\n').map((x) => x.trim());
@@ -31,7 +31,7 @@ export const loadFile = (name) => {
   };
 };
 
-export const analyseOutcome = (outcome) => {
+const analyseOutcome = (outcome) => {
   const scoreMap = new Map();
   for (const c of categories) {
     scoreMap.set(c, 0);
@@ -43,10 +43,23 @@ export const analyseOutcome = (outcome) => {
       continue;
     }
     for (const c of cs) {
-      console.log(w + ' category: ' + c);
+      // console.log(w + ' category: ' + c);
       scoreMap.set(c, scoreMap.get(c) + 1);
     }
   }
-  console.log(scoreMap);
+  var outCategory = '';
+  var highest = 0;
+  scoreMap.forEach((v, k, m) => {
+    if (v > highest) {
+      highest = v;
+      outCategory = k;
+    }
+  });
+  if (highest == 0) {
+    return undefined;
+  }
+  return outCategory;
+  // console.log(scoreMap);
 };
 
+export default {loadFile, analyseOutcome};
