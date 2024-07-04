@@ -1,8 +1,10 @@
 'use client';
+
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faGoogle } from '@fortawesome/free-brands-svg-icons';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import OAuth from '../components/OAuth';
 
 export default function Register() {
@@ -11,6 +13,14 @@ export default function Register() {
   const [password, setPassword] = React.useState('');
   const [confirmPassword, setConfirmPassword] = React.useState('');
   let port = 5000; // change later
+  
+  // Ensure stay logged in
+  const router = useRouter();
+  const token = window.localStorage.getItem('token') || null
+  if (token !== null) {
+    router.push('/courses');
+    return
+  }
 
   // backend stuff starts here
   const register = async () => {
@@ -30,6 +40,12 @@ export default function Register() {
         },
       });
       const data = await response.json();
+      if (response.ok) {
+        window.localStorage.setItem('token', data.token)
+        router.push('/courses');
+      } else {
+        console.error(data.message);
+      }
     }
   };
   return (

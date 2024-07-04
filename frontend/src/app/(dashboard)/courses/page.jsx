@@ -5,9 +5,18 @@ import './listingCourses.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faStar, faTrash, faUser, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 //import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 export default function ListingCourses() {
+  // Ensure stay logged in
+  const router = useRouter();
+  const token = window.localStorage.getItem('token') || null
+  if (token === null) {
+    router.push('/');
+    return
+  }
+
   //const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   //const [courses, setCourses]
