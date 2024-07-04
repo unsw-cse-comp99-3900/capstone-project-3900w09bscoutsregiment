@@ -115,6 +115,27 @@ const analyseCourses = (courseList) => {
       innerCourse.outcomes.push(outcome);
     }
   }
+  var maxCount = 0;
+  for (const [category, blocks] of Object.entries(out)) {
+    var count = 0;
+    for (const b of blocks) {
+      for (const c of b.courses) {
+        count += c.outcomes.length;
+      }
+    }
+    if (count > maxCount) {
+      maxCount = count;
+    }
+  }
+  for (const [category, blocks] of Object.entries(out)) {
+    for (const b of blocks) {
+      var count = 0;
+      for (const c of b.courses) {
+        count += c.outcomes.length;
+      }
+      b.width = count / maxCount;
+    }
+  }
   return out;
 };
 
