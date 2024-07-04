@@ -13,6 +13,7 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  sessionActive: { type: Boolean, default: false },
 });
 
 // This is a pre-save hook which hashes the user's

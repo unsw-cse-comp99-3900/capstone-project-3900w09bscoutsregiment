@@ -1,14 +1,16 @@
 'use client'; // needed for useState to work
 import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFacebook, faGoogle } from '@fortawesome/free-brands-svg-icons';
 import Link from 'next/link';
 import OAuth from '../components/OAuth';
+import { useRouter } from 'next/navigation'
+
 
 export default function Login() {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   let port = 5000;
+  const router = useRouter();
+
 
   // backend stuff
   const login = async () => {
@@ -21,9 +23,12 @@ export default function Login() {
       headers: {
         'Content-type': 'application/json',
       },
+      credentials: 'include',
     });
+
     const data = await response.json();
-    console.log(data);
+    router.push('/pathways');
+
   };
 
   return (

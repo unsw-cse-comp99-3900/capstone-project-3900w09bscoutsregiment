@@ -26,7 +26,7 @@ const CoursesLayout = ({ children }) => {
             <button onClick={toggleDropdown} className='text-white hover:bg-blue-800 px-4 py-2 rounded-md'>Profile</button>
             {isDropdownOpen && (
               <div className='absolute bg-white flex flex-col right-0 top-14 rounded-bl-xl'>
-                <Link className='text-sm px-20 py-2 hover:bg-gray-100 font-semibold' href="/logout">Logout</Link>
+                <Link className='text-sm px-20 py-2 hover:bg-gray-100 font-semibold' href="/">Logout</Link>
                 <Link className='text-sm px-20 py-2 hover:bg-gray-100 font-semibold' href="/profile">Profile</Link>
                 <Link className='text-sm px-20 py-2 hover:bg-gray-100 font-semibold' href="/theme">Theme</Link>
               </div>
