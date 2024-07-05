@@ -116,5 +116,60 @@ courseRouter.post('/delete', async (req, res) => {
   res.send('ok');
 });
 
+courseRouter.post('/favorite', async (req, res) => {
+  const userId = req.body.userId;
+  if (!validIdString(userId)) {
+    return res.status(400).json({ message: 'userId is not a valid ObjectId' });
+  }
+  const userExists = (await User.exists({_id: userId}).exec()) != null;
+  if (!userExists) {
+    return res.status(400).json({ message: 'Provided userId is not a user in the db' });
+  }
+  const courseId = req.body.courseId;
+  if (!validIdString(courseId)) {
+    return res.status(400).json({ message: 'courseId is not a valid ObjectId' });
+  }
+  const courseExists = (await Course.exists({_id: courseId}).exec()) != null;
+  if (!courseExists) {
+    return res.status(400).json({ message: 'Provided courseId is not a course in the db' });
+  }
+  const userList = await User.findOne({_id: userId}, 'courses').exec();
+  for (const e of userList.courses) {
+    if (e.courseId.toString() == courseId) {
+      e.favorite = true;
+    }
+  }
+  const result = await User.updateOne({_id: userId}, {courses: userList}).exec();
+  console.log(result);
+  res.send('ok');
+});
+
+courseRouter.post('/unfavorite', async (req, res) => {
+  const userId = req.body.userId;
+  if (!validIdString(userId)) {
+    return res.status(400).json({ message: 'userId is not a valid ObjectId' });
+  }
+  const userExists = (await User.exists({_id: userId}).exec()) != null;
+  if (!userExists) {
+    return res.status(400).json({ message: 'Provided userId is not a user in the db' });
+  }
+  const courseId = req.body.courseId;
+  if (!validIdString(courseId)) {
+    return res.status(400).json({ message: 'courseId is not a valid ObjectId' });
+  }
+  const courseExists = (await Course.exists({_id: courseId}).exec()) != null;
+  if (!courseExists) {
+    return res.status(400).json({ message: 'Provided courseId is not a course in the db' });
+  }
+  const userList = await User.findOne({_id: userId}, 'courses').exec();
+  for (const e of userList.courses) {
+    if (e.courseId.toString() == courseId) {
+      e.favorite = false;
+    }
+  }
+  const result = await User.updateOne({_id: userId}, {courses: userList}).exec();
+  console.log(result);
+  res.send('ok');
+});
 
 export default courseRouter;
