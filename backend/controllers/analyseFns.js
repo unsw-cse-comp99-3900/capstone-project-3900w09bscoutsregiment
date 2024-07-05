@@ -137,25 +137,56 @@ const makePng = (analysis, name) => {
   const data = {}; 
   data.labels = categories;
   data.datasets = new Array();
-  for (const c of categories) {
-
+  for (const [i, c] of categories.entries()) {
+    const blocks = analysis[c];
+    for (const b of blocks) {
+      const existingSet = data.datasets.find((x) => x.backgroundColor == b.colour)
+      if (existingSet == undefined) {
+        var label = '';
+        var values = new Array();
+        for (const course of b.courses) {
+          label += course.code + ' ';
+        }
+        var j = 0;
+        while (j < i) {
+          values.push(0);
+          j++;
+        }
+        values.push(b.count);
+        data.datasets.push({label: label, data: values, backgroundColor: b.colour});
+      } else {
+        var labelBits = existingSet.label.split(' ');
+        for (const course of b.courses) {
+          if (!labelBits.includes(course.code)) {
+            existingSet.label += course.code + ' ';
+          }
+        }
+        var j = existingSet.data.length;
+        while (j < i) {
+          existingSet.data.push(0);
+          j++;
+        }
+        existingSet.data.push(b.count);
+      }
+    }
   }
 
   new Chart(ctx, {
     type: 'bar',
-    data: {
-      labels: [1, 2, 3, 4, 5],
-      datasets: [{
-        label: 'data',
-        data: [4, 2, 1, 0, 3],
-        backgroundColour: 'lightblue'
-      },
-      {
-        label: 'data2',
-        data: [2, 0, 3, 2, 2],
-        backgroundColour: 'lightgreen'
-      }]
-    },
+    data: data,
+    // data: {
+    //   labels: [1, 2, 3, 4, 5],
+    //   datasets: [{
+    //     label: 'data',
+    //     data: [4, 2, 1, 0, 3],
+    //     backgroundColor: 'lightblue'
+    //   },
+    //   {
+    //     label: 'data2',
+    //     data: [2, 0, 3, 2, 2],
+    //     backgroundColor: 'lightgreen'
+    //   }]
+    // },
     options: {
       indexAxis: 'y',
       scales: {
