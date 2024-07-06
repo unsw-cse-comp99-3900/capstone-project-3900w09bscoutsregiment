@@ -70,7 +70,7 @@ db.once('open', async () => {
     {
       _id: 3,
       code: "CEIC6711",
-      colour: "#ddddaa",
+      colour: "#eeeeaa",
       outcomes: [
         "Describe the phenomenological changes wrought on the raw materials of a commercial product during processing to produce specific properties including viscosity, stability, or colour.",
         "Explain the physicochemical basis for performance of a product during use.",
