@@ -3,6 +3,7 @@ import Course from '../model/Course.js';
 import User from '../model/User.js';
 import { termEq, termToggle, termIsSmall } from '../controllers/termFns.js';
 import { validIdString } from '../controllers/idFns.js';
+import analyseFns from '../controllers/analyseFns.js';
 
 const courseRouter = express.Router();
 
@@ -85,7 +86,7 @@ courseRouter.post('/add', async (req, res) => {
   }
   const userList = await User.findOne({_id: userId}, 'courses').exec();
   console.log(userList);
-  if (userList.courses.includes(courseId)) {
+  if (userList.courses.find((x) => x.courseId == courseId) != undefined) {
     return res.status(400).json({ message: 'User already added course' });
   }
   userList.courses.push({courseId: courseId, colour: "02b0f5", favorite: false});
@@ -139,7 +140,7 @@ courseRouter.post('/favorite', async (req, res) => {
       e.favorite = true;
     }
   }
-  const result = await User.updateOne({_id: userId}, {courses: userList}).exec();
+  const result = await User.updateOne({_id: userId}, {courses: userList.courses}).exec();
   console.log(result);
   res.send('ok');
 });
@@ -167,9 +168,16 @@ courseRouter.post('/unfavorite', async (req, res) => {
       e.favorite = false;
     }
   }
-  const result = await User.updateOne({_id: userId}, {courses: userList}).exec();
+  const result = await User.updateOne({_id: userId}, {courses: userList.courses}).exec();
   console.log(result);
   res.send('ok');
+});
+
+courseRouter.post('/analyse', async (req, res) => {
+  const courses = req.body.courses;
+  // maybe check input is ok
+  const analysis = analyseFns.analyseCourses(courses);
+  return res.json(analysis);
 });
 
 export default courseRouter;
