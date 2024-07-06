@@ -1,9 +1,22 @@
+'use client'
+
 import { AppBar, Toolbar, Button, Typography, Box, Container } from '@mui/material';
 import logosmall from './Components/HomePage/Cotam-logo.png';
 import WaveSVG from './Components/HomePage/WaveSVG.js';
 import FooterPage from './Components/HomePage/FooterPage';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+
 export default function Home() {
+  
+  // Ensure stay logged in
+  const router = useRouter();
+  const token = window.localStorage.getItem('token');
+  if (token !== null) {
+    router.push('/courses');
+    return
+  }
+
   return (
     <main className="flex bg-white flex-col p-0 b-0 m-0 items-center justify-between">
       <div className='text-white pt-3 pb-8 w-full bg-primary-theme-db flex justify-between px-12'>
