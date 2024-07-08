@@ -3,6 +3,7 @@ import logosmall from './Components/HomePage/Cotam-logo.png';
 import WaveSVG from './Components/HomePage/WaveSVG.js';
 import FooterPage from './Components/HomePage/FooterPage';
 import Link from 'next/link';
+import Image from 'next/image';
 export default function Home() {
   return (
     <main className="flex bg-white flex-col p-0 b-0 m-0 items-center justify-between">
@@ -42,17 +43,29 @@ export default function Home() {
       <br></br>
 
       <br></br>
-      <div>
-        <div className='text-4xl font-bold text-primary-theme-lb'>What we Offer</div>
-        <div>
-          <div>left pic</div>
-          <div>middle pic</div>
-          <div>bottom pic</div>
+      <div className='text-4xl font-bold text-primary-theme-lb items-center justify-center '>What we Offer</div>
+      <div className='mt-12 p-5'>
+        <div className='flex space-x-8 items-center justify-center home-background-how-it-works'>
+          <div className='w-1/5 border-solid border-2 border-black rounded-xl h-60 p-2 flex flex-col justify-center items-center bg-white'>
+            <Image src="/homepage/images/left-img.png" alt="Example2" width={70} height={70} />
+            <div className='font-bold'>Accurate Mapping</div>
+            <div>Our app uses bloom's taxonomy to carefully map all the course outline </div>
+          </div>
+          <div className='w-1/5 border-solid border-2 border-black rounded-xl h-60 p-2 pt-0 flex flex-col justify-center items-center bg-white'>
+            <Image src="/homepage/images/mid-img.png" alt="Example3" width={70} height={70} />
+            <div className='font-bold'>Breakdown Analysis</div>
+            <div>Our app give a detail analysis for each of the taxonomy level</div>
+          </div>
+          <div className='w-1/5 border-solid border-2 border-black rounded-xl h-60 p-2 pt-4 flex flex-col justify-center items-center bg-white'>
+            <Image src="/homepage/images/right-img.png" alt="Example" width={70} height={70} className='' />
+            <div className='font-bold'>Multiple Course Comparison</div>
+            <div>Our app support multiple course comparison for a better understanding</div>
+          </div>
         </div>
       </div>
       <br></br>
 
-      <div className='text-4xl font-bold text-primary-theme-lb'>
+      <div className='text-4xl font-bold text-primary-theme-lb mt-16'>
         <div>How it Works</div>
       </div>
 
