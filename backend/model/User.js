@@ -13,6 +13,7 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  courses: [{courseId: mongoose.ObjectId, colour: String, favorite: Boolean}]
 });
 
 // This is a pre-save hook which hashes the user's

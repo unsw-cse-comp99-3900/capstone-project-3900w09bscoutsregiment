@@ -21,10 +21,10 @@ export default function ListingCourses() {
   const [searchTerm, setSearchTerm] = useState('');
   //const [courses, setCourses]
   const [courses, setCourses] = useState([
-    { code: 'COMP3311', name: 'Database Systems', term: 'Term 1', year: '2024', col: [] },
-    { code: 'COMP3331', name: 'Computer Networks and Applications', term: 'Term 1', year: '2024' , col: [] },
-    { code: 'COMP9417', name: 'Machine learning and data mining', term: 'Term 1', year: '2024' , col: [] },
-    { code: 'COMP1511', name: 'Programming fundamentals', term: 'Term 1', year: '2024' , col: [] }
+    { code: 'COMP3311', title: 'Database Systems', term: 'Term 1', year: '2024', outcomes: [] },
+    { code: 'COMP3331', title: 'Computer Networks and Applications', term: 'Term 1', year: '2024' , outcomes: [] },
+    { code: 'COMP9417', title: 'Machine learning and data mining', term: 'Term 1', year: '2024' , outcomes: [] },
+    { code: 'COMP1511', title: 'Programming fundamentals', term: 'Term 1', year: '2024' , outcomes: [] }
   ]);
   const [visitedCourses, setVisitedCourses] = useState([]);
 
@@ -53,7 +53,7 @@ export default function ListingCourses() {
   };
 
   const filteredCourses = courses.filter(course =>
-    course.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     course.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
     course.term.toLowerCase().includes(searchTerm.toLowerCase()) ||
     course.year.toLowerCase().includes(searchTerm.toLowerCase())
@@ -62,6 +62,7 @@ export default function ListingCourses() {
   /*
   const handlePreviousClick = () => {
     //navigate(-1);
+    course.name
   };
 
   */
@@ -80,7 +81,8 @@ export default function ListingCourses() {
               />
             </header>
             <button className="add-course-button">
-              <FontAwesomeIcon icon={faPlus} /> Add Course
+              <FontAwesomeIcon icon={faPlus} />
+              <Link href="/search">Add Course</Link>
             </button>
             <table className='courses'>
               <thead>
@@ -100,7 +102,7 @@ export default function ListingCourses() {
                   onClick={() => handleCourseClick(course)}
                   >
                     <td>{course.code}</td>
-                    <td className='description'>{course.name}</td>
+                    <td className='description'>{course.title}</td>
                     <td className='description'>{course.term}</td>
                     <td className='description'>{course.year}</td>
                     <td>
@@ -123,7 +125,7 @@ export default function ListingCourses() {
                 visitedCourses.map((course) => (
                     <div key={course.code} className="course-details">
                       <h2>{course.code}</h2>
-                      <h3>{course.name}</h3>
+                      <h3>{course.title}</h3>
                       <p>{course.year} {course.term}</p>
                     </div>
                   ))

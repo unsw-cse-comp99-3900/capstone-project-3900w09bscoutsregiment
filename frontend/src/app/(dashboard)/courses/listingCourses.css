@@ -16,9 +16,9 @@ body {
 .header {
   display: flex;
   align-items: center;
-  padding: 10px;
   background-color: rgb(36,99,235);
   padding: 5px 10px;
+  padding-top: 70px;
   cursor: pointer;
   align-items: center;
   justify-content: center;
