@@ -1,6 +1,17 @@
+'use client'
+
 import Link from 'next/link';
+import { useRouter } from 'next/navigation'
 
 const Helps = () => {
+  // Ensure stay logged in
+  const router = useRouter();
+  const token = window.localStorage.getItem('token') || null
+  if (token === null) {
+    router.push('/');
+    return
+  }
+
   return (
     <div className="bg-white pt-12">
       <div className="bg-blue-100 p-20 flex flex-col items-center justify-center">
