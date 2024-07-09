@@ -1,4 +1,4 @@
-'use client';
+'use client'
 
 import { AppBar, Toolbar, Button, Typography, Box, Container } from '@mui/material';
 import WaveSVG from './Components/HomePage/WaveSVG.js';
