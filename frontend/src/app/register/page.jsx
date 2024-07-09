@@ -1,8 +1,8 @@
 'use client';
+
 import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFacebook, faGoogle } from '@fortawesome/free-brands-svg-icons';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import OAuth from '../components/OAuth';
 
 export default function Register() {
@@ -11,6 +11,14 @@ export default function Register() {
   const [password, setPassword] = React.useState('');
   const [confirmPassword, setConfirmPassword] = React.useState('');
   let port = 5000; // change later
+
+  // Ensure stay logged in
+  const router = useRouter();
+  const token = window.localStorage.getItem('token') || null;
+  if (token !== null) {
+    router.push('/courses');
+    return;
+  }
 
   // backend stuff starts here
   const register = async () => {
@@ -30,24 +38,36 @@ export default function Register() {
         },
       });
       const data = await response.json();
+      if (response.ok) {
+        window.localStorage.setItem('token', data.token);
+        router.push('/courses');
+      } else {
+        console.error(data.message);
+      }
     }
   };
   return (
     <div>
-      <div id="top-content" className='text-white w-full bg-primary-theme-db flex justify-between px-4'>
-        <span className="m-1 p-1 font-bold text-2xl">COTAM</span>
+      <div
+        id="top-content"
+        className="text-white w-full bg-primary-theme-db flex justify-start gap-4 px-4 py-4"
+      >
+        <img src="Cotam-logo.png" alt="" className="rounded-md" />
+        <Link href="/" className="text-white" style={{ fontSize: '2rem' }}>
+          COTAM
+        </Link>
       </div>
       <div className="login-background">
         {/* start of form */}
         <form
           name="publish-form"
           id="form"
-          className=" w-1/3 justify-center mx-auto pt-3"
+          className=" w-1/3 justify-center mx-auto pt-3 relative top-16"
         >
           {/* email */}
           <div className="mb-2">
             <label
-              className="block text-white text-[2rem] font-bold my-0"
+              className="block text-white text-[4rem] font-bold my-0"
               htmlFor="password"
             >
               Sign Up
@@ -61,7 +81,7 @@ export default function Register() {
               onChange={(e) => {
                 setEmail(e.target.value);
               }}
-            // multiple
+              // multiple
             />
           </div>
 
