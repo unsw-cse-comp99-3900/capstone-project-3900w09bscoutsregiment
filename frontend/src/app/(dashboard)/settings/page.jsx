@@ -18,7 +18,9 @@ const Settings = () => {
         <input type="text" value="***********" disabled className="bg-gray-200 text-gray-700 border border-gray-300 rounded py-2 px-4"/>
         <button>Change Password</button>
       </div>
+      
     </div>
+
   )
 }
 
