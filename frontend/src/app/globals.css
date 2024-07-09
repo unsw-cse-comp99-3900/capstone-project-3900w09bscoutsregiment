@@ -37,13 +37,22 @@
     /* background-repeat: no-repeat; */
     background-position: center;
 }
+@layer base {
+  .light {
+    --color-bkg: #1a202c;
+    --color-bkg-light: #2d3748;
+    --color-bkg-lighter: #4a5568;
+    --color-bkg-lightest: #718096;
+  }
 
-.dark {
-  --color-bkg: #1a202c;
-  --color-bkg-light: #2d3748;
-  --color-bkg-lighter: #4a5568;
-  --color-bkg-lightest: #718096;
+  .dark {
+    --color-bkg: #1a202c;
+    --color-bkg-light: #2d3748;
+    --color-bkg-lighter: #4a5568;
+    --color-bkg-lightest: #718096;
+  }
 }
+
 
 :root[theme="dark"] {
   --color-bkg: #1a202c;
