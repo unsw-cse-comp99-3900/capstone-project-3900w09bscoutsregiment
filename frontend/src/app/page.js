@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { AppBar, Toolbar, Button, Typography, Box, Container } from '@mui/material';
 import WaveSVG from './Components/HomePage/WaveSVG.js';
@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 export default function Home() {
-  
+
   // Ensure stay logged in
   const router = useRouter();
   const token = window.localStorage.getItem('token');
