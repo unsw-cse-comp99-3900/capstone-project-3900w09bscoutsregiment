@@ -6,10 +6,10 @@ const ThemeToggle = () => {
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <div>
-      <button onClick={() => toggleTheme('light')}>Light Theme</button>
-      <button onClick={() => toggleTheme('dark')}>Dark Theme</button>
-      <button onClick={() => toggleTheme('color-blind')}>Color-blind Theme</button>
+    <div className='flex flex-col'>
+      <button className='border w-1/4' onClick={() => toggleTheme('light')}>Light Theme</button>
+      <button className='border w-1/4' onClick={() => toggleTheme('dark')}>Dark Theme</button>
+      <button className='border w-1/4' onClick={() => toggleTheme('color-blind')}>Color-blind Theme</button>
     </div>
   );
 };

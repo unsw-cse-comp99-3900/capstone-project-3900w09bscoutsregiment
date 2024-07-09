@@ -15,6 +15,7 @@ export const ThemeProvider = ({ children }) => {
   }, []);
 
   const toggleTheme = (newTheme) => {
+    console.log(newTheme);
     setTheme(newTheme);
     localStorage.setItem('theme', newTheme);
     document.documentElement.className = newTheme;
