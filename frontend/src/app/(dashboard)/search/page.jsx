@@ -8,15 +8,19 @@ const SearchPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [year, setYear] = useState('2024');
   const [term, setTerm] = useState('Term 2');
-  const [period, setPeriod] = useState('');
   const [courses, setCourses] = useState([]);
+  const [filteredCourses, setFilteredCourses] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const [coursesPerPage] = useState(10); // Number of courses per page
   const [selectedCourse, setSelectedCourse] = useState(null);
 
   useEffect(() => {
     fetchCourses();
-  }, [currentPage, searchTerm, year, term]);
+  }, []);
+
+  useEffect(() => {
+    filterCourses();
+  }, [searchTerm, year, term, courses]);
 
   const fetchCourses = async () => {
     try {
@@ -25,15 +29,36 @@ const SearchPage = () => {
         throw new Error('Network response was not ok');
       }
       const data = await response.json();
-      setCourses(data.courses);
-      setTotalPages(data.totalPages);
+      setCourses(data);  // Assuming data is an array of courses
+      setFilteredCourses(data);  // Ensure filteredCourses is updated as an array
     } catch (error) {
       console.error('Error fetching courses:', error);
     }
   };
 
+  const filterCourses = () => {
+    let filtered = courses;
+
+    if (searchTerm) {
+      const searchRegex = new RegExp(searchTerm, 'i');
+      filtered = filtered.filter(course => 
+        course.title.match(searchRegex) || course.code.match(searchRegex)
+      );
+    }
+
+    if (year) {
+      filtered = filtered.filter(course => course.year.toString() === year);
+    }
+
+    if (term) {
+      filtered = filtered.filter(course => course.term === term);
+    }
+
+    setFilteredCourses(filtered);
+    setCurrentPage(1); // Reset to the first page whenever filters change
+  };
+
   const handleAddCourse = async (courseId) => {
-    console.log("addCourse");
     const userId = localStorage.getItem('token'); // Replace with actual user ID
     try {
       const response = await fetch(`http://localhost:${port}/api/course/add`, {
@@ -45,7 +70,6 @@ const SearchPage = () => {
       });
       if (response.ok) {
         console.log('Course added successfully');
-        // Optionally, update the UI to reflect the addition
       } else {
         console.error('Failed to add course');
       }
@@ -66,30 +90,38 @@ const SearchPage = () => {
     setTerm(event.target.value);
   };
 
-  const handleSearch = () => {
-    setCurrentPage(1);
-    fetchCourses();
-  };
-
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
 
+  const handleDirectPageChange = (event) => {
+    let page = parseInt(event.target.value, 10);
+    if (isNaN(page) || page < 1) {
+      page = 1;
+    } else if (page > Math.ceil(filteredCourses.length / coursesPerPage)) {
+      page = Math.ceil(filteredCourses.length / coursesPerPage);
+    }
+    setCurrentPage(page);
+  };
+
   const shortenTerm = (term) => {
+    if (!term.includes('Term')) {
+      return term;
+    }
     return term.replace('Term ', 'T');
   };
 
   const handleShowDetails = async (course) => {
-    console.log("Details show");
     const shortenedTerm = shortenTerm(course.term);
     try {
-      const response = await fetch(`http://localhost:${port}/api/course/${course.code}/${course.year}/${shortenedTerm}`);
+      const response = await fetch(
+        `http://localhost:${port}/api/course/${course.code}/${course.year}/${shortenedTerm}`
+      );
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
       const data = await response.json();
       setSelectedCourse(data[0]);
-      console.log('Selected course:', data[0]);
     } catch (error) {
       console.error('Error fetching course details:', error);
     }
@@ -98,6 +130,32 @@ const SearchPage = () => {
   const handleCloseModal = () => {
     setSelectedCourse(null);
   };
+
+  // Get current courses for the page
+  const indexOfLastCourse = currentPage * coursesPerPage;
+  const indexOfFirstCourse = indexOfLastCourse - coursesPerPage;
+  const currentCourses = filteredCourses.slice(indexOfFirstCourse, Math.min(indexOfLastCourse, filteredCourses.length));
+
+  // Pagination control
+  const totalPages = Math.ceil(filteredCourses.length / coursesPerPage);
+  const visiblePages = 5; // Number of pagination links to display
+
+  let startPage, endPage;
+  if (totalPages <= visiblePages) {
+    startPage = 1;
+    endPage = totalPages;
+  } else {
+    if (currentPage <= Math.ceil(visiblePages / 2)) {
+      startPage = 1;
+      endPage = visiblePages;
+    } else if (currentPage + Math.floor(visiblePages / 2) >= totalPages) {
+      startPage = totalPages - visiblePages + 1;
+      endPage = totalPages;
+    } else {
+      startPage = currentPage - Math.floor(visiblePages / 2);
+      endPage = currentPage + Math.floor(visiblePages / 2);
+    }
+  }
 
   return (
     <div className="search-page">
@@ -110,6 +168,7 @@ const SearchPage = () => {
             value={searchTerm}
             onChange={handleSearchChange}
           />
+          <button onClick={filterCourses}>Search</button>
         </div>
         <div className="filters">
           <div className="filter">
@@ -133,7 +192,7 @@ const SearchPage = () => {
         </div>
         <h2>Results :</h2>
         <div className="results">
-          {courses.map((course) => (
+          {currentCourses.map((course) => (
             <div key={course._id} className="course">
               <span>{course.code}</span>
               <span>{course.title}</span>
@@ -148,6 +207,42 @@ const SearchPage = () => {
               <button className="details-button" onClick={() => handleShowDetails(course)}>Details</button>
             </div>
           ))}
+        </div>
+        <div className="pagination">
+          <button
+            className={currentPage === 1 ? 'disabled' : ''}
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </button>
+          {Array.from({ length: endPage - startPage + 1 }, (_, index) => (
+            <button
+              key={startPage + index}
+              className={currentPage === startPage + index ? 'active' : ''}
+              onClick={() => handlePageChange(startPage + index)}
+            >
+              {startPage + index}
+            </button>
+          ))}
+          <button
+            className={currentPage === totalPages ? 'disabled' : ''}
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </button>
+        </div>
+        <div className="direct-navigation">
+          <span>Go to page:</span>
+          <input
+            type="number"
+            min="1"
+            max={totalPages}
+            value={currentPage}
+            onChange={handleDirectPageChange}
+          />
+          <span>of {totalPages} pages</span>
         </div>
       </div>
       {selectedCourse && selectedCourse.outcomes && (
