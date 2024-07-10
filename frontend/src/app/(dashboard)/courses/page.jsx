@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './listingCourses.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faStar, faTrash, faUser, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
@@ -11,22 +11,34 @@ import Link from 'next/link';
 export default function ListingCourses() {
   // Ensure stay logged in
   const router = useRouter();
-  const token = window.localStorage.getItem('token') || null
-  if (token === null) {
-    router.push('/');
-    return
-  }
-
-  //const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
-  //const [courses, setCourses]
-  const [courses, setCourses] = useState([
-    { code: 'COMP3311', title: 'Database Systems', term: 'Term 1', year: '2024', outcomes: [] },
-    { code: 'COMP3331', title: 'Computer Networks and Applications', term: 'Term 1', year: '2024' , outcomes: [] },
-    { code: 'COMP9417', title: 'Machine learning and data mining', term: 'Term 1', year: '2024' , outcomes: [] },
-    { code: 'COMP1511', title: 'Programming fundamentals', term: 'Term 1', year: '2024' , outcomes: [] }
-  ]);
+  const [courses, setCourses] = useState([]);
   const [visitedCourses, setVisitedCourses] = useState([]);
+  const port = 5100;
+  
+  useEffect(() => {
+    console.log("something")
+    const fetchUserCourses = async () => {
+      const userId = 'teehee'; // Replace with actual user ID
+      try {
+        const response = await fetch(`http://localhost:${port}/api/course/list/${userId}`, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        if (!response.ok) {
+          throw new Error('Failed to fetch user courses');
+        }
+        const data = await response.json();
+        setCourses(data);
+      } catch (error) {
+        console.error('Error fetching user courses:', error);
+      }
+    };
+
+    fetchUserCourses();
+  }, []);
 
   const handleCourseClick = (course) => {
     if (visitedCourses.some((visitedCourse) => visitedCourse.code === course.code)) {
@@ -59,13 +71,6 @@ export default function ListingCourses() {
     course.year.toLowerCase().includes(searchTerm.toLowerCase())
   );
   
-  /*
-  const handlePreviousClick = () => {
-    //navigate(-1);
-    course.name
-  };
-
-  */
   return (
     <>
       <div className="app">

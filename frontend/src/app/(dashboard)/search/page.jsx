@@ -1,7 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import './search.css';
-//import { useRouter } from 'next/navigation';
 
 const SearchPage = () => {
   let port = 5000;
