@@ -86,6 +86,7 @@ body {
 .course-list th, .course-list td, .course-list tr {
   text-align: left;
   padding: 10px;
+  padding-top: 50px;
   border-bottom: 1px solid #ddd;
   box-sizing: border-box;
 }
