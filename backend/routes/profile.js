@@ -28,6 +28,11 @@ const authMiddleware = (req, res, next) => {
   });
 };
 
+profileRouter.get('/details', authMiddleware, async (req, res) => {
+  const user = await User.findById(req.userId);
+  return res.json({ email: user.email, name: user.name });
+});
+
 // Update email
 profileRouter.put('/update/email', authMiddleware, async (req, res) => {
   const { oldEmail, newEmail } = req.body;
