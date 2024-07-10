@@ -28,15 +28,15 @@ const Helps = () => {
       <div className="pt-5 flex flex-col items-center justify-center">
         <span className="font-semibold text-3xl">Common queries</span>
         <ul className="py-5">
-          <li className="flex justify-between items-center border-b p-4 gap-20">
+          <li className="option_menu">
             <span>How do I search all the courses ?</span>
             <span>&gt;</span>
           </li>
-          <li className="flex justify-between items-center border-b p-4 gap-20">
+          <li className="option_menu">
             <span>What is bloom's taxonomy and how will it help us ?</span>
             <span>&gt;</span>
           </li>
-          <li className="flex justify-between items-center border-b p-4 gap-20">
+          <li className="option_menu">
             <span>What is COTAM and who developed it ?</span>
             <span>&gt;</span>
           </li>

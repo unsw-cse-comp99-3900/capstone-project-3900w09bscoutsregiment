@@ -8,7 +8,7 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function Home() {
-  
+
   // Ensure stay logged in
   const router = useRouter();
   React.useEffect(() => {

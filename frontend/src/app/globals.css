@@ -30,3 +30,7 @@
   position: relative;
   top: -12px;
 }
+
+.option_menu {
+  @apply flex rounded-xl justify-between items-center border-b p-4 gap-10 hover:bg-gray-200 transition duration-300 ease-in-out
+}
