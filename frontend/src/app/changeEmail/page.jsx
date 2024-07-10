@@ -1,28 +1,26 @@
 'use client'; // needed for useState to work
 import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFacebook, faGoogle } from '@fortawesome/free-brands-svg-icons';
 import Link from 'next/link';
-import OAuth from '../components/OAuth';
 
-export default function ForgotPassword() {
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
+export default function ChangeEmail() {
+  const [oldEmail, setOldEmail] = React.useState('');
+  const [newEmail, setNewEmail] = React.useState('');
+
   let port = 5000;
 
-  // backend stuff
-  // TODO: CHANGE THIS TO FORGOT PASSWORD
-  const sendEmailForgotPassword = async () => {
-    const response = await fetch(`http://localhost:${port}/api/auth/send`, {
-      method: 'POST',
+  const handleUpdateEmail = async () => {
+    const response = await fetch(`http://localhost:${port}/api/profile/update/email`, {
+      method: 'PUT',
       body: JSON.stringify({
-        email,
-        password,
+        oldEmail,
+        newEmail,
       }),
       headers: {
         'Content-type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
     });
+
     const data = await response.json();
     console.log(data);
   };
@@ -36,26 +34,29 @@ export default function ForgotPassword() {
           className=" w-1/3 justify-center mx-auto pt-3" // POSTIION MUST BE ABOSLUTE
         >
           <div className="mb-5 relative top-32">
-            <label
-              className="block text-white text-[2rem] font-bold mb-5"
-              htmlFor="password"
-            >
-              Forgot Password
+            <label className="block text-white text-[4rem] font-bold mb-5">
+              Update Email
             </label>
-            <div className="text-white mb-3 ">
-              We will send you an email with instructions on how to reset your
-              password.
-            </div>
             <input
-              name="email-address"
+              name="old-email-address"
               className="shadow appearance-none border rounded w-full py-3 px-2 text-gray-700 placeholder-blue-400 leading-tight focus:outline-none focus:shadow-outline"
               id="email-address"
               type="text"
-              placeholder="Email address"
+              placeholder="Enter your old email address"
               onChange={(e) => {
-                setEmail(e.target.value);
+                setOldEmail(e.target.value);
               }}
-              // multiple
+            />
+
+            <input
+              name="new-email-address"
+              className="shadow appearance-none border rounded w-full py-3 px-2 text-gray-700 placeholder-blue-400 leading-tight focus:outline-none focus:shadow-outline"
+              id="email-address"
+              type="text"
+              placeholder="Enter your new email address"
+              onChange={(e) => {
+                setNewEmail(e.target.value);
+              }}
             />
           </div>
 
@@ -63,11 +64,11 @@ export default function ForgotPassword() {
           <div className="items-center justify-between relative top-32">
             <button
               id="submit"
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold w-1/4 italic py-2 px-4 pb-3: rounded focus:outline-none focus:shadow-outline mb-5"
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold w-1/3 italic py-2 px-4 pb-3: rounded focus:outline-none focus:shadow-outline mb-5"
               type="button"
-              onClick={sendEmailForgotPassword}
+              onClick={handleUpdateEmail}
             >
-              Send Email
+              Submit
             </button>
           </div>
           <div className="flex items-center justify-center relative top-52">
