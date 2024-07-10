@@ -42,10 +42,7 @@ courseRouter.get('/all', async (req, res) => {
 });
 
 courseRouter.get('/list/:user', async (req, res) => {
-  if (!validIdString(req.params.user)) {
-    return res.status(400).json({ message: 'user is not a valid ObjectId' });
-  }
-  const user = await User.findOne({_id: req.params.user}).exec();  
+  const user = await User.findOne({_id: req.userId}).exec();  
   if (user == null) {
     return res.status(400).json({ message: 'Provided user does not exists' });
   }
@@ -71,13 +68,7 @@ courseRouter.get('/list/:user', async (req, res) => {
 });
 
 courseRouter.post('/add', async (req, res) => {
-  console.log('adding course?');
   const userId = req.userId;
-  // const userId = req.body.userId;
-  // if (!validIdString(userId)) {
-  //   return res.status(400).json({ message: 'userId is not a valid ObjectId' });
-  // }
-  console.log(userId);
   const userExists = (await User.exists({_id: userId}).exec()) != null;
   if (!userExists) {
     console.log('user not exist');
@@ -106,10 +97,7 @@ courseRouter.post('/add', async (req, res) => {
 });
 
 courseRouter.post('/delete', async (req, res) => {
-  const userId = req.body.userId;
-  if (!validIdString(userId)) {
-    return res.status(400).json({ message: 'userId is not a valid ObjectId' });
-  }
+  const userId = req.userId;
   const courseId = req.body.courseId;
   if (!validIdString(courseId)) {
     return res.status(400).json({ message: 'courseId is not a valid ObjectId' });
