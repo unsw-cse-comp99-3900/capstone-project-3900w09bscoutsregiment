@@ -8,6 +8,7 @@ const CoursesLayout = ({ children }) => {
   const router = useRouter();
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
   const dropdownRef = React.useRef(null);
+  const settingsRef = React.useRef(null);
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -18,12 +19,17 @@ const CoursesLayout = ({ children }) => {
   const logout = () => {
     localStorage.removeItem('token')
     router.push('/');
-    closeDropdown();
+    closeDropdown()
     return;
   };
 
   const handleOutsideClick = (event) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(event.target) &&
+      settingsRef.current &&
+      !settingsRef.current.contains(event.target)
+    ) {
       closeDropdown();
     }
   };
@@ -65,6 +71,7 @@ const CoursesLayout = ({ children }) => {
         </div>
         <button
           onClick={toggleDropdown}
+          ref={settingsRef}
           className='text-white hover:bg-blue-800 px-4 py-2 rounded-md'
         >
           Settings

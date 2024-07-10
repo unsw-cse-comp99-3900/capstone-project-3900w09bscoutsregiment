@@ -6,6 +6,8 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 const Profile = () => {
+  const [userDetails, setUserDetails] = React.useState({ name: '', email: '' });
+
   // Ensure stay logged in
   const router = useRouter();
   React.useEffect(() => {
@@ -14,6 +16,27 @@ const Profile = () => {
       router.push('/');
       return
     }
+
+    // const fetchProfile = async () => {
+    //   try {
+    //     const res = await fetch('https://localhost:5000/api/profile/details', {
+    //       method: 'GET',
+    //       headers: {
+    //         'Content-Type': 'application/json',
+    //         Authorization: `Bearer ${localStorage.getItem('token')}`,
+    //       }
+    //     })
+
+        
+  
+    //     const data = await res.json();
+    //     console.log(data)
+    //   } catch (error) {
+    //     console.error(error)
+    //   } 
+    // }  
+
+    // fetchProfile();
   }, [])
 
   const logout = () => {

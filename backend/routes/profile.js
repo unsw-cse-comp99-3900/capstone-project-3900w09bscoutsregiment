@@ -59,6 +59,7 @@ profileRouter.put('/update/resetpassword', authMiddleware, async (req, res) => {
 
   try {
     const user = await User.findById(req.userId);
+    console.log(req.userId)
 
     if (!user) {
       return res.status(400).json({ message: 'This user does not exist' });
@@ -83,6 +84,19 @@ profileRouter.put('/update/resetpassword', authMiddleware, async (req, res) => {
     return res
       .status(500)
       .json({ message: 'Error occured while updating passwords' });
+  }
+});
+
+// Get username, email
+profileRouter.get('/details', authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findById(req.userId).select('name email');
+    if (!user) {
+      return res.status(400).json({ message: 'This user does not exist' });
+    }
+    return res.status(200).json({ username: user.name, email: user.email });
+  } catch {
+    return res.status(500).json({message: 'Error retrieving user profile'})
   }
 });
 
