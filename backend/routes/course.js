@@ -17,6 +17,35 @@ courseRouter.get('/:code/:year/:term', async (req, res) => {
 
 courseRouter.get('/all', async (req, res) => {
   const query = Course.find({});
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  const skip = (page - 1) * limit;
+
+  if (req.query.search != null) {
+    const searchTerm = new RegExp(req.query.search, "i");
+    query.find({ $or: [{ title: searchTerm }, { code: searchTerm }] });
+  }
+  if (req.query.term != null && termIsSmall(req.query.term)) {
+    const term = termToggle(req.query.term);
+    query.find({ term: term });
+  }
+  if (req.query.year != null) {
+    const year = Number(req.query.year);
+    if (year !== NaN) {
+      query.find({ year: year });
+    }
+  }
+
+  query.select(['_id', 'title', 'code', 'term', 'year']);
+  query.skip(skip).limit(limit);
+
+  const courses = await query.exec();
+  const totalCourses = await Course.countDocuments(query);
+
+  res.json({ courses, totalCourses, totalPages: Math.ceil(totalCourses / limit), currentPage: page });
+  /* This is the intial code, the current limit the amount of courses to 10,
+  If you want to get all the courses just used this commented code.
+  const query = Course.find({});
   if (req.query.search != null) {
     const searchTerm = new RegExp(req.query.search, "i");
     query.find({$or: [{title: searchTerm}, {code: searchTerm}]});
@@ -35,6 +64,7 @@ courseRouter.get('/all', async (req, res) => {
   const courses = await query.exec();
   console.log(courses);
   res.json(courses);
+  */
 });
 
 courseRouter.get('/list/:user', async (req, res) => {

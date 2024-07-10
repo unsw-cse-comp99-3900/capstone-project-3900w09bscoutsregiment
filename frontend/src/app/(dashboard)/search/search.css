@@ -100,7 +100,56 @@ body {
     margin-left: 10px;
   }
   
-  .course .add-button:hover, .details-button:hover {
+  .course .add-button:hover, .details-button:hover, .modal-content button:hover {
     background-color: #0056b3;
   }
+
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.5);
+  }
   
+  .modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 500px;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .modal-content h2 {
+    margin-top: 0;
+    font-size: 24px; /* Adjust font size as needed */
+    font-weight: bold;
+  }  
+
+  .modal-content h3 {
+    margin-top: 0;
+    font-size: 20px; /* Adjust font size as needed */
+    font-weight: bold;
+  }
+  
+  .modal-content ol {
+    list-style-type:decimal;
+    padding-left: 20px;
+  }
+  
+  .modal-content button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+  }
