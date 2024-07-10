@@ -29,6 +29,16 @@ export default function ForgotPassword() {
 
   return (
     <div>
+      <div
+        id="top-content"
+        className="text-white w-full bg-primary-theme-db flex justify-start gap-4 px-4 py-4"
+      >
+        <img src="Cotam-logo.png" alt="" className="rounded-md" />
+        <Link href="/" className="text-white" style={{ fontSize: '2rem' }}>
+          COTAM
+        </Link>
+      </div>
+
       <div className="login-background">
         <form
           name="publish-form"
@@ -55,7 +65,7 @@ export default function ForgotPassword() {
               onChange={(e) => {
                 setEmail(e.target.value);
               }}
-              // multiple
+            // multiple
             />
           </div>
 
