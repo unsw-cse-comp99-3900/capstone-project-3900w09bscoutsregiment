@@ -1,8 +1,6 @@
 'use client';
 
 import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFacebook, faGoogle } from '@fortawesome/free-brands-svg-icons';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import OAuth from '../components/OAuth';
@@ -45,90 +43,83 @@ export default function Login() {
 
   return (
     <div>
-      <div
-        id="top-content"
-        className="text-white w-full bg-primary-theme-db flex justify-start gap-4 px-4 py-4"
-      >
-        <img src="Cotam-logo.png" alt="" className="rounded-md" />
-        <Link href="/" className="text-white" style={{ fontSize: '2rem' }}>
-          COTAM
-        </Link>
-      </div>
-      <div className="login-background">
-        <form
-          name="publish-form"
-          id="form"
-          className=" w-1/3 justify-center mx-auto pt-3 relative top-36" // POSTIION MUST BE ABOSLUTE therein lies the question, why?
-        >
-          <div className="mb-4">
-            <label className="block text-white text-[4rem] font-bold mb-2">
-              Log in
-            </label>
-            <input
-              name="email-address"
-              className="shadow appearance-none border rounded w-full py-3 px-2 text-gray-700 placeholder-blue-400 leading-tight focus:outline-none focus:shadow-outline"
-              id="email-address"
-              type="text"
-              placeholder="Email address"
-              onChange={(e) => {
-                setEmail(e.target.value);
-              }}
-              // multiple
-            />
-          </div>
-
-          {/* password */}
-          <div className="mb-6">
-            <input
-              name="password"
-              className="shadow appearance-none border border-500 rounded w-full py-3 px-2 text-gray-700 placeholder-blue-400 mb-3"
-              id="password"
-              type="password"
-              placeholder="Password"
-              onChange={(e) => {
-                setPassword(e.target.value);
-              }}
-            />
-          </div>
-
-          {/* submit */}
-          <div className="items-center justify-between">
-            <button
-              id="submit"
-              className="bg-blue-500 hover:bg-blue-700 text-white text-lg font-bold w-full italic py-2 px-4 pb-3: rounded focus:outline-none focus:shadow-outline"
-              type="button"
-              onClick={login}
-            >
-              Log in
-            </button>
-            <div className="p-5">
-              <hr className="custom-login-hr "></hr>
+      <div className='login_background'>
+        <div className='min-h-screen flex justify-center items-center'>
+          <form
+            name="publish-form"
+            id="form"
+            className="justify-center mx-auto w-2/5 space-y-2 p-14 rounded-2xl bg-white shadow-2xl"
+          >
+            <div>
+              <h2 className="block text-blue-500 text-[4rem] font-bold my-4">
+                Log In
+              </h2>
+              <input
+                name="email-address"
+                className='input_text'
+                id="email-address"
+                type="text"
+                placeholder="Email address"
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                }}
+                // multiple
+              />
             </div>
-          </div>
-          {/* other login options */}
-          <div className="flex items-center justify-evenly">
-            <OAuth></OAuth>
-          </div>
-          {/* forgot password */}
-          <div className="pt-8 flex items-center justify-center">
-            <Link
-              href="/forgotPassword"
-              style={{ textDecoration: 'underline', color: '#1d4ed8' }}
-            >
-              Forgot your password?
-            </Link>
-          </div>
-          {/* sign up */}
-          <div className="flex items-center justify-center gap-2">
-            <p> Don't have an account yet?</p>
-            <Link
-              href="/register"
-              style={{ textDecoration: 'underline', color: '#1d4ed8' }}
-            >
-              Sign up
-            </Link>
-          </div>
-        </form>
+
+            {/* password */}
+            <div className="mb-6">
+              <input
+                name="password"
+                className='input_text'
+                id="password"
+                type="password"
+                placeholder="Password"
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
+              />
+            </div>
+
+            {/* submit */}
+            <div className="items-center justify-between">
+              <button
+                id="submit"
+                className="bg-blue-500 hover:bg-blue-700 text-white text-lg font-bold w-full italic py-2 px-4 pb-3: rounded focus:outline-none focus:shadow-outline"
+                type="button"
+                onClick={login}
+              >
+                Log in
+              </button>
+              <div className="p-5">
+                <hr className="custom-login-hr "></hr>
+              </div>
+            </div>
+            {/* other login options */}
+            <div className="flex items-center justify-evenly">
+              <OAuth></OAuth>
+            </div>
+            {/* forgot password */}
+            <div className="pt-8 flex items-center justify-center">
+              <Link
+                href="/forgotPassword"
+                style={{ textDecoration: 'underline', color: '#1d4ed8' }}
+              >
+                Forgot your password?
+              </Link>
+            </div>
+            {/* sign up */}
+            <div className="flex items-center justify-center gap-2">
+              <p> Don't have an account yet?</p>
+              <Link
+                href="/register"
+                style={{ textDecoration: 'underline', color: '#1d4ed8' }}
+              >
+                Sign up
+              </Link>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );
