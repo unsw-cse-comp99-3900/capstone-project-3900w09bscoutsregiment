@@ -3,8 +3,11 @@ import Course from '../model/Course.js';
 import User from '../model/User.js';
 import { termEq, termToggle, termIsSmall } from '../controllers/termFns.js';
 import { validIdString } from '../controllers/idFns.js';
+import { authMiddleware } from './profile.js';
 
 const courseRouter = express.Router();
+
+courseRouter.use(authMiddleware);
 
 courseRouter.get('/:code/:year/:term', async (req, res) => {
   const query = Course.find({});
@@ -98,7 +101,6 @@ courseRouter.get('/list/:user', async (req, res) => {
 
 courseRouter.post('/add', async (req, res) => {
   console.log('adding course?');
-  console.log(req);
   const userId = req.userId;
   // const userId = req.body.userId;
   // if (!validIdString(userId)) {

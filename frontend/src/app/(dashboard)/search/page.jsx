@@ -20,7 +20,11 @@ const SearchPage = () => {
 
   const fetchCourses = async () => {
     try {
-      const response = await fetch(`http://localhost:${port}/api/course/all`);
+      const response = await fetch(`http://localhost:${port}/api/course/all`, {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      });
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -83,7 +87,11 @@ const SearchPage = () => {
     console.log("Details show");
     const shortenedTerm = shortenTerm(course.term);
     try {
-      const response = await fetch(`http://localhost:${port}/api/course/${course.code}/${course.year}/${shortenedTerm}`);
+      const response = await fetch(`http://localhost:${port}/api/course/${course.code}/${course.year}/${shortenedTerm}`, {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      });
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
