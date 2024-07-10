@@ -24,7 +24,11 @@ const SearchPage = () => {
 
   const fetchCourses = async () => {
     try {
-      const response = await fetch(`http://localhost:${port}/api/course/all`);
+      const response = await fetch(`http://localhost:${port}/api/course/all`, {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      });
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -59,14 +63,15 @@ const SearchPage = () => {
   };
 
   const handleAddCourse = async (courseId) => {
-    const userId = localStorage.getItem('token'); // Replace with actual user ID
+    console.log("addCourse");
     try {
       const response = await fetch(`http://localhost:${port}/api/course/add`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`
         },
-        body: JSON.stringify({ userId, courseId }),
+        body: JSON.stringify({ userId: "teehee", courseId }),
       });
       if (response.ok) {
         console.log('Course added successfully');
@@ -114,9 +119,11 @@ const SearchPage = () => {
   const handleShowDetails = async (course) => {
     const shortenedTerm = shortenTerm(course.term);
     try {
-      const response = await fetch(
-        `http://localhost:${port}/api/course/${course.code}/${course.year}/${shortenedTerm}`
-      );
+      const response = await fetch(`http://localhost:${port}/api/course/${course.code}/${course.year}/${shortenedTerm}`, {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      });
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }

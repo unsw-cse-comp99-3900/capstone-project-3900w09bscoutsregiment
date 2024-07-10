@@ -39,9 +39,8 @@ app.get('/', (req, res) => {
 // sign up and log in pages should be directed to
 // localhost:{PORT}/api/auth/signup or localhost:{PORT}/api/auth/login
 app.use('/api/auth', authRouter);
-app.use('/api/course', courseRouter);
 app.use('/api/profile', profileRouter);
-
+app.use('/api/course', courseRouter);
 app.get('/course/:code/:year/:term/', async (req, res) => {
   const query = Course.find({});
   query.find({ code: req.params.code });
