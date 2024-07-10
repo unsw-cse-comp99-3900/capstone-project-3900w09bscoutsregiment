@@ -34,14 +34,14 @@ const SearchPage = () => {
 
   const handleAddCourse = async (courseId) => {
     console.log("addCourse");
-    const userId = localStorage.getItem('token'); // Replace with actual user ID
     try {
       const response = await fetch(`http://localhost:${port}/api/course/add`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`
         },
-        body: JSON.stringify({ userId, courseId }),
+        body: JSON.stringify({ userId: "teehee", courseId }),
       });
       if (response.ok) {
         console.log('Course added successfully');

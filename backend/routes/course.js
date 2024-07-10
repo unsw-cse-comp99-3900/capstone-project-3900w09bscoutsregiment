@@ -97,25 +97,33 @@ courseRouter.get('/list/:user', async (req, res) => {
 });
 
 courseRouter.post('/add', async (req, res) => {
-  const userId = req.body.userId;
-  if (!validIdString(userId)) {
-    return res.status(400).json({ message: 'userId is not a valid ObjectId' });
-  }
+  console.log('adding course?');
+  console.log(req);
+  const userId = req.userId;
+  // const userId = req.body.userId;
+  // if (!validIdString(userId)) {
+  //   return res.status(400).json({ message: 'userId is not a valid ObjectId' });
+  // }
+  console.log(userId);
   const userExists = (await User.exists({_id: userId}).exec()) != null;
   if (!userExists) {
+    console.log('user not exist');
     return res.status(400).json({ message: 'Provided userId is not a user in the db' });
   }
   const courseId = req.body.courseId;
   if (!validIdString(courseId)) {
+    console.log('bad cid');
     return res.status(400).json({ message: 'courseId is not a valid ObjectId' });
   }
   const courseExists = (await Course.exists({_id: courseId}).exec()) != null;
   if (!courseExists) {
+    console.log('course not exist');
     return res.status(400).json({ message: 'Provided courseId is not a course in the db' });
   }
   const userList = await User.findOne({_id: userId}, 'courses').exec();
   console.log(userList);
   if (userList.courses.includes(courseId)) {
+    console.log('user already has');
     return res.status(400).json({ message: 'User already added course' });
   }
   userList.courses.push({courseId: courseId, colour: "02b0f5", favorite: false});
