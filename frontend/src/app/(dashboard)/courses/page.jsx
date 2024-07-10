@@ -14,14 +14,13 @@ export default function ListingCourses() {
   const [searchTerm, setSearchTerm] = useState('');
   const [courses, setCourses] = useState([]);
   const [visitedCourses, setVisitedCourses] = useState([]);
-  const port = 5100;
+  const port = 5000;
   
   useEffect(() => {
     console.log("something")
     const fetchUserCourses = async () => {
-      const userId = 'teehee'; // Replace with actual user ID
       try {
-        const response = await fetch(`http://localhost:${port}/api/course/list/${userId}`, {
+        const response = await fetch(`http://localhost:${port}/api/course/list`, {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${localStorage.getItem('token')}`

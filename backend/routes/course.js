@@ -41,7 +41,7 @@ courseRouter.get('/all', async (req, res) => {
   
 });
 
-courseRouter.get('/list/:user', async (req, res) => {
+courseRouter.get('/list', async (req, res) => {
   const user = await User.findOne({_id: req.userId}).exec();  
   if (user == null) {
     return res.status(400).json({ message: 'Provided user does not exists' });
@@ -50,12 +50,13 @@ courseRouter.get('/list/:user', async (req, res) => {
   for (const course of user.courses) {
     searchList.push({_id: course.courseId});
   }
-  const courseList = await Course.find({$or: searchList}, '_id code year term').exec();
+  const courseList = await Course.find({$or: searchList}, '_id title code year term').exec();
   const output = new Array();
   for (const course of courseList) {
     const tempCourse = user.courses.find((elem) => elem.courseId.toString() == course._id.toString());
     output.push({
       courseId: course._id,
+      title: course.title,
       code: course.code,
       year: course.year,
       term: course.term,
