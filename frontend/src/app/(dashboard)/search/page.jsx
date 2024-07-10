@@ -168,7 +168,6 @@ const SearchPage = () => {
             value={searchTerm}
             onChange={handleSearchChange}
           />
-          <button onClick={filterCourses}>Search</button>
         </div>
         <div className="filters">
           <div className="filter">
@@ -248,8 +247,8 @@ const SearchPage = () => {
       {selectedCourse && selectedCourse.outcomes && (
         <div className="modal">
           <div className="modal-content">
-            <h2><u>{selectedCourse.title}</u></h2>
-            <h3>Outcomes:</h3>
+            <h2><u>({selectedCourse.code}) {selectedCourse.title}</u></h2>
+            <h3>Learning Outcomes:</h3>
             <ol>
               {selectedCourse.outcomes.map((outcome, index) => (
                 <li key={index}>{outcome}</li>
