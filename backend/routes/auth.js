@@ -6,11 +6,13 @@ import jwt from 'jsonwebtoken';
 
 const authRouter = express.Router();
 
+const JWT_SECRET_KEY =
+  'a64574ab370ef9fb3f5d5b21ed91f092a8f51713b84f34be67641d14e2b9c83f18860d21caf5dcfed5e04d216cbef38f07c75d3de60098b7af42351d21c7f408';
+
 // Manual Signup
 authRouter.post('/signup', async (req, res) => {
   const { name, email, password, confirmPassword } = req.body;
 
-  console.log('hi');
   if (password !== confirmPassword) {
     return res.status(400).json({ message: 'Passwords do not match' });
   }
@@ -19,15 +21,12 @@ authRouter.post('/signup', async (req, res) => {
     const userExists = await User.findOne({ email });
 
     if (userExists) {
-      console.log('user already exists');
       return res.status(400).json({ message: 'User already exists' });
     }
 
     const user = await User.create({ name, email, password });
-    console.log('created user');
 
-    const saveUser = await user.save();
-    console.log('saved user');
+    await user.save();
 
     return res.status(201).json({ message: 'User registered successfully' });
   } catch (error) {
@@ -48,15 +47,13 @@ authRouter.post('/login', async (req, res) => {
       return res.status(400).json({ message: 'Invalid email or password' });
     }
 
-    const isMatch = await user.matchPassword(password);
+    const doPasswordsMatch = await user.matchPassword(password);
 
-    if (!isMatch) {
+    if (!doPasswordsMatch) {
       return res.status(400).json({ message: 'Invalid email or password' });
     }
 
-    console.log(process.env);
-
-    const token = jwt.sign({ id: user._id }, `${process.env.JWT_SECRET_KEY}`, {
+    const token = jwt.sign({ id: user._id }, JWT_SECRET_KEY, {
       expiresIn: '1h',
     });
 
