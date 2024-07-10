@@ -3,6 +3,7 @@ dotenv.config();
 import express from 'express';
 import mongoose from 'mongoose';
 import authRouter from './routes/auth.js';
+import profileRouter from './routes/profile.js';
 import cors from 'cors';
 import courseRouter from './routes/course.js';
 import analyseFns from './controllers/analyseFns.js';
@@ -15,10 +16,12 @@ app.use(express.json());
 app.use(cors());
 
 // MongoDB connection
-try { 
- //  mongoose.connect('mongodb://localhost:27017/mydatabase', {
-  mongoose.connect('mongodb+srv://alixaz031:TZZzJPXi1e8HN61E@3900database.owuq2ud.mongodb.net/', {
-  });
+try {
+  //  mongoose.connect('mongodb://localhost:27017/mydatabase', {
+  mongoose.connect(
+    'mongodb+srv://alixaz031:TZZzJPXi1e8HN61E@3900database.owuq2ud.mongodb.net/',
+    {}
+  );
 } catch (err) {
   console.log(err);
 }
@@ -88,4 +91,3 @@ db.once('open', async () => {
     console.log(`Backend running at http://localhost:${port}`);
   });
 });
-
