@@ -13,7 +13,7 @@ const CoursesLayout = ({ children }) => {
     setIsDropdownOpen(!isDropdownOpen);
   };
   const logout = () => {
-    window.localStorage.removeItem('token')
+    localStorage.removeItem('token')
     router.push('/');
     return
   };

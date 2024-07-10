@@ -14,11 +14,13 @@ export default function Register() {
 
   // Ensure stay logged in
   const router = useRouter();
-  const token = window.localStorage.getItem('token') || null;
-  if (token !== null) {
-    router.push('/courses');
-    return;
-  }
+  React.useEffect(() => {
+    const token = localStorage.getItem('token') || null;
+    if (token !== null) {
+      router.push('/courses');
+      return;
+    }
+  }, [])
 
   // backend stuff starts here
   const register = async () => {
@@ -39,7 +41,7 @@ export default function Register() {
       });
       const data = await response.json();
       if (response.ok) {
-        window.localStorage.setItem('token', data.token);
+        localStorage.setItem('token', data.token);
         router.push('/courses');
       } else {
         console.error(data.message);

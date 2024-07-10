@@ -4,17 +4,20 @@ import { AppBar, Toolbar, Button, Typography, Box, Container } from '@mui/materi
 import WaveSVG from './Components/HomePage/WaveSVG.js';
 import FooterPage from './Components/HomePage/FooterPage';
 import Link from 'next/link';
+import React from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function Home() {
   
   // Ensure stay logged in
   const router = useRouter();
-  const token = window.localStorage.getItem('token');
-  if (token !== null) {
-    router.push('/courses');
-    return
-  }
+  React.useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token !== null) {
+      router.push('/courses');
+      return
+    }
+  }, [])
 
   return (
     <main className="flex bg-white flex-col p-0 b-0 m-0 items-center justify-between">

@@ -1,16 +1,19 @@
 'use client'
 
 import Link from "next/link"
+import React from "react"
 import { useRouter } from 'next/navigation'
 
 const Settings = () => {
   // Ensure stay logged in
   const router = useRouter();
-  const token = window.localStorage.getItem('token') || null
-  if (token === null) {
-    router.push('/');
-    return
-  }
+  React.useEffect(() => {
+    const token = localStorage.getItem('token') || null
+    if (token === null) {
+      router.push('/');
+      return
+    }
+  }, [])
   
   return (
     <div className="min-h-screen bg-blue-100 flex justify-center items-center pt-12">

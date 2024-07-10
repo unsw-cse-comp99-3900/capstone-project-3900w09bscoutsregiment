@@ -10,11 +10,13 @@ const CourseReasoning = () => {
   
   // Ensure stay logged in
   const router = useRouter();
-  const token = window.localStorage.getItem('token') || null
-  if (token === null) {
-    router.push('/');
-    return
-  }
+  React.useEffect(() => {
+    const token = localStorage.getItem('token') || null
+    if (token === null) {
+      router.push('/');
+      return
+    }
+  }, [])
 
   // backend stuff
   const openai = new OpenAI({apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY, dangerouslyAllowBrowser: true});
@@ -43,11 +45,11 @@ const CourseReasoning = () => {
     
     const completion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
-      messages: [{ role: 'user', content: `Explain why is ${CLO} is included as ${taxLvl} in Bloom's Taxonomy` }],
+      messages: [{ role: 'system', content: `Explain why is ${CLO} is included as ${taxLvl} in Bloom's Taxonomy` }],
       // tools: tools,
       // tool_choice: "auto",
     });  
-    console.log(completion)
+    console.log(completion.choices[0])
   }
 
   return (
