@@ -60,29 +60,34 @@
     /* background-repeat: no-repeat; */
     background-position: center;
 }
-@layer base {
+/* @layer base {
   .light {
-    --color-bkg: #1a202c;
-    --color-bkg-light: #2d3748;
-    --color-bkg-lighter: #4a5568;
-    --color-bkg-lightest: #718096;
+      --color-bkg: 217deg 32.6% 17.5%;
+      --color-content: 210deg 40% 98%;
+      --color-accent1: 288deg 95.8% 60.6%;
+      --color-accent2: 168deg 83.8% 48.2%;
   }
 
   .dark {
-    --color-bkg: #1a202c;
-    --color-bkg-light: #2d3748;
-    --color-bkg-lighter: #4a5568;
-    --color-bkg-lightest: #718096;
+    --color-bkg: 217deg 32.6% 17.5%;
+    --color-content: 210deg 40% 98%;
+    --color-accent1: 288deg 95.8% 60.6%;
+    --color-accent2: 168deg 83.8% 48.2%;
   }
+ :root[class="dark"] {
+   --color-bkg: #1a202c;
+   --color-bkg-light: #2d3748;
+   --color-bkg-lighter: #2269e3;
+   --color-bkg-lightest: #718096;
+   --color-content: #f8fafc;
 }
-
-
-:root[theme="dark"] {
-  --color-bkg: #1a202c;
-  --color-bkg-light: #2d3748;
-  --color-bkg-lighter: #4a5568;
-  --color-bkg-lightest: #718096;
 }
+body {
+  @apply bg-[color:var(--color-bkg)] text-[color:var(--color-content)];
+}
+.text-custom {
+  @apply text-[color:var(--color-content)];
+} */
 .option_menu {
   @apply flex rounded-xl justify-between items-center border-b p-4 gap-10 hover:bg-gray-200 transition duration-300 ease-in-out
 }

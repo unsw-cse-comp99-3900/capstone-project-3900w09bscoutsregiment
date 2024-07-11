@@ -2,8 +2,6 @@
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from './context/ThemeContext';
-import { Inter } from "next/font/google";
-import "./globals.css";
 import Link from "next/link";
 
 const inter = Inter({ subsets: ['latin'] });
@@ -28,6 +26,16 @@ export default function RootLayout({ children }) {
               <Link href='/register' className='highlight_btn'>Register</Link>
             </div>
           </div>
+          {/* <div className="bg-custom text-custom absolute">
+            <Link href='/' className='flex items-center gap-2'>
+              <div className='bg-custom text-custom'></div>
+              <span className='bg-custom text-custom'>COTAM</span>
+            </Link>
+            <div>
+              <Link href='/login' className='outline_btn me-2'>Login</Link>
+              <Link href='/register' className='highlight_btn'>Register</Link>
+            </div>
+          </div> */}
           {children}
         </ThemeProvider>
 
