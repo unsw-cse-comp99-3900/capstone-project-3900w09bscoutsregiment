@@ -32,7 +32,8 @@ export default function Home() {
             <p className="mt-2 text-left">We will help you find a pathway</p>
           </div>
           <div className=' p-1'>
-            image here
+            <Image src="/homepage/images/clip.svg" alt="Example3" className="p-0 m-0 " width={500} height={500} />
+
           </div>
         </div>
       </div>
