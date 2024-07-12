@@ -41,7 +41,7 @@ export default function ListingCourses() {
       name: 'Database Systems',
       term: 'Term 1',
       year: '2024',
-      col: [
+      info: [
         { category: 'Create', value: 60 },
         { category: 'Evaluate', value: 40 },
         { category: 'Analyse', value: 20 },
@@ -56,7 +56,7 @@ export default function ListingCourses() {
       name: 'Computer Networks and Applications',
       term: 'Term 1',
       year: '2024',
-      col: [
+      info: [
         { category: 'Create', value: 50 },
         { category: 'Evaluate', value: 30 },
         { category: 'Analyse', value: 60 },
@@ -116,21 +116,33 @@ export default function ListingCourses() {
     setShowAnalysisChart(true);
   };
 
+  const hideAnalysis = () => {
+    setShowAnalysisChart(false);
+  };
+
   const displayChart = () => {
     if (visitedCourses.length === 1) {
       return (
-        <ResponsiveContainer>
-          <BarChart width={700} height={300} data={visitedCourses[0].col}>
-            <CartesianGrid strokeDasharray='3 3' />
-            <XAxis dataKey='category' />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey='value' fill='#8884d8' />
-          </BarChart>
-        </ResponsiveContainer>
+        <div style={{ width: '100%', height: '300px', marginTop: '5em' }}>
+          <ResponsiveContainer>
+            <BarChart width={700} height={300} data={visitedCourses[0].info}>
+              <CartesianGrid strokeDasharray='3 3' />
+              <XAxis dataKey='category' />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar
+                dataKey='value'
+                fill='#8884d8'
+                name={visitedCourses[0].code}
+              />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
       );
     } else if (visitedCourses.length > 1) {
+      const colors = ['#8884d8', '#82ca9d', '#ffc658'];
+
       const data = [];
       const categories = [
         'Create',
@@ -146,25 +158,31 @@ export default function ListingCourses() {
         const obj = { category };
         visitedCourses.forEach((course) => {
           obj[course.code] =
-            course.col.find((c) => c.category === category)?.value || 0;
+            course.info.find((c) => c.category === category)?.value || 0;
         });
-        console.log(obj);
         data.push(obj);
       });
 
       return (
-        <ResponsiveContainer>
-          <BarChart width={800} height={300} data={data}>
-            <CartesianGrid strokeDasharray='3 3' />
-            <XAxis dataKey='category' />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            {visitedCourses.map((course) => (
-              <Bar key={course.code} dataKey={course.code} fill='#8884d8' />
-            ))}
-          </BarChart>
-        </ResponsiveContainer>
+        <div style={{ width: '100%', height: '300px', marginTop: '5em' }}>
+          <ResponsiveContainer>
+            <BarChart width={800} height={300} data={data}>
+              <CartesianGrid strokeDasharray='3 3' />
+              <XAxis dataKey='category' />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+
+              {visitedCourses.map((course, idx) => (
+                <Bar
+                  key={course.code}
+                  dataKey={course.code}
+                  fill={colors[idx]}
+                />
+              ))}
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
       );
     }
     return null;
@@ -255,7 +273,12 @@ export default function ListingCourses() {
                 )}
               </div>
             ) : (
-              displayChart()
+              <>
+                {displayChart()}
+                <button className='analysis-button' onClick={hideAnalysis}>
+                  <FontAwesomeIcon icon={faArrowLeft} /> Go Back
+                </button>
+              </>
             )}
             {visitedCourses.length !== 0 && !showAnalysisChart && (
               <button
