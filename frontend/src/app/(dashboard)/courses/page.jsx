@@ -14,7 +14,6 @@ export default function ListingCourses() {
   const [searchTerm, setSearchTerm] = useState('');
   const [courses, setCourses] = useState([]);
   const [visitedCourses, setVisitedCourses] = useState([]);
-  const [selectedCourse, setSelectedCourse] = useState(null);
   const port = 5000;
   
   useEffect(() => {
@@ -30,6 +29,7 @@ export default function ListingCourses() {
           throw new Error('Failed to fetch user courses');
         }
         const data = await response.json();
+        console.log('course list', data);
         setCourses(data);
       } catch (error) {
         console.error('Error fetching user courses:', error);
@@ -58,7 +58,7 @@ export default function ListingCourses() {
         throw new Error('Network response was not ok');
       }
       const data = await response.json();
-      setSelectedCourse(data[0]);
+      console.log(data[0])
       return data[0];
     } catch (error) {
       console.error('Error fetching course details:', error);
@@ -70,6 +70,7 @@ export default function ListingCourses() {
   There is something wrong in this part, TODO: TO be fix later
   */
   const handleCourseClick = async (course) => {
+    console.log(course);
     if (visitedCourses.some((visitedCourse) => visitedCourse.code === course.code)) {
       // Course already visited, remove it
       setVisitedCourses(visitedCourses.filter((visitedCourse) => visitedCourse.code !== course.code));
@@ -77,7 +78,17 @@ export default function ListingCourses() {
       // Course not visited, fetch and add it
       const fetchedCourse = await handleShowDetails(course);
       if (fetchedCourse) {
-        setVisitedCourses([...visitedCourses, selectedCourse]);
+        const courseWithOutcomes = {
+          courseId: fetchedCourse._id,
+          title: fetchedCourse.title,
+          code: fetchedCourse.code,
+          year: fetchedCourse.year,
+          term: fetchedCourse.term,
+          favorite: course.favorite,
+          colour: course.colour, // default value or replace with actual value if available
+          outcomes: fetchedCourse.outcomes,
+        };
+        setVisitedCourses([...visitedCourses, courseWithOutcomes]);
       }
     }
   };
@@ -135,8 +146,8 @@ export default function ListingCourses() {
                 {filteredCourses.map(course => (
                   <tr 
                   key={course.code}
-                  className={`course-item ${visitedCourses.some(vc => vc.code === course.code) ? 'selected' : ''}`}
                   onClick={() => handleCourseClick(course)}
+                  className={`course-item ${visitedCourses.length !== 0 && visitedCourses.some(vc => vc.code === course.code) ? 'selected' : ''}`}
                   >
                     <td>{course.code}</td>
                     <td className='description'>{course.title}</td>
