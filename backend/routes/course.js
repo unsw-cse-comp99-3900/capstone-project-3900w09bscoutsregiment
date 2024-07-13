@@ -8,7 +8,7 @@ import analyseFns from '../controllers/analyseFns.js';
 
 const courseRouter = express.Router();
 
-courseRouter.use(authMIddleware);
+courseRouter.use(authMiddleware);
 
 courseRouter.get('/:code/:year/:term', async (req, res) => {
   const query = Course.find({});
