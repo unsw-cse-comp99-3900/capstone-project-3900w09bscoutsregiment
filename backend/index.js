@@ -5,16 +5,11 @@ import mongoose from 'mongoose';
 import authRouter from './routes/auth.js';
 import profileRouter from './routes/profile.js';
 import cors from 'cors';
-import Course from './model/Course.js';
-// const Course = require('./model/Course');
-import User from './model/User.js';
-import HasCourse from './model/HasCourse.js';
-// const User = require('./model/User');
-// const HasCourse = require('./model/HasCourse');
+import courseRouter from './routes/course.js';
+import analyseFns from './controllers/analyseFns.js';
 
 const app = express();
 const port = 5000;
-import { termEq, termToggle, termIsSmall } from './controllers/termFns.js';
 
 // Middleware
 app.use(express.json());
@@ -44,77 +39,57 @@ app.get('/', (req, res) => {
 // localhost:{PORT}/api/auth/signup or localhost:{PORT}/api/auth/login
 app.use('/api/auth', authRouter);
 
+app.use('/api/course', courseRouter);
+
 app.use('/api/profile', profileRouter);
 
-app.get('/course/:code/:year/:term/', async (req, res) => {
-  const query = Course.find({});
-  query.find({ code: req.params.code });
-  query.find({ year: Number(req.params.year) });
-  query.find({ term: termToggle(req.params.term) });
-  const course = await query.exec();
-  res.json(course);
-});
-
-app.get('/courses', async (req, res) => {
-  const query = Course.find({});
-  if (req.query.search != null) {
-    const searchTerm = new RegExp(req.query.search, 'i');
-    query.find({ $or: [{ title: searchTerm }, { code: searchTerm }] });
-  }
-  if (req.query.term != null && termIsSmall(req.query.term)) {
-    const term = termToggle(req.query.term);
-    query.find({ term: term });
-  }
-  if (req.query.year != null) {
-    const year = Number(req.query.year);
-    if (year !== NaN) {
-      query.find({ year: year });
-    }
-  }
-  query.select(['_id', 'title', 'code', 'term', 'year']);
-  const courses = await query.exec();
-  console.log(courses);
-  res.json(courses);
-});
-
-app.post('/add-course', async (req, res) => {
-  const userId = req.body.userId;
-  if (userId == null) {
-    // we have a problem here i think
-    throw new Error('Need a user to add to');
-  }
-  const userExists = (await User.exists({ _id: userId }).exec()) != null;
-  if (!userExists) {
-    throw new Error("User id doesn't exist in db");
-  }
-  const courseId = req.body.courseId;
-  if (courseId == null) {
-    // we also have a problem here
-    throw new Error('Need a course to add to the user');
-  }
-  const courseExists = (await Course.exists({ _id: courseId }).exec()) != null;
-  if (!courseExists) {
-    throw new Error("User id doesn't exist in db");
-  }
-  const userHasCourse =
-    (await HasCourse.exists({ userId: userId, courseId: courseId }).exec()) !=
-    null;
-  if (userHasCourse) {
-    throw new Error('User should not have the same one twice');
-  }
-  const result = await HasCourse.create({
-    userId: userId,
-    courseId: courseId,
-    favorite: false,
-  });
-  console.log(res);
-  res.send('ok');
-});
-
-app.post('/delete-course', async (req, res) => {});
 
 db.once('open', async () => {
   console.log('Connected to MongoDB');
+  analyseFns.loadFile('./verbs.txt');
+  const analysis = analyseFns.analyseCourses([
+    {
+      _id: 1,
+      code: "COMP1511",
+      colour: "#ffccff",
+      outcomes: [
+        "Apply C programming language to solve simple decision, looping, array, and linked list problems programmatically",
+        "Review the produced code against specification criteria by applying testing techniques",
+        "Apply basic data structures, such as arrays and linked lists, to solve complex problems",
+        "Read and understand coding solutions."
+      ]
+    },
+    {
+      _id: 2,
+      code: "COMP1521",
+      colour: "#ffccff",
+      outcomes: [
+        "Describe the architectural layers (fundamental parts) of a modern computer systems from hardware device (chip) levels upwards",
+        "Describe the principles of memory management and explain the workings of a system with virtual memory management",
+        "Explain how the major components of a CPU work together, including how data and instructions are represented in a computer",
+        "Design, implement, and analyse small programs at the assembly/machine level",
+        "Describe the relationship between a high-level procedural language (C) and assembly (machine language) which implements it, including how a compiled program is executed in a classical von Neumann machine",
+        "Describe the components comprising, and the services offered by, an operating system",
+        "Implement simple programs involving communication and concurrency"
+      ]
+    },
+    {
+      _id: 3,
+      code: "CEIC6711",
+      colour: "#eeeeaa",
+      outcomes: [
+        "Describe the phenomenological changes wrought on the raw materials of a commercial product during processing to produce specific properties including viscosity, stability, or colour.",
+        "Explain the physicochemical basis for performance of a product during use.",
+        "Develop the basis for a material with specified flow and dynamic properties using key ingredients like polymers, particles, and emulsifiers.",
+        "Analyse experimental data on product properties to deliver quantitative measures of product performance."
+      ]
+    }
+  ]);
+  console.log(analysis);
+  analyseFns.makePng(analysis, './test.png');
+  // console.log(analyseOutcome('Describe biomaterial classes, their general properties, and predict how specific materials may be affected by physiological conditions'));
+  // console.log(analyseOutcome('Develop the basis for a material with specified flow and dynamic properties using key ingredients like polymers, particles, and emulsifiers.'));
+  // console.log(analyseOutcome('Analyse experimental data on product properties to deliver quantitative measures of product performance.'));
   app.listen(port, () => {
     console.log(`Backend running at http://localhost:${port}`);
   });
