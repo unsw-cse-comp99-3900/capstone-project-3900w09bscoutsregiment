@@ -107,12 +107,15 @@ export default function ListingCourses() {
     setCourses(courses.filter(course => course.code !== courseCode));
   };
 
-  const filteredCourses = courses.filter(course =>
-    course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    course.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    course.term.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    course.year.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredCourses = courses.filter(course => {
+    const searchTermLower = searchTerm.toLowerCase();
+    return (
+      course.title.toLowerCase().includes(searchTermLower) ||
+      course.code.toLowerCase().includes(searchTermLower) ||
+      course.term.toLowerCase().includes(searchTermLower) ||
+      course.year.toString().includes(searchTermLower)
+    );
+  });
   
   return (
     <>
