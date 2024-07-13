@@ -28,6 +28,19 @@ export const authMiddleware = (req, res, next) => {
   });
 };
 
+// Get username, email
+profileRouter.get('/details', authMiddleware, async (req, res) => {
+  const user = await User.findById(req.userId);
+  if (!user) {
+    return res.status(400).json({ message: 'This user does not exist' });
+  }
+  try {
+    return res.status(200).json({ email: user.email, name: user.name });
+  } catch {
+    return res.status(500).json({message: 'Error retrieving user profile'})
+  }
+});
+
 // Update email
 profileRouter.put('/update/email', authMiddleware, async (req, res) => {
   const { oldEmail, newEmail } = req.body;
@@ -59,6 +72,7 @@ profileRouter.put('/update/resetpassword', authMiddleware, async (req, res) => {
 
   try {
     const user = await User.findById(req.userId);
+    console.log(req.userId)
 
     if (!user) {
       return res.status(400).json({ message: 'This user does not exist' });

@@ -38,17 +38,20 @@ app.get('/', (req, res) => {
 // sign up and log in pages should be directed to
 // localhost:{PORT}/api/auth/signup or localhost:{PORT}/api/auth/login
 app.use('/api/auth', authRouter);
-app.use('/api/profile', profileRouter);
+
 app.use('/api/course', courseRouter);
+
+app.use('/api/profile', profileRouter);
+
 
 db.once('open', async () => {
   console.log('Connected to MongoDB');
   analyseFns.loadFile('./verbs.txt');
-  console.log(analyseFns.analyseCourses([
+  const analysis = analyseFns.analyseCourses([
     {
       _id: 1,
       code: "COMP1511",
-      colour: "123456",
+      colour: "#ffccff",
       outcomes: [
         "Apply C programming language to solve simple decision, looping, array, and linked list problems programmatically",
         "Review the produced code against specification criteria by applying testing techniques",
@@ -59,7 +62,7 @@ db.once('open', async () => {
     {
       _id: 2,
       code: "COMP1521",
-      colour: "123456",
+      colour: "#ffccff",
       outcomes: [
         "Describe the architectural layers (fundamental parts) of a modern computer systems from hardware device (chip) levels upwards",
         "Describe the principles of memory management and explain the workings of a system with virtual memory management",
@@ -73,7 +76,7 @@ db.once('open', async () => {
     {
       _id: 3,
       code: "CEIC6711",
-      colour: "423456",
+      colour: "#eeeeaa",
       outcomes: [
         "Describe the phenomenological changes wrought on the raw materials of a commercial product during processing to produce specific properties including viscosity, stability, or colour.",
         "Explain the physicochemical basis for performance of a product during use.",
@@ -81,7 +84,9 @@ db.once('open', async () => {
         "Analyse experimental data on product properties to deliver quantitative measures of product performance."
       ]
     }
-  ]));
+  ]);
+  console.log(analysis);
+  analyseFns.makePng(analysis, './test.png');
   // console.log(analyseOutcome('Describe biomaterial classes, their general properties, and predict how specific materials may be affected by physiological conditions'));
   // console.log(analyseOutcome('Develop the basis for a material with specified flow and dynamic properties using key ingredients like polymers, particles, and emulsifiers.'));
   // console.log(analyseOutcome('Analyse experimental data on product properties to deliver quantitative measures of product performance.'));

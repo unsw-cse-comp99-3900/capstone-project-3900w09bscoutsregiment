@@ -11,6 +11,15 @@ import Link from 'next/link';
 export default function ListingCourses() {
   // Ensure stay logged in
   const router = useRouter();
+  React.useEffect(() => {
+    const token = localStorage.getItem('token') || null
+    if (token === null) {
+      router.push('/');
+      return
+    }
+  }, [])
+
+  //const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [courses, setCourses] = useState([]);
   const [visitedCourses, setVisitedCourses] = useState([]);
