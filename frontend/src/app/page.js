@@ -21,7 +21,7 @@ export default function Home() {
   }, [])
 
   return (
-    <main className="flex bg-white flex-col p-0 b-0 m-0 items-center justify-between">
+    <main className="flex bg-main flex-col p-0 b-0 m-0 items-center justify-between">
       <div className="bg-gradient-to-b px-12 from-primary-theme-db to-primary-theme-lb h-full pt-32 w-full">
         <div className="text-white text-center flex justify-between p-2">
           <div className='w-2/3 p-1'>

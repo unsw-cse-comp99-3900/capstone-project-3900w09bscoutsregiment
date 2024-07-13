@@ -13,10 +13,10 @@ module.exports = {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       colors: {
-        'primary-theme-lb': '#0075FF',
-        'primary-theme-db': '#004699',
+        'primary-theme-lb': 'var(--primary-theme-lb)',
+        'primary-theme-db': 'var(--primary-theme-db)',
+        'bg-main': 'var(--primary-bg)',
       },
-      // still  unsure on how it works
       // colors: {
       //   accent: {
       //     1: "hsl(var(--color-accent1) / <alpha-value>)",
