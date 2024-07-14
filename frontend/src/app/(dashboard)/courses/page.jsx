@@ -119,7 +119,7 @@ export default function ListingCourses() {
     }
   };
 
-  const handleDeleteCourse = async (courseCode) => {
+  const handleDeleteCourse = async (courseId) => {
     try {
       await fetch(`http://localhost:${port}/api/course/delete`, {
         method: 'POST',
@@ -127,10 +127,10 @@ export default function ListingCourses() {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${localStorage.getItem('token')}`
         },
-        body: JSON.stringify({ courseId: courseCode })
+        body: JSON.stringify({ courseId: courseId })
       });
       // Remove the course from the list
-      setCourses(courses.filter(course => course.code !== courseCode));
+      setCourses(courses.filter(course => course.courseId !== courseId));
     } catch (error) {
       console.error('Error deleting course:', error);
     }
@@ -180,7 +180,7 @@ export default function ListingCourses() {
                   <button className="action-button" onClick={(e) => { e.stopPropagation(); handleFavoriteCourse(course); }}>
                     <FontAwesomeIcon icon={faStar} className={course.favorite ? 'favorite' : ''} />
                   </button>
-                  <button className="action-button" onClick={(e) => { e.stopPropagation(); handleDeleteCourse(course.code); }}>
+                  <button className="action-button" onClick={(e) => { e.stopPropagation(); handleDeleteCourse(course.courseId); }}>
                     <FontAwesomeIcon icon={faTrash} />
                   </button>
                 </div>
