@@ -78,7 +78,7 @@ courseRouter.get('/list', async (req, res) => {
     for (const c of analyseFns.categories) {
       infoList.push({category: c, value: 0}); 
     }
-    for (const outcome of courseList.outcomes) {
+    for (const outcome of course.outcomes) {
       const c = analyseFns.analyseOutcome(outcome);
       const infoBlock = infoList.find((i) => i.category == c);
       infoBlock.value += 1;
