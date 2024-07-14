@@ -9,7 +9,7 @@ import Link from 'next/link';
 
 export default function ListingCourses() {
   const router = useRouter();
-  useEffect(() => {
+  React.useEffect(() => {
     const token = localStorage.getItem('token') || null;
     if (token === null) {
       router.push('/');
@@ -64,7 +64,7 @@ export default function ListingCourses() {
         throw new Error('Network response was not ok');
       }
       const data = await response.json();
-      console.log(data[0])
+      console.log(data[0]);
       return data[0];
     } catch (error) {
       console.error('Error fetching course details:', error);
@@ -73,13 +73,14 @@ export default function ListingCourses() {
   };
 
   const handleCourseClick = async (course) => {
+    console.log(course);
     if (visitedCourses.some((visitedCourse) => visitedCourse.code === course.code)) {
       setVisitedCourses(visitedCourses.filter((visitedCourse) => visitedCourse.code !== course.code));
     } else {
       const fetchedCourse = await handleShowDetails(course);
       if (fetchedCourse) {
         const courseWithOutcomes = {
-          courseId: fetchedCourse._id,
+          courseId: fetchedCourse.courseId,
           title: fetchedCourse.title,
           code: fetchedCourse.code,
           year: fetchedCourse.year,
@@ -106,7 +107,7 @@ export default function ListingCourses() {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${localStorage.getItem('token')}`
         },
-        body: JSON.stringify({ courseId: course._id })
+        body: JSON.stringify({ courseId: course.courseId })
       });
       // Refresh course list
       const updatedCourses = courses.map((c) => 
@@ -146,93 +147,83 @@ export default function ListingCourses() {
   }).sort((a, b) => b.favorite - a.favorite);
 
   return (
-    <>
-      <div className="app">
-        <div className="content">
-          <div className="course-list">
-            <header className="header">
-              <input
-                type="text"
-                className='input-search'
-                placeholder="Search"
-                value={searchTerm}
-                onChange={handleSearchChange}
-              />
-            </header>
-            <button className="add-course-button">
-              <FontAwesomeIcon icon={faPlus} />
-              <Link href="/search">Add Course</Link>
-            </button>
-            <table className='courses'>
-              <thead>
-                <tr>
-                  <th>Code</th>
-                  <th>Name</th>
-                  <th>Term</th>
-                  <th>Year</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredCourses.map(course => (
-                  <tr 
-                  key={course.code}
-                  onClick={() => handleCourseClick(course)}
-                  className={`course-item ${visitedCourses.length !== 0 && visitedCourses.some(vc => vc.code === course.code) ? 'selected' : ''}`}
-                  >
-                    <td>{course.code}</td>
-                    <td className='description'>{course.title}</td>
-                    <td className='description'>{course.term}</td>
-                    <td className='description'>{course.year}</td>
-                    <td>
-                      <button className="action-button" onClick={(e) => { e.stopPropagation(); handleFavoriteCourse(course); }}>
-                        <FontAwesomeIcon icon={faStar} className={course.favorite ? 'favorite' : ''} />
-                      </button>
-                      <button className="action-button" onClick={(e) => { e.stopPropagation(); handleDeleteCourse(course.code); }}>
-                        <FontAwesomeIcon icon={faTrash} />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <div className="analysis">
-            <div className="course-details-container">
-              {visitedCourses.length !== 0 ? (
-                visitedCourses.map((course) => (
-                  <div key={course._id} className="course-details">
-                    <thead>
-                      <tr>
-                        <h2>{course.code}</h2>
-                        <h3>{course.title}</h3>
-                        <p>{course.year} {course.term}</p>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <ol>
-                        {course.outcomes.map((outcome, index) => (
-                          <li key={index}>{outcome}</li>
-                        ))}
-                      </ol>
-                    </tbody>
-                  </div>
-                ))
-              ) : (
-                <div className='normal-details'>
-                  <h2>Select a course to analyse</h2>
-                  <p>Nothing is selected</p>
+    <div className="app">
+      <div className="content">
+        <div className="course-list">
+          <header className="header">
+            <input
+              type="text"
+              className='input-search'
+              placeholder="Search"
+              value={searchTerm}
+              onChange={handleSearchChange}
+            />
+          </header>
+          <button className="add-course-button">
+            <FontAwesomeIcon icon={faPlus} />
+            <Link href="/search">Add Course</Link>
+          </button>
+          <div className="courses">
+            {filteredCourses.map(course => (
+              <div
+                key={course.code}
+                onClick={() => handleCourseClick(course)}
+                className={`course-item ${visitedCourses.some(vc => vc.code === course.code) ? 'selected' : ''}`}
+              >
+                <div className="course-info">
+                  <div className="course-code">{course.code}</div>
+                  <div className="course-title">{course.title}</div>
+                  <div className="course-term">{course.term}</div>
+                  <div className="course-year">{course.year}</div>
                 </div>
-              )}
-            </div>
-            {visitedCourses.length !== 0 && (
-              <button className="analysis-button">
-                Analyse Course
-              </button>
-            )}
+                <div className="course-actions">
+                  <button className="action-button" onClick={(e) => { e.stopPropagation(); handleFavoriteCourse(course); }}>
+                    <FontAwesomeIcon icon={faStar} className={course.favorite ? 'favorite' : ''} />
+                  </button>
+                  <button className="action-button" onClick={(e) => { e.stopPropagation(); handleDeleteCourse(course.code); }}>
+                    <FontAwesomeIcon icon={faTrash} />
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
+        <div className="analysis">
+        <div className="course-details-container">
+          {visitedCourses.length !== 0 ? (
+            visitedCourses.map((course) => (
+              <div key={course.courseId} className="course-details">
+                <div className="course-header">
+                  <h2>{course.code}</h2>
+                  <h3>{course.title}</h3>
+                  <p>{course.year} {course.term}</p>
+                </div>
+                <h2>Learning Outcomes:</h2>
+                <div className="course-outcomes">
+                  <ol>
+                    {course.outcomes.map((outcome, index) => (
+                      <li key={index}>{outcome}</li>
+                    ))}
+                  </ol>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="centered-container">
+              <div className='normal-details'>
+                <h2>Select a course to analyse</h2>
+                <p>Nothing is selected</p>
+              </div>
+            </div>
+          )}
+        </div>
+          {visitedCourses.length !== 0 && (
+            <button className="analysis-button">
+              Analyse Course
+            </button>
+          )}
+        </div>
       </div>
-    </>
+    </div>
   );
 }
