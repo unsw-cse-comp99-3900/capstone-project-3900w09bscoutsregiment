@@ -8,7 +8,7 @@ import analyseFns from '../controllers/analyseFns.js';
 
 const courseRouter = express.Router();
 
-courseRouter.use(authMIddleware);
+courseRouter.use(authMiddleware);
 
 courseRouter.get('/:code/:year/:term', async (req, res) => {
   const query = Course.find({});
@@ -42,6 +42,22 @@ courseRouter.get('/all', async (req, res) => {
   
 });
 
+// resposnse format
+// [
+//   {
+//     courseId,
+//     title,
+//     code,
+//     year,
+//     term,
+//     favorite,
+//     colour,
+//     info: [
+//       { category, value },
+//       { category, value },
+//     ]
+//   }
+// ]
 courseRouter.get('/list', async (req, res) => {
   const user = await User.findOne({_id: req.userId}).exec();  
   if (user == null) {
@@ -51,10 +67,19 @@ courseRouter.get('/list', async (req, res) => {
   for (const course of user.courses) {
     searchList.push({_id: course.courseId});
   }
-  const courseList = await Course.find({$or: searchList}, '_id title code year term').exec();
+  const courseList = await Course.find({$or: searchList}, '_id title code year term outcomes').exec();
   const output = new Array();
   for (const course of courseList) {
     const tempCourse = user.courses.find((elem) => elem.courseId.toString() == course._id.toString());
+    const infoList = new Array();
+    for (const c of analyseFns.categories) {
+      infoList.push({category: c, value: 0}); 
+    }
+    for (const outcome of courseList.outcomes) {
+      const c = analyseFns.analyseOutcome(outcome);
+      const infoBlock = infoList.find((i) => i.category == c);
+      infoBlock.value += 1;
+    }
     output.push({
       courseId: course._id,
       title: course.title,
@@ -62,7 +87,8 @@ courseRouter.get('/list', async (req, res) => {
       year: course.year,
       term: course.term,
       favorite: tempCourse.favorite,
-      colour: tempCourse.colour
+      colour: tempCourse.colour,
+      info: infoList
     });
   }
   console.log(output);

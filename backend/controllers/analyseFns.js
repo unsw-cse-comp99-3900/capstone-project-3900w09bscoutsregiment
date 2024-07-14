@@ -212,4 +212,4 @@ const makePng = (analysis, name) => {
   fs.writeFileSync(name, buffer);
 };
 
-export default { loadFile, analyseOutcome, analyseCourses, makePng };
+export default { categories, loadFile, analyseOutcome, analyseCourses, makePng };
