@@ -42,13 +42,13 @@ export default function ListingCourses() {
       term: 'Term 1',
       year: '2024',
       info: [
-        { category: 'Create', value: 60 },
-        { category: 'Evaluate', value: 40 },
-        { category: 'Analyse', value: 20 },
-        { category: 'Apply', value: 80 },
-        { category: 'Understand', value: 50 },
-        { category: 'Remember', value: 70 },
-        { category: 'Other', value: 30 },
+        { category: 'Create', value: 6 },
+        { category: 'Evaluate', value: 4 },
+        { category: 'Analyse', value: 2 },
+        { category: 'Apply', value: 8 },
+        { category: 'Understand', value: 5 },
+        { category: 'Remember', value: 7 },
+        { category: 'Other', value: 3 },
       ],
     },
     {
@@ -57,13 +57,13 @@ export default function ListingCourses() {
       term: 'Term 1',
       year: '2024',
       info: [
-        { category: 'Create', value: 50 },
-        { category: 'Evaluate', value: 30 },
-        { category: 'Analyse', value: 60 },
-        { category: 'Apply', value: 70 },
-        { category: 'Understand', value: 40 },
-        { category: 'Remember', value: 90 },
-        { category: 'Other', value: 20 },
+        { category: 'Create', value: 5 },
+        { category: 'Evaluate', value: 3 },
+        { category: 'Analyse', value: 6 },
+        { category: 'Apply', value: 7 },
+        { category: 'Understand', value: 4 },
+        { category: 'Remember', value: 9 },
+        { category: 'Other', value: 2 },
       ],
     },
   ]);
@@ -178,6 +178,7 @@ export default function ListingCourses() {
                   key={course.code}
                   dataKey={course.code}
                   fill={colors[idx]}
+                  stackId='a'
                 />
               ))}
             </BarChart>
