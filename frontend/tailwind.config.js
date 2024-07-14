@@ -15,7 +15,10 @@ module.exports = {
       colors: {
         'primary-theme-lb': 'var(--primary-theme-lb)',
         'primary-theme-db': 'var(--primary-theme-db)',
-        'bg-main': 'var(--primary-bg)',
+        'main-bkg': 'var(--primary-bkg)',
+        'main-txt': 'var(--primary-txt)',
+        'secondary-bkg': 'var(--secondary-bkg)',
+        'secondary-txt': 'var(--secondary-txt)',
       },
       // colors: {
       //   accent: {

@@ -65,9 +65,12 @@
 @layer base {
 
   :root[class="dark"] {
-    --primary-theme-lb: #202123;
-    --primary-theme-db:rgb(24, 26, 29);
-    --primary-bg: #000000;
+    --primary-theme-lb: #0075FF;
+    --primary-theme-db:#004699;
+    --primary-bkg: #000000;
+    --primary-txt: #ffffff;
+    --secondary-bkg: #ffffff; /*fix thisr*/
+    --secondary-txt: #000000;
     --color-bkg-lighter: #000000;
     --color-bkg-lightest: #718096;
     --color-content: #1c1f1c;
@@ -76,6 +79,10 @@
   :root[class="light"] {
     --primary-theme-lb: #0075FF;
     --primary-theme-db: #004699;
+    --primary-bkg: #ffffff;
+    --primary-txt: #000000;
+    --secondary-bkg: #000000;
+    --secondary-txt: #ffffff;
     --color-bkg-light: #dbe9fd;
     --color-content: #ffffff;
     --color-text-primary: #000000;

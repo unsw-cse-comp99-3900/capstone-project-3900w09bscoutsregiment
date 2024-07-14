@@ -21,12 +21,12 @@ export default function Home() {
   }, [])
 
   return (
-    <main className="flex bg-main flex-col p-0 b-0 m-0 items-center justify-between">
+    <main className="flex bg-main-bkg flex-col p-0 b-0 m-0 items-center justify-between">
       <div className="bg-gradient-to-b px-12 from-primary-theme-db to-primary-theme-lb h-full pt-32 w-full">
-        <div className="text-white text-center flex justify-between p-2">
+        <div className="text-secondary-txt text-center flex justify-between p-2">
           <div className='w-2/3 p-1'>
             <h1 className="text-5xl font-bold text-left">Improve Your <br />Course <span className="underline font-light">Outcomes</span></h1>
-            <button className="flex justify-start mt-4 px-6 py-2 bg-blue-500 hover:text-primary-theme-db hover:opacity-80 text-primary-theme-lb italic bg-white font-semibold rounded-lg">
+            <button className="flex justify-start mt-4 px-6 py-2 hover:text-primary-theme-db hover:opacity-80 text-primary-theme-lb italic bg-main-bkg font-semibold rounded-lg">
               Get Started
             </button>
             <p className="mt-2 text-left">We will help you find a pathway</p>
@@ -69,13 +69,13 @@ export default function Home() {
 
       <br></br>
 
-      <div className="bg-blue-500 text-white p-4 flex items-center justify-center">
+      <div className="bg-primary-theme-lb text-secondary-txt p-4 flex items-center justify-center">
         <iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
       </div>
       <div>
-        <button className="flex justify-start mt-4 px-6 py-2 bg-blue-500 hover:bg-blue-700 text-white italic bg-primary-theme-lb font-semibold rounded-lg">Feedback</button>
+        <button className="flex justify-start mt-4 px-6 py-2 bg-primary-theme-lb hover:bg-blue-700 text-secondary-txt italic bg-primary-theme-lb font-semibold rounded-lg">Feedback</button>
       </div>
-      <div>Want to help improve our app? Share your feedback!</div>
+      <div className='text-main-txt'>Want to help improve our app? Share your feedback!</div>
       <FooterPage />
     </main>
 
