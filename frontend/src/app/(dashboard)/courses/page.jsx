@@ -3,28 +3,25 @@
 import React, { useState, useEffect } from 'react';
 import './listingCourses.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faStar, faTrash, faUser, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-//import { useNavigate } from 'react-router-dom';
+import { faPlus, faStar, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 export default function ListingCourses() {
-  // Ensure stay logged in
   const router = useRouter();
-  React.useEffect(() => {
-    const token = localStorage.getItem('token') || null
+  useEffect(() => {
+    const token = localStorage.getItem('token') || null;
     if (token === null) {
       router.push('/');
-      return
+      return;
     }
-  }, [])
+  }, []);
 
-  //const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [courses, setCourses] = useState([]);
   const [visitedCourses, setVisitedCourses] = useState([]);
   const port = 5000;
-  
+
   useEffect(() => {
     const fetchUserCourses = async () => {
       try {
@@ -75,16 +72,10 @@ export default function ListingCourses() {
     }
   };
 
-  /*
-  There is something wrong in this part, TODO: TO be fix later
-  */
   const handleCourseClick = async (course) => {
-    console.log(course);
     if (visitedCourses.some((visitedCourse) => visitedCourse.code === course.code)) {
-      // Course already visited, remove it
       setVisitedCourses(visitedCourses.filter((visitedCourse) => visitedCourse.code !== course.code));
     } else {
-      // Course not visited, fetch and add it
       const fetchedCourse = await handleShowDetails(course);
       if (fetchedCourse) {
         const courseWithOutcomes = {
@@ -94,7 +85,7 @@ export default function ListingCourses() {
           year: fetchedCourse.year,
           term: fetchedCourse.term,
           favorite: course.favorite,
-          colour: course.colour, // default value or replace with actual value if available
+          colour: course.colour,
           outcomes: fetchedCourse.outcomes,
         };
         setVisitedCourses([...visitedCourses, courseWithOutcomes]);
@@ -106,14 +97,42 @@ export default function ListingCourses() {
     setSearchTerm(event.target.value);
   };
 
-  const handleSaveCourse = (course) => {
-    if (!visitedCourses.some((visitedCourse) => visitedCourse.code === course.code)) {
-      setVisitedCourses([...visitedCourses, course]);
+  const handleFavoriteCourse = async (course) => {
+    const endpoint = course.favorite ? 'unfavorite' : 'favorite';
+    try {
+      await fetch(`http://localhost:${port}/api/course/${endpoint}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({ courseId: course._id })
+      });
+      // Refresh course list
+      const updatedCourses = courses.map((c) => 
+        c.code === course.code ? { ...c, favorite: !c.favorite } : c
+      );
+      setCourses(updatedCourses);
+    } catch (error) {
+      console.error(`Error ${course.favorite ? 'unfavoriting' : 'favoriting'} course:`, error);
     }
   };
 
-  const handleDeleteCourse = (courseCode) => {
-    setCourses(courses.filter(course => course.code !== courseCode));
+  const handleDeleteCourse = async (courseCode) => {
+    try {
+      await fetch(`http://localhost:${port}/api/course/delete`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({ courseId: courseCode })
+      });
+      // Remove the course from the list
+      setCourses(courses.filter(course => course.code !== courseCode));
+    } catch (error) {
+      console.error('Error deleting course:', error);
+    }
   };
 
   const filteredCourses = courses.filter(course => {
@@ -124,8 +143,8 @@ export default function ListingCourses() {
       course.term.toLowerCase().includes(searchTermLower) ||
       course.year.toString().includes(searchTermLower)
     );
-  });
-  
+  }).sort((a, b) => b.favorite - a.favorite);
+
   return (
     <>
       <div className="app">
@@ -166,8 +185,8 @@ export default function ListingCourses() {
                     <td className='description'>{course.term}</td>
                     <td className='description'>{course.year}</td>
                     <td>
-                      <button className="action-button" onClick={() => handleSaveCourse(course)}>
-                        <FontAwesomeIcon icon={faStar} />
+                      <button className="action-button" onClick={(e) => { e.stopPropagation(); handleFavoriteCourse(course); }}>
+                        <FontAwesomeIcon icon={faStar} className={course.favorite ? 'favorite' : ''} />
                       </button>
                       <button className="action-button" onClick={(e) => { e.stopPropagation(); handleDeleteCourse(course.code); }}>
                         <FontAwesomeIcon icon={faTrash} />
@@ -180,38 +199,37 @@ export default function ListingCourses() {
           </div>
           <div className="analysis">
             <div className="course-details-container">
-              {visitedCourses.length !== 0? (
-
+              {visitedCourses.length !== 0 ? (
                 visitedCourses.map((course) => (
-                    <div key={course._id} className="course-details">
-                      <thead>
-                        <tr>
-                          <h2>{course.code}</h2>
-                          <h3>{course.title}</h3>
-                          <p>{course.year} {course.term}</p>
-                        </tr>
-                      </thead>
-                      <tbody>
+                  <div key={course._id} className="course-details">
+                    <thead>
+                      <tr>
+                        <h2>{course.code}</h2>
+                        <h3>{course.title}</h3>
+                        <p>{course.year} {course.term}</p>
+                      </tr>
+                    </thead>
+                    <tbody>
                       <ol>
                         {course.outcomes.map((outcome, index) => (
                           <li key={index}>{outcome}</li>
                         ))}
                       </ol>
-                      </tbody>
-                    </div>
-                  ))
-                ) : (
-                  <div className='normal-details'>
-                    <h2>Select a course to analyse</h2>
-                    <p>Nothing is selected</p>
+                    </tbody>
                   </div>
+                ))
+              ) : (
+                <div className='normal-details'>
+                  <h2>Select a course to analyse</h2>
+                  <p>Nothing is selected</p>
+                </div>
               )}
             </div>
             {visitedCourses.length !== 0 && (
-                <button className="analysis-button">
-                  Analyse Course
-                </button>
-              )}
+              <button className="analysis-button">
+                Analyse Course
+              </button>
+            )}
           </div>
         </div>
       </div>
