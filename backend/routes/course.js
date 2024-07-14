@@ -67,6 +67,9 @@ courseRouter.get('/list', async (req, res) => {
   for (const course of user.courses) {
     searchList.push({_id: course.courseId});
   }
+  if (searchList.length < 1) {
+    return res.json([]);
+  }
   const courseList = await Course.find({$or: searchList}, '_id title code year term outcomes').exec();
   const output = new Array();
   for (const course of courseList) {
