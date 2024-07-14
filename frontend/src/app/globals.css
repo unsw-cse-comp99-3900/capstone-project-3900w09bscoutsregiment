@@ -67,7 +67,8 @@
   :root[class="dark"] {
     --primary-theme-lb: #0075FF;
     --primary-theme-db:#004699;
-    --primary-bkg: #000000;
+    /* #2236fd for new color? */
+    --primary-bkg: #0b0f21;
     --primary-txt: #ffffff;
     --secondary-bkg: #ffffff; /*fix thisr*/
     --secondary-txt: #000000;
