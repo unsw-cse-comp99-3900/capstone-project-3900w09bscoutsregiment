@@ -43,6 +43,7 @@ app.use('/api/course', courseRouter);
 
 app.use('/api/profile', profileRouter);
 
+
 db.once('open', async () => {
   console.log('Connected to MongoDB');
   analyseFns.loadFile('./verbs.txt');
