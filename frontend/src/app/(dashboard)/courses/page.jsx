@@ -36,51 +36,54 @@ export default function ListingCourses() {
 
   const [searchTerm, setSearchTerm] = useState('');
   const [courses, setCourses] = useState([]);
-  const [courses, setCourses] = useState([
-    {
-      code: 'COMP3311',
-      name: 'Database Systems',
-      term: 'Term 1',
-      year: '2024',
-      info: [
-        { category: 'Create', value: 6 },
-        { category: 'Evaluate', value: 4 },
-        { category: 'Analyse', value: 2 },
-        { category: 'Apply', value: 8 },
-        { category: 'Understand', value: 5 },
-        { category: 'Remember', value: 7 },
-        { category: 'Other', value: 3 },
-      ],
-    },
-    {
-      code: 'COMP3331',
-      name: 'Computer Networks and Applications',
-      term: 'Term 1',
-      year: '2024',
-      info: [
-        { category: 'Create', value: 5 },
-        { category: 'Evaluate', value: 3 },
-        { category: 'Analyse', value: 6 },
-        { category: 'Apply', value: 7 },
-        { category: 'Understand', value: 4 },
-        { category: 'Remember', value: 9 },
-        { category: 'Other', value: 2 },
-      ],
-    },
-  ]);
+  // const [courses, setCourses] = useState([
+  //   {
+  //     code: 'COMP3311',
+  //     name: 'Database Systems',
+  //     term: 'Term 1',
+  //     year: '2024',
+  //     info: [
+  //       { category: 'Create', value: 6 },
+  //       { category: 'Evaluate', value: 4 },
+  //       { category: 'Analyse', value: 2 },
+  //       { category: 'Apply', value: 8 },
+  //       { category: 'Understand', value: 5 },
+  //       { category: 'Remember', value: 7 },
+  //       { category: 'Other', value: 3 },
+  //     ],
+  //   },
+  //   {
+  //     code: 'COMP3331',
+  //     name: 'Computer Networks and Applications',
+  //     term: 'Term 1',
+  //     year: '2024',
+  //     info: [
+  //       { category: 'Create', value: 5 },
+  //       { category: 'Evaluate', value: 3 },
+  //       { category: 'Analyse', value: 6 },
+  //       { category: 'Apply', value: 7 },
+  //       { category: 'Understand', value: 4 },
+  //       { category: 'Remember', value: 9 },
+  //       { category: 'Other', value: 2 },
+  //     ],
+  //   },
+  // ]);
   const [visitedCourses, setVisitedCourses] = useState([]);
   const [showAnalysisChart, setShowAnalysisChart] = useState(false);
   const port = 5000;
-  
+
   useEffect(() => {
     const fetchUserCourses = async () => {
       try {
-        const response = await fetch(`http://localhost:${port}/api/course/list`, {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('token')}`
+        const response = await fetch(
+          `http://localhost:${port}/api/course/list`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
           }
-        });
+        );
         if (!response.ok) {
           throw new Error('Failed to fetch user courses');
         }
@@ -105,16 +108,19 @@ export default function ListingCourses() {
   const handleShowDetails = async (course) => {
     const shortenedTerm = shortenTerm(course.term);
     try {
-      const response = await fetch(`http://localhost:${port}/api/course/${course.code}/${course.year}/${shortenedTerm}`, {
-        headers: {
-          authorization: `Bearer ${localStorage.getItem('token')}`
+      const response = await fetch(
+        `http://localhost:${port}/api/course/${course.code}/${course.year}/${shortenedTerm}`,
+        {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
         }
-      });
+      );
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
       const data = await response.json();
-      console.log(data[0])
+      console.log(data[0]);
       return data[0];
     } catch (error) {
       console.error('Error fetching course details:', error);
@@ -173,7 +179,7 @@ export default function ListingCourses() {
     setCourses(courses.filter((course) => course.code !== courseCode));
   };
 
-  const filteredCourses = courses.filter(course => {
+  const filteredCourses = courses.filter((course) => {
     const searchTermLower = searchTerm.toLowerCase();
     return (
       course.title.toLowerCase().includes(searchTermLower) ||
@@ -182,14 +188,6 @@ export default function ListingCourses() {
       course.year.toString().includes(searchTermLower)
     );
   });
-  
-  const filteredCourses = courses.filter(
-    (course) =>
-      course.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      course.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      course.term.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      course.year.toLowerCase().includes(searchTerm.toLowerCase())
-  );
 
   const showAnalysis = () => {
     setShowAnalysisChart(true);
@@ -284,7 +282,7 @@ export default function ListingCourses() {
             </header>
             <button className='add-course-button'>
               <FontAwesomeIcon icon={faPlus} />
-              <Link href="/search">Add Course</Link>
+              <Link href='/search'>Add Course</Link>
             </button>
             <table className='courses'>
               <thead>
@@ -297,20 +295,16 @@ export default function ListingCourses() {
                 </tr>
               </thead>
               <tbody>
-                {filteredCourses.map(course => (
-                  <tr 
-                  key={course.code}
-                  onClick={() => handleCourseClick(course)}
-                  className={`course-item ${visitedCourses.length !== 0 && visitedCourses.some(vc => vc.code === course.code) ? 'selected' : ''}`}
                 {filteredCourses.map((course) => (
                   <tr
                     key={course.code}
+                    onClick={() => handleCourseClick(course)}
                     className={`course-item ${
+                      visitedCourses.length !== 0 &&
                       visitedCourses.some((vc) => vc.code === course.code)
                         ? 'selected'
                         : ''
                     }`}
-                    onClick={() => handleCourseClick(course)}
                   >
                     <td>{course.code}</td>
                     <td className='description'>{course.title}</td>
@@ -349,16 +343,16 @@ export default function ListingCourses() {
                           <h2>{course.code}</h2>
                           <h3>{course.title}</h3>
                           <p>
-                        {course.year} {course.term}
-                      </p>
+                            {course.year} {course.term}
+                          </p>
                         </tr>
                       </thead>
                       <tbody>
-                      <ol>
-                        {course.outcomes.map((outcome, index) => (
-                          <li key={index}>{outcome}</li>
-                        ))}
-                      </ol>
+                        <ol>
+                          {course.outcomes.map((outcome, index) => (
+                            <li key={index}>{outcome}</li>
+                          ))}
+                        </ol>
                       </tbody>
                     </div>
                   ))
@@ -391,4 +385,3 @@ export default function ListingCourses() {
     </>
   );
 }
-
