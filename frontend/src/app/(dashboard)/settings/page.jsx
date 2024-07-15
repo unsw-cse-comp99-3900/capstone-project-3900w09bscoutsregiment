@@ -1,3 +1,4 @@
+import ThemeToggle from "@/app/Components/ThemeToggle"
 import Link from "next/link"
 
 const Settings = () => {
@@ -23,7 +24,9 @@ const Settings = () => {
           <Link href="/" className="underline italic">Change Password</Link>
         </div>
       </div>
+      <ThemeToggle />
     </div>
+
   )
 }
 

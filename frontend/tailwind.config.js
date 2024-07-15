@@ -16,6 +16,15 @@ module.exports = {
         'primary-theme-lb': '#0075FF',
         'primary-theme-db': '#004699',
       },
+      // still  unsure on how it works
+      // colors: {
+      //   accent: {
+      //     1: "hsl(var(--color-accent1) / <alpha-value>)",
+      //     2: "hsl(var(--color-accent2) / <alpha-value>)",
+      //   },
+      //   bkg: "hsl(var(--color-bkg) / <alpha-value>)",
+      //   content: "hsl(var(--color-content) / <alpha-value>)",
+      // },
     },
   },
   plugins: [],

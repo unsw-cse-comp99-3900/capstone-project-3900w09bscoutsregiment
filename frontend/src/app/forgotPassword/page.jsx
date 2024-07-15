@@ -69,24 +69,25 @@ export default function ForgotPassword() {
             />
           </div>
 
-          {/* Send email */}
-          <div className="items-center justify-between relative top-32">
-            <button
-              id="submit"
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold w-1/4 italic py-2 px-4 pb-3: rounded focus:outline-none focus:shadow-outline mb-5"
-              type="button"
-              onClick={sendEmailForgotPassword}
-            >
-              Send Email
-            </button>
-          </div>
-          <div className="flex items-center justify-center relative top-52">
-            Return to &nbsp;
-            <Link href="/" className="text-primary-theme-lb underline">
-              Home
-            </Link>
-          </div>
-        </form>
+            {/* Send email */}
+            <div className="items-center justify-between pt-2">
+              <button
+                id="submit"
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold w-1/4 italic py-2 px-4 pb-3: rounded focus:outline-none focus:shadow-outline mb-5"
+                type="button"
+                onClick={sendEmailForgotPassword}
+              >
+                Send Email
+              </button>
+            </div>
+            <div className="flex items-center justify-center pt-2">
+              Return to &nbsp;
+              <Link href="/" className="text-primary-theme-lb underline">
+                Home
+              </Link>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );
