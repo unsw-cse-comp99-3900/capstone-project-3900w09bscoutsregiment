@@ -159,12 +159,14 @@ export default function ListingCourses() {
               onChange={handleSearchChange}
             />
           </header>
-          <button className="add-course-button">
-            <FontAwesomeIcon icon={faPlus} />
-            <Link href="/search">Add Course</Link>
-          </button>
+          <Link href="/search">
+            <button className="add-course-button">
+              <FontAwesomeIcon icon={faPlus} />Add Course
+            </button>
+          </Link>
           <div className="courses">
-            {filteredCourses.map(course => (
+          {filteredCourses.length !== 0 ? (
+            filteredCourses.map(course => (
               <div
                 key={course.code}
                 onClick={() => handleCourseClick(course)}
@@ -185,26 +187,36 @@ export default function ListingCourses() {
                   </button>
                 </div>
               </div>
-            ))}
+            ))
+          ) : (
+            <div className="centered-container">
+              <div className='normal-details'>
+                <h2>Empty, No Courses</h2>
+                <p>Click on the Add Course Button to find courses</p>
+                <p>to can add to the list</p>
+              </div>
+            </div>
+          )}
           </div>
         </div>
         <div className="analysis">
-        <div className="course-details-container">
           {visitedCourses.length !== 0 ? (
             visitedCourses.map((course) => (
-              <div key={course.courseId} className="course-details">
-                <div className="course-header">
-                  <h2>{course.code}</h2>
-                  <h3>{course.title}</h3>
-                  <p>{course.year} {course.term}</p>
-                </div>
-                <h2>Learning Outcomes:</h2>
-                <div className="course-outcomes">
-                  <ol>
-                    {course.outcomes.map((outcome, index) => (
-                      <li key={index}>{outcome}</li>
-                    ))}
-                  </ol>
+              <div className="course-details-container">
+                <div key={course.courseId} className="course-details">
+                  <div className="course-header">
+                    <h2>{course.code}</h2>
+                    <h3>{course.title}</h3>
+                    <p>{course.year} {course.term}</p>
+                  </div>
+                  <h2>Learning Outcomes:</h2>
+                  <div className="course-outcomes">
+                    <ol>
+                      {course.outcomes.map((outcome, index) => (
+                        <li key={index}>{outcome}</li>
+                      ))}
+                    </ol>
+                  </div>
                 </div>
               </div>
             ))
@@ -216,7 +228,6 @@ export default function ListingCourses() {
               </div>
             </div>
           )}
-        </div>
           {visitedCourses.length !== 0 && (
             <button className="analysis-button">
               Analyse Course
