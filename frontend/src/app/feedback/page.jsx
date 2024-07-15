@@ -57,6 +57,15 @@ export default function sendFeedback() {
     }
   };
 
+  const resetForm = () => {
+    setEmail('');
+    setName('');
+    setFeedback('');
+    setEmailError(false);
+    setNameError(false);
+    setFeedbackError(false);
+  };
+
   const sendEmail = (e) => {
     e.preventDefault();
 
@@ -67,12 +76,13 @@ export default function sendFeedback() {
       .then(
         () => {
           console.log('SUCCESS!');
+          resetForm();
+          form.current.reset();
         },
         (error) => {
           console.log('FAILED...', error.text);
         }
       );
-    e.target.reset();
   };
 
   return (
