@@ -83,6 +83,7 @@ courseRouter.get('/list', async (req, res) => {
       const infoBlock = infoList.find((i) => i.category == c);
       infoBlock.value += 1;
     }
+    console.log(infoList);
     output.push({
       courseId: course._id,
       title: course.title,
@@ -196,11 +197,11 @@ courseRouter.post('/unfavorite', async (req, res) => {
   res.send('ok');
 });
 
-courseRouter.post('/analyse', async (req, res) => {
-  const courses = req.body.courses;
-  // maybe check input is ok
-  const analysis = analyseFns.analyseCourses(courses);
-  return res.json(analysis);
-});
+// courseRouter.post('/analyse', async (req, res) => {
+//   const courses = req.body.courses;
+//   // maybe check input is ok
+//   const analysis = analyseFns.analyseCourses(courses);
+//   return res.json(analysis);
+// });
 
 export default courseRouter;
