@@ -20,7 +20,7 @@ send a request to `/api/course/COMP1511/2024/T1`.
   title: string (e.g. 'Financial Accounting Fundamentals'),
   code: string (e.g. 'ACCT2511'),
   year: number (e.g. 2024),
-  term: string (e.g. "Term 1"),
+  term: string (e.g. 'Term 1'),
   outcomes: [
     string (e.g. Define, identify, and classify economic transactions into components),
     ...
@@ -28,7 +28,7 @@ send a request to `/api/course/COMP1511/2024/T1`.
 }
 ```
 
-## get `/all`
+## GET `/all`
 
 This URL provides a list of all of the courses in the database, it can be filtered 
 with any of three query string options.
@@ -48,9 +48,48 @@ with any of three query string options.
     title: string (e.g. 'Financial Accounting Fundamentals'),
     code: string (e.g. 'ACCT2511'),
     year: number (e.g. 2024),
-    term: string (e.g. "Term 1"),
+    term: string (e.g. 'Term 1'),
   },
   ... 
+]
+```
+
+## GET `/list`
+
+> NOTE: might not need to return colour as it might not be used
+
+> NOTE: might change `courseId` to `_id` for consistency
+
+> NOTE: might make this return all the course outcomes to avoid additional 
+> web requests
+
+This URL provides the list of courses that have been added to the current user's 
+account. It provides the basic information for each course along with whether 
+the user has favorited this course and what colour it has been assigned. It also
+provides the analysis of the course outcomes in the form of each taxonomical category
+paired with the number of outcomes that fall into the category.
+
+### Response Format
+
+```
+[
+  {
+    _id: 24 character hexadecimal string,
+    title: string (e.g. 'Financial Accounting Fundamentals'),
+    code: string (e.g. 'ACCT2511'),
+    year: number (e.g. 2024),
+    term: string (e.g. 'Term 1'),
+    favorite: boolean,
+    colour: hexadecimal colour (e.g. '#a3f334'),
+    info: [
+      {
+        category: string (e.g. 'understand')
+        value: number (e.g. 2)
+      },
+      ...
+    ]
+  },
+  ...
 ]
 ```
 
