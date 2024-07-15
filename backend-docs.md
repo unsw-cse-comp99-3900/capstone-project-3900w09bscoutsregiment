@@ -1,10 +1,58 @@
-# Course Interface
+# `/api/course` Interface
 
-## Getting a list of courses
+All of the following URLs are created by prepending `/api/course`, for example
+the `/list` below is accessed via the URL `/api/course/list`.
 
-Currently done by querying `/courses?search=foo&year=2024&term=T2`, this should 
-search for `foo` as a substring of either the course title or code, alongside the 
-year and term restrictions.
+## GET `/:code/:year/:term`
+
+> NOTE: this interface might change to use the database ID for a course
+
+Takes the unique combination of course code, year and term and provides the
+full details for the associated course. The parameters are passed through the 
+URL for example to access COMP1511, from the year 2024 in term 1 you would 
+send a request to `/api/course/COMP1511/2024/T1`.
+
+### Response Format
+
+```
+{
+  _id: 24 character hexadecimal string,
+  title: string (e.g. 'Financial Accounting Fundamentals'),
+  code: string (e.g. 'ACCT2511'),
+  year: number (e.g. 2024),
+  term: string (e.g. "Term 1"),
+  outcomes: [
+    string (e.g. Define, identify, and classify economic transactions into components),
+    ...
+  ]
+}
+```
+
+## get `/all`
+
+This URL provides a list of all of the courses in the database, it can be filtered 
+with any of three query string options.
+
+- `search` takes a string that is used to match course titles and codes and returns
+  only matching courses.
+- `term` takes a term and filters the list for courses in that term,
+  e.g. T1 or T2.
+- `year` takes a year and filters the list for courses that run in that year.
+
+### Response Format
+
+```
+[
+  {
+    _id: 24 character hexadecimal string,
+    title: string (e.g. 'Financial Accounting Fundamentals'),
+    code: string (e.g. 'ACCT2511'),
+    year: number (e.g. 2024),
+    term: string (e.g. "Term 1"),
+  },
+  ... 
+]
+```
 
 # Terms
 
