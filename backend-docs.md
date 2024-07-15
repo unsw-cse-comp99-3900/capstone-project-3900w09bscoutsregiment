@@ -93,6 +93,16 @@ paired with the number of outcomes that fall into the category.
 ]
 ```
 
+## POST `/add` and `/delete`
+
+These URLs are used to add or delete courses from the current user's account.
+The body of the request contains the `courseId` that is to be added.
+
+## POST `/favorite` and `/unfavorite`
+
+These URLs are used to record the favorite status of a course in the user's 
+account. The body of the request provides the `courseId` that is to be favorited.
+
 # Terms
 
 We want to be able to track terms, but terms are more complicated than 
