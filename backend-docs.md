@@ -74,7 +74,7 @@ paired with the number of outcomes that fall into the category.
 ```
 [
   {
-    _id: 24 character hexadecimal string,
+    courseId: 24 character hexadecimal string,
     title: string (e.g. 'Financial Accounting Fundamentals'),
     code: string (e.g. 'ACCT2511'),
     year: number (e.g. 2024),
