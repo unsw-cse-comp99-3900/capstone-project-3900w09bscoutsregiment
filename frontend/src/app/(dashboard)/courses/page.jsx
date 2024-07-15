@@ -7,21 +7,11 @@ import {
   faPlus,
   faStar,
   faTrash,
-  faUser,
   faArrowLeft,
 } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from 'recharts';
+import displayChart from './analysisChart';
 
 export default function ListingCourses() {
   const router = useRouter();
@@ -97,11 +87,15 @@ export default function ListingCourses() {
     if (
       visitedCourses.some((visitedCourse) => visitedCourse.code === course.code)
     ) {
-      setVisitedCourses(
-        visitedCourses.filter(
-          (visitedCourse) => visitedCourse.code !== course.code
-        )
+      const newVisitedCourses = visitedCourses.filter(
+        (visitedCourse) => visitedCourse.code !== course.code
       );
+
+      setVisitedCourses(newVisitedCourses);
+
+      if (newVisitedCourses.length === 0) {
+        setAnalysisChart(false);
+      }
     } else {
       const fetchedCourse = await handleShowDetails(course);
       if (fetchedCourse) {
@@ -178,61 +172,12 @@ export default function ListingCourses() {
     })
     .sort((a, b) => b.favorite - a.favorite);
 
-  /* ************* Analysis functions ************* */
   const showAnalysis = () => {
     setAnalysisChart(true);
   };
 
   const hideAnalysis = () => {
     setAnalysisChart(false);
-  };
-
-  const displayChart = () => {
-    if (visitedCourses.length === 0) return null;
-
-    const data = [];
-    const categories = [
-      'create',
-      'evaluate',
-      'analyse',
-      'apply',
-      'understand',
-      'remember',
-      'none',
-    ];
-
-    categories.forEach((category) => {
-      const obj = { category };
-
-      visitedCourses.forEach((course) => {
-        const info = course.info.find((c) => c.category === category);
-        obj[course.code] = info ? info.value : 0;
-      });
-
-      data.push(obj);
-    });
-
-    return (
-      <div style={{ width: '100%', height: '300px', marginTop: '5em' }}>
-        <ResponsiveContainer>
-          <BarChart layout='vertical' width={800} height={300} data={data}>
-            <CartesianGrid strokeDasharray='3 3' />
-            <XAxis type='number' />
-            <YAxis dataKey='category' type='category' width={150} />
-            <Tooltip />
-            <Legend />
-            {visitedCourses.map((course) => (
-              <Bar
-                key={course.code}
-                dataKey={course.code}
-                fill={`#${Math.floor(Math.random() * 16777215).toString(16)}`}
-                name={course.code}
-              />
-            ))}
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
-    );
   };
 
   return (
@@ -330,7 +275,7 @@ export default function ListingCourses() {
             </div>
           ) : (
             <>
-              {displayChart()}
+              {displayChart(visitedCourses)}
               <button
                 className='analysis-button'
                 onClick={() => hideAnalysis()}
