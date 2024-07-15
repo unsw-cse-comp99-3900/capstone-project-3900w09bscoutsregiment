@@ -25,14 +25,14 @@ export default function Home() {
       <div className="bg-gradient-to-b px-12 from-primary-theme-db to-primary-theme-lb h-full pt-32 w-full">
         <div className="text-secondary-txt text-center flex justify-between p-2">
           <div className='w-2/3 p-1'>
-            <h1 className="text-5xl font-bold text-left">Improve Your <br />Course <span className="underline font-light">Outcomes</span></h1>
-            <button className="flex justify-start mt-4 px-6 py-2 hover:text-primary-theme-db hover:opacity-80 text-primary-theme-lb italic bg-main-bkg font-semibold rounded-lg">
+            <h1 className="text-5xl font-bold text-left text-white">Improve Your <br />Course <span className="underline font-light">Outcomes</span></h1>
+            <button className="flex justify-start mt-4 px-6 py-2 hover:text-primary-theme-db hover:opacity-80 text-primary-theme-lb italic bg-white font-semibold rounded-lg">
               Get Started
             </button>
-            <p className="mt-2 text-left">We will help you find a pathway</p>
+            <p className="mt-2 text-left text-white">We will help you find a pathway</p>
           </div>
           <div className=' p-1'>
-            <Image src="/homepage/images/clip.svg" alt="Example3" className="p-0 m-0 " width={500} height={500} />
+            <Image src="/homepage/images/clip.svg" alt="Example3" className="p-0 m-0 scale-150" width={500} height={500} />
 
           </div>
         </div>
