@@ -10,7 +10,6 @@ import {
   faUser,
   faArrowLeft,
 } from '@fortawesome/free-solid-svg-icons';
-import { faPlus, faStar, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
@@ -37,7 +36,7 @@ export default function ListingCourses() {
   const [searchTerm, setSearchTerm] = useState('');
   const [courses, setCourses] = useState([]);
   const [visitedCourses, setVisitedCourses] = useState([]);
-  const [showAnalysisChart, setShowAnalysisChart] = useState(false);
+  const [analysisChart, setAnalysisChart] = useState(false);
   const port = 5000;
 
   useEffect(() => {
@@ -56,7 +55,6 @@ export default function ListingCourses() {
           throw new Error('Failed to fetch user courses');
         }
         const data = await response.json();
-        console.log('course list', data);
         setCourses(data);
       } catch (error) {
         console.error('Error fetching user courses:', error);
@@ -88,7 +86,6 @@ export default function ListingCourses() {
         throw new Error('Network response was not ok');
       }
       const data = await response.json();
-      console.log(data[0]);
       return data[0];
     } catch (error) {
       console.error('Error fetching course details:', error);
@@ -97,7 +94,6 @@ export default function ListingCourses() {
   };
 
   const handleCourseClick = async (course) => {
-    console.log(course);
     if (
       visitedCourses.some((visitedCourse) => visitedCourse.code === course.code)
     ) {
@@ -110,7 +106,7 @@ export default function ListingCourses() {
       const fetchedCourse = await handleShowDetails(course);
       if (fetchedCourse) {
         const courseWithOutcomes = {
-          courseId: fetchedCourse.courseId,
+          courseId: course.courseId,
           title: fetchedCourse.title,
           code: fetchedCourse.code,
           year: fetchedCourse.year,
@@ -118,6 +114,7 @@ export default function ListingCourses() {
           favorite: course.favorite,
           colour: course.colour,
           outcomes: fetchedCourse.outcomes,
+          info: course.info,
         };
         setVisitedCourses([...visitedCourses, courseWithOutcomes]);
       }
@@ -181,6 +178,63 @@ export default function ListingCourses() {
     })
     .sort((a, b) => b.favorite - a.favorite);
 
+  /* ************* Analysis functions ************* */
+  const showAnalysis = () => {
+    setAnalysisChart(true);
+  };
+
+  const hideAnalysis = () => {
+    setAnalysisChart(false);
+  };
+
+  const displayChart = () => {
+    if (visitedCourses.length === 0) return null;
+
+    const data = [];
+    const categories = [
+      'create',
+      'evaluate',
+      'analyse',
+      'apply',
+      'understand',
+      'remember',
+      'none',
+    ];
+
+    categories.forEach((category) => {
+      const obj = { category };
+
+      visitedCourses.forEach((course) => {
+        const info = course.info.find((c) => c.category === category);
+        obj[course.code] = info ? info.value : 0;
+      });
+
+      data.push(obj);
+    });
+
+    return (
+      <div style={{ width: '100%', height: '300px', marginTop: '5em' }}>
+        <ResponsiveContainer>
+          <BarChart layout='vertical' width={800} height={300} data={data}>
+            <CartesianGrid strokeDasharray='3 3' />
+            <XAxis type='number' />
+            <YAxis dataKey='category' type='category' width={150} />
+            <Tooltip />
+            <Legend />
+            {visitedCourses.map((course) => (
+              <Bar
+                key={course.code}
+                dataKey={course.code}
+                fill={`#${Math.floor(Math.random() * 16777215).toString(16)}`}
+                name={course.code}
+              />
+            ))}
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+    );
+  };
+
   return (
     <div className='app'>
       <div className='content'>
@@ -243,38 +297,53 @@ export default function ListingCourses() {
           </div>
         </div>
         <div className='analysis'>
-          <div className='course-details-container'>
-            {visitedCourses.length !== 0 ? (
-              visitedCourses.map((course) => (
-                <div key={course.courseId} className='course-details'>
-                  <div className='course-header'>
-                    <h2>{course.code}</h2>
-                    <h3>{course.title}</h3>
-                    <p>
-                      {course.year} {course.term}
-                    </p>
+          {!analysisChart ? (
+            <div className='course-details-container'>
+              {visitedCourses.length !== 0 ? (
+                visitedCourses.map((course, idx) => (
+                  <div key={idx} className='course-details'>
+                    <div className='course-header'>
+                      <h2>{course.code}</h2>
+                      <h3>{course.title}</h3>
+                      <p>
+                        {course.year} {course.term}
+                      </p>
+                    </div>
+                    <h2>Learning Outcomes:</h2>
+                    <div className='course-outcomes'>
+                      <ol>
+                        {course.outcomes.map((outcome, index) => (
+                          <li key={index}>{outcome}</li>
+                        ))}
+                      </ol>
+                    </div>
                   </div>
-                  <h2>Learning Outcomes:</h2>
-                  <div className='course-outcomes'>
-                    <ol>
-                      {course.outcomes.map((outcome, index) => (
-                        <li key={index}>{outcome}</li>
-                      ))}
-                    </ol>
+                ))
+              ) : (
+                <div className='centered-container'>
+                  <div className='normal-details'>
+                    <h2>Select a course to analyse</h2>
+                    <p>Nothing is selected</p>
                   </div>
                 </div>
-              ))
-            ) : (
-              <div className='centered-container'>
-                <div className='normal-details'>
-                  <h2>Select a course to analyse</h2>
-                  <p>Nothing is selected</p>
-                </div>
-              </div>
-            )}
-          </div>
-          {visitedCourses.length !== 0 && (
-            <button className='analysis-button'>Analyse Course</button>
+              )}
+            </div>
+          ) : (
+            <>
+              {displayChart()}
+              <button
+                className='analysis-button'
+                onClick={() => hideAnalysis()}
+              >
+                <FontAwesomeIcon icon={faArrowLeft} /> Go Back
+              </button>
+            </>
+          )}
+
+          {visitedCourses.length !== 0 && !analysisChart && (
+            <button className='analysis-button' onClick={() => showAnalysis()}>
+              Analyse Course
+            </button>
           )}
         </div>
       </div>
