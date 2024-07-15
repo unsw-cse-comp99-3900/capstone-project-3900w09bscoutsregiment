@@ -34,19 +34,19 @@ export default function ForgotPassword() {
           <form
             name="publish-form"
             id="form"
-            className="justify-center mx-auto w-2/5 space-y-2 p-14 rounded-2xl bg-white shadow-2xl"
+            className="justify-center mx-auto w-2/5 bg-secondary-bkg space-y-2 p-14 rounded-2xl shadow-2xl"
           >
             <div>
-              <h2 className="block text-blue-500 text-[3rem] font-bold my-4">
+              <h2 className="block text-primary-theme-lb text-[3rem] font-bold my-4">
                 Forgot Password
               </h2>
-              <div className="mb-3">
+              <div className="mb-3 text-main-txt">
                 We will send you an email with instructions on how to reset your
                 password.
               </div>
               <input
                 name="email-address"
-                className="shadow appearance-none border rounded w-full py-3 px-2 text-gray-700 placeholder-blue-400 leading-tight focus:outline-none focus:shadow-outline"
+                className="shadow appearance-none border rounded w-full py-3 px-2 text-gray-700 placeholder-primary-theme-lb leading-tight focus:outline-none focus:shadow-outline"
                 id="email-address"
                 type="text"
                 placeholder="Email address"
@@ -60,14 +60,14 @@ export default function ForgotPassword() {
             <div className="items-center justify-between pt-2">
               <button
                 id="submit"
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold w-1/4 italic py-2 px-4 pb-3: rounded focus:outline-none focus:shadow-outline mb-5"
+                className="bg-primary-theme-lb hover:bg-blue-700 text-white font-bold w-1/4 italic py-2 px-4 pb-3: rounded focus:outline-none focus:shadow-outline mb-5"
                 type="button"
                 onClick={sendEmailForgotPassword}
               >
                 Send Email
               </button>
             </div>
-            <div className="flex items-center justify-center pt-2">
+            <div className="flex items-center justify-center pt-2 text-main-txt">
               Return to &nbsp;
               <Link href="/" className="text-primary-theme-lb underline">
                 Home

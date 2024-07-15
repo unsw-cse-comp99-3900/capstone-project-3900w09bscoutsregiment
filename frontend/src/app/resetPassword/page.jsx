@@ -42,11 +42,11 @@ export default function ResetPassword() {
           <form
             name='publish-form'
             id='form'
-            className='justify-center mx-auto w-2/5 space-y-2 p-14 rounded-2xl bg-white shadow-2xl'
+            className='justify-center mx-auto w-2/5 space-y-2 p-14 rounded-2xl bg-secondary-bkg shadow-2xl'
           >
             <div className='mb-2'>
               <label
-                className='block text-blue-500 text-[3rem] font-bold my-4'
+                className='block text-primary-theme-lb text-[3rem] font-bold my-4'
                 htmlFor='password'
               >
                 Reset Password
@@ -98,14 +98,14 @@ export default function ResetPassword() {
             <div className='flex items-center justify-between pb-2'>
               <button
                 id='submit'
-                className='bg-blue-500 hover:bg-blue-700 text-white font-bold w-full italic py-2 px-4 pb-3: rounded focus:outline-none focus:shadow-outline'
+                className='bg-primary-theme-lb hover:bg-blue-700 text-white font-bold w-full italic py-2 px-4 pb-3: rounded focus:outline-none focus:shadow-outline'
                 type='button'
                 onClick={handleResetPassword}
               >
                 Reset
               </button>
             </div>
-            <div className='flex items-center justify-center relative top-52'>
+            <div className='flex items-center justify-center relative top-52 text-main-txt'>
               Return to &nbsp;
               <Link href='/' className='text-primary-theme-lb underline'>
                 Home
