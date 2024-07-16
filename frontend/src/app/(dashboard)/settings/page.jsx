@@ -1,4 +1,4 @@
-import ThemeToggle from "@/app/Components/ThemeToggle"
+import ThemeToggle from "../profile/ThemeToggle"
 import Link from "next/link"
 
 const Settings = () => {

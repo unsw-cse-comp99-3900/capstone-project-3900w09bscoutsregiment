@@ -1,7 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+@import 'flowbite';
 /* Where is this used */
 .login-background {
   background: linear-gradient(to bottom, var(--primary-theme-db), var(--primary-theme-lb));
