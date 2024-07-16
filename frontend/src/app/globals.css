@@ -2,8 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Where is this used */
 .login-background {
-  background: linear-gradient(to bottom, #004699, #0075FF);
+  background: linear-gradient(to bottom, var(--primary-theme-db), var(--primary-theme-lb));
   background-size: cover;
   background-position: center;
 
@@ -26,7 +27,7 @@
 }
 
 .login_background {
-  background: linear-gradient(to bottom, #004699, #0075FF);
+  background: linear-gradient(to bottom, var(--primary-theme-db), var(--primary-theme-lb));
   background-size: cover;
   background-position: center;
 
@@ -55,39 +56,53 @@
 }
 
 .home-background-how-it-works {
-    background-image: url('/homepage/images/blob.svg');
-    background-size: cover;
-    /* background-repeat: no-repeat; */
-    background-position: center;
+  background-image: url('/homepage/images/blob.svg');
+  background-size: cover;
+  /* background-repeat: no-repeat; */
+  background-position: center;
 }
-/* @layer base {
-  .light {
-      --color-bkg: 217deg 32.6% 17.5%;
-      --color-content: 210deg 40% 98%;
-      --color-accent1: 288deg 95.8% 60.6%;
-      --color-accent2: 168deg 83.8% 48.2%;
+
+@layer base {
+
+  :root[class="dark"] {
+    --primary-theme-lb: #0075FF;
+    --primary-theme-db:#004699;
+    /* #2236fd for new color? */
+    --primary-bkg: #0b0f21;
+    --primary-txt: #ffffff;
+    --secondary-bkg: #ffffff; /*fix thisr*/
+    --secondary-txt: #000000;
+    --color-bkg-lighter: #000000;
+    --color-bkg-lightest: #718096;
+    --color-content: #1c1f1c;
   }
 
-  .dark {
-    --color-bkg: 217deg 32.6% 17.5%;
-    --color-content: 210deg 40% 98%;
-    --color-accent1: 288deg 95.8% 60.6%;
-    --color-accent2: 168deg 83.8% 48.2%;
+  :root[class="light"] {
+    --primary-theme-lb: #0075FF;
+    --primary-theme-db: #004699;
+    --primary-bkg: #ffffff;
+    --primary-txt: #000000;
+    --secondary-bkg: #000000;
+    --secondary-txt: #ffffff;
+    --color-bkg-light: #dbe9fd;
+    --color-content: #ffffff;
+    --color-text-primary: #000000;
+    --color-text-secondary: #ffffff;
   }
- :root[class="dark"] {
-   --color-bkg: #1a202c;
-   --color-bkg-light: #2d3748;
-   --color-bkg-lighter: #2269e3;
-   --color-bkg-lightest: #718096;
-   --color-content: #f8fafc;
+
+  :root[class="color-blind"] {
+    --color-bkg: #14a720;
+    --color-bkg-light: #2d3748;
+    --color-bkg-lighter: #2269e3;
+    --color-bkg-lightest: #718096;
+    --color-content: #26d223;
+  }
 }
-}
-body {
+
+/* body {
   @apply bg-[color:var(--color-bkg)] text-[color:var(--color-content)];
-}
-.text-custom {
-  @apply text-[color:var(--color-content)];
 } */
+
 .option_menu {
   @apply flex rounded-xl justify-between items-center border-b p-4 gap-10 hover:bg-gray-200 transition duration-300 ease-in-out
 }

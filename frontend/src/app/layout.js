@@ -26,9 +26,9 @@ export default function RootLayout({ children }) {
               <Link href='/register' className='highlight_btn'>Register</Link>
             </div>
           </div>
-          {/* <div className="bg-custom text-custom absolute">
+          {/* <div className="bg-theme text-custom absolute">
             <Link href='/' className='flex items-center gap-2'>
-              <div className='bg-custom text-custom'></div>
+              <div className='bg-theme text-custom'></div>
               <span className='bg-custom text-custom'>COTAM</span>
             </Link>
             <div>
