@@ -1,11 +1,17 @@
-"use client";
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import './listingCourses.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faStar, faTrash } from '@fortawesome/free-solid-svg-icons';
+import {
+  faPlus,
+  faStar,
+  faTrash,
+  faArrowLeft,
+} from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import displayChart from './analysisChart';
 
 export default function ListingCourses() {
   const router = useRouter();
@@ -20,22 +26,25 @@ export default function ListingCourses() {
   const [searchTerm, setSearchTerm] = useState('');
   const [courses, setCourses] = useState([]);
   const [visitedCourses, setVisitedCourses] = useState([]);
+  const [analysisChart, setAnalysisChart] = useState(false);
   const port = 5000;
 
   useEffect(() => {
     const fetchUserCourses = async () => {
       try {
-        const response = await fetch(`http://localhost:${port}/api/course/list`, {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('token')}`
+        const response = await fetch(
+          `http://localhost:${port}/api/course/list`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
           }
-        });
+        );
         if (!response.ok) {
           throw new Error('Failed to fetch user courses');
         }
         const data = await response.json();
-        console.log('course list', data);
         setCourses(data);
       } catch (error) {
         console.error('Error fetching user courses:', error);
@@ -55,16 +64,18 @@ export default function ListingCourses() {
   const handleShowDetails = async (course) => {
     const shortenedTerm = shortenTerm(course.term);
     try {
-      const response = await fetch(`http://localhost:${port}/api/course/${course.code}/${course.year}/${shortenedTerm}`, {
-        headers: {
-          authorization: `Bearer ${localStorage.getItem('token')}`
+      const response = await fetch(
+        `http://localhost:${port}/api/course/${course.code}/${course.year}/${shortenedTerm}`,
+        {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
         }
-      });
+      );
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
       const data = await response.json();
-      console.log(data[0]);
       return data[0];
     } catch (error) {
       console.error('Error fetching course details:', error);
@@ -73,14 +84,23 @@ export default function ListingCourses() {
   };
 
   const handleCourseClick = async (course) => {
-    console.log(course);
-    if (visitedCourses.some((visitedCourse) => visitedCourse.code === course.code)) {
-      setVisitedCourses(visitedCourses.filter((visitedCourse) => visitedCourse.code !== course.code));
+    if (
+      visitedCourses.some((visitedCourse) => visitedCourse.code === course.code)
+    ) {
+      const newVisitedCourses = visitedCourses.filter(
+        (visitedCourse) => visitedCourse.code !== course.code
+      );
+
+      setVisitedCourses(newVisitedCourses);
+
+      if (newVisitedCourses.length === 0) {
+        setAnalysisChart(false);
+      }
     } else {
       const fetchedCourse = await handleShowDetails(course);
       if (fetchedCourse) {
         const courseWithOutcomes = {
-          courseId: fetchedCourse.courseId,
+          courseId: course.courseId,
           title: fetchedCourse.title,
           code: fetchedCourse.code,
           year: fetchedCourse.year,
@@ -88,6 +108,7 @@ export default function ListingCourses() {
           favorite: course.favorite,
           colour: course.colour,
           outcomes: fetchedCourse.outcomes,
+          info: course.info,
         };
         setVisitedCourses([...visitedCourses, courseWithOutcomes]);
       }
@@ -105,17 +126,20 @@ export default function ListingCourses() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
-        body: JSON.stringify({ courseId: course.courseId })
+        body: JSON.stringify({ courseId: course.courseId }),
       });
       // Refresh course list
-      const updatedCourses = courses.map((c) => 
+      const updatedCourses = courses.map((c) =>
         c.code === course.code ? { ...c, favorite: !c.favorite } : c
       );
       setCourses(updatedCourses);
     } catch (error) {
-      console.error(`Error ${course.favorite ? 'unfavoriting' : 'favoriting'} course:`, error);
+      console.error(
+        `Error ${course.favorite ? 'unfavoriting' : 'favoriting'} course:`,
+        error
+      );
     }
   };
 
@@ -125,111 +149,154 @@ export default function ListingCourses() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
-        body: JSON.stringify({ courseId: courseId })
+        body: JSON.stringify({ courseId: courseId }),
       });
       // Remove the course from the list
-      setCourses(courses.filter(course => course.courseId !== courseId));
+      setCourses(courses.filter((course) => course.courseId !== courseId));
     } catch (error) {
       console.error('Error deleting course:', error);
     }
   };
 
-  const filteredCourses = courses.filter(course => {
-    const searchTermLower = searchTerm.toLowerCase();
-    return (
-      course.title.toLowerCase().includes(searchTermLower) ||
-      course.code.toLowerCase().includes(searchTermLower) ||
-      course.term.toLowerCase().includes(searchTermLower) ||
-      course.year.toString().includes(searchTermLower)
-    );
-  }).sort((a, b) => b.favorite - a.favorite);
+  const filteredCourses = courses
+    .filter((course) => {
+      const searchTermLower = searchTerm.toLowerCase();
+      return (
+        course.title.toLowerCase().includes(searchTermLower) ||
+        course.code.toLowerCase().includes(searchTermLower) ||
+        course.term.toLowerCase().includes(searchTermLower) ||
+        course.year.toString().includes(searchTermLower)
+      );
+    })
+    .sort((a, b) => b.favorite - a.favorite);
+
+  const showAnalysis = () => {
+    setAnalysisChart(true);
+  };
+
+  const hideAnalysis = () => {
+    setAnalysisChart(false);
+  };
 
   return (
-    <div className="app">
-      <div className="content">
-        <div className="course-list">
-          <header className="header">
+    <div className='app'>
+      <div className='content'>
+        <div className='course-list'>
+          <header className='header'>
             <input
-              type="text"
+              type='text'
               className='input-search'
-              placeholder="Search"
+              placeholder='Search'
               value={searchTerm}
               onChange={handleSearchChange}
             />
           </header>
-          <Link href="/search">
-            <button className="add-course-button">
-              <FontAwesomeIcon icon={faPlus} />Add Course
-            </button>
-          </Link>
-          <div className="courses">
-          {filteredCourses.length !== 0 ? (
-            filteredCourses.map(course => (
-              <div
-                key={course.code}
-                onClick={() => handleCourseClick(course)}
-                className={`course-item ${visitedCourses.some(vc => vc.code === course.code) ? 'selected' : ''}`}
-              >
-                <div className="course-info">
-                  <div className="course-code">{course.code}</div>
-                  <div className="course-title">{course.title}</div>
-                  <div className="course-term">{course.term}</div>
-                  <div className="course-year">{course.year}</div>
-                </div>
-                <div className="course-actions">
-                  <button className="action-button" onClick={(e) => { e.stopPropagation(); handleFavoriteCourse(course); }}>
-                    <FontAwesomeIcon icon={faStar} className={course.favorite ? 'favorite' : ''} />
-                  </button>
-                  <button className="action-button" onClick={(e) => { e.stopPropagation(); handleDeleteCourse(course.courseId); }}>
-                    <FontAwesomeIcon icon={faTrash} />
-                  </button>
+          <button className='add-course-button'>
+            <FontAwesomeIcon icon={faPlus} />
+            <Link href='/search'>Add Course</Link>
+          </button>
+          <div className='courses'>
+            {filteredCourses.length === 0 ? (
+              <div className='centered-container'>
+                <div className='normal-details'>
+                  <h2>Empty, No Courses</h2>
+                  <p>Click on the Add Course Button to find courses</p>
+                  <p>to can add to the list</p>
                 </div>
               </div>
-            ))
-          ) : (
-            <div className="centered-container">
-              <div className='normal-details'>
-                <h2>Empty, No Courses</h2>
-                <p>Click on the Add Course Button to find courses</p>
-                <p>to can add to the list</p>
-              </div>
-            </div>
-          )}
+            ) : (
+              filteredCourses.map((course) => (
+                <div
+                  key={course.code}
+                  onClick={() => handleCourseClick(course)}
+                  className={`course-item ${
+                    visitedCourses.some((vc) => vc.code === course.code)
+                      ? 'selected'
+                      : ''
+                  }`}
+                >
+                  <div className='course-info'>
+                    <div className='course-code'>{course.code}</div>
+                    <div className='course-title'>{course.title}</div>
+                    <div className='course-term'>{course.term}</div>
+                    <div className='course-year'>{course.year}</div>
+                  </div>
+                  <div className='course-actions'>
+                    <button
+                      className='action-button'
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleFavoriteCourse(course);
+                      }}
+                    >
+                      <FontAwesomeIcon
+                        icon={faStar}
+                        className={course.favorite ? 'favorite' : ''}
+                      />
+                    </button>
+                    <button
+                      className='action-button'
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteCourse(course.courseId);
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faTrash} />
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
-        <div className="analysis">
-          {visitedCourses.length !== 0 ? (
-            visitedCourses.map((course) => (
-              <div className="course-details-container">
-                <div key={course.courseId} className="course-details">
-                  <div className="course-header">
-                    <h2>{course.code}</h2>
-                    <h3>{course.title}</h3>
-                    <p>{course.year} {course.term}</p>
+        <div className='analysis'>
+          {!analysisChart ? (
+            <div className='course-details-container'>
+              {visitedCourses.length !== 0 ? (
+                visitedCourses.map((course, idx) => (
+                  <div key={idx} className='course-details'>
+                    <div className='course-header'>
+                      <h2>{course.code}</h2>
+                      <h3>{course.title}</h3>
+                      <p>
+                        {course.year} {course.term}
+                      </p>
+                    </div>
+                    <h2>Learning Outcomes:</h2>
+                    <div className='course-outcomes'>
+                      <ol>
+                        {course.outcomes.map((outcome, index) => (
+                          <li key={index}>{outcome}</li>
+                        ))}
+                      </ol>
+                    </div>
                   </div>
-                  <h2>Learning Outcomes:</h2>
-                  <div className="course-outcomes">
-                    <ol>
-                      {course.outcomes.map((outcome, index) => (
-                        <li key={index}>{outcome}</li>
-                      ))}
-                    </ol>
+                ))
+              ) : (
+                <div className='centered-container'>
+                  <div className='normal-details'>
+                    <h2>Select a course to analyse</h2>
+                    <p>Nothing is selected</p>
                   </div>
                 </div>
-              </div>
-            ))
-          ) : (
-            <div className="centered-container">
-              <div className='normal-details'>
-                <h2>Select a course to analyse</h2>
-                <p>Nothing is selected</p>
-              </div>
+              )}
             </div>
+          ) : (
+            <>
+              {displayChart(visitedCourses)}
+              <button
+                className='analysis-button'
+                onClick={() => hideAnalysis()}
+              >
+                <FontAwesomeIcon icon={faArrowLeft} /> Go Back
+              </button>
+            </>
           )}
-          {visitedCourses.length !== 0 && (
-            <button className="analysis-button">
+
+          {visitedCourses.length !== 0 && !analysisChart && (
+            <button className='analysis-button' onClick={() => showAnalysis()}>
               Analyse Course
             </button>
           )}

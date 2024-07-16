@@ -1,6 +1,13 @@
-'use client'
+'use client';
 
-import { AppBar, Toolbar, Button, Typography, Box, Container } from '@mui/material';
+import {
+  AppBar,
+  Toolbar,
+  Button,
+  Typography,
+  Box,
+  Container,
+} from '@mui/material';
 import WaveSVG from './Components/HomePage/WaveSVG.js';
 import FooterPage from './Components/HomePage/FooterPage';
 import Link from 'next/link';
@@ -10,16 +17,15 @@ import { useRouter } from 'next/navigation';
 import 'flowbite';
 
 export default function Home() {
-
   // Ensure stay logged in
   const router = useRouter();
   React.useEffect(() => {
     const token = localStorage.getItem('token');
     if (token !== null) {
       router.push('/courses');
-      return
+      return;
     }
-  }, [])
+  }, []);
 
   return (
     <main className="flex bg-main-bkg flex-col p-0 b-0 m-0 items-center justify-between">
