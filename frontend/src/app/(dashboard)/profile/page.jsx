@@ -112,6 +112,14 @@ const Profile = () => {
               </div>
               <span className='ml-auto pl-20'>&gt;</span>
             </Link>
+            <div className="option_menu">
+              <Image src='/assets/icons/theme.svg' width={30} height={30} alt='feedback' />
+              <div className='flex flex-col'>
+                <b>Theme</b>
+                <p>Change Theme</p>
+              </div>
+              <span className='ml-auto pl-20'>&gt;</span>
+            </div>
           </div>
         </div>
       </div>
