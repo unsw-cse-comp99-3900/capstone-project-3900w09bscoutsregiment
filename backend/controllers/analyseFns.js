@@ -5,6 +5,7 @@ import Chart from 'chart.js/auto';
 const verbMap = new Map();
 const categories = new Array();
 
+// loads a file that contains the verb mappings into a map
 const loadFile = (name) => {
   try {
     const data = fs.readFileSync(name, 'utf8');
@@ -34,6 +35,8 @@ const loadFile = (name) => {
   };
 };
 
+// takes an outcome and gives the best fitting category based on 
+// the verb mapping algorithm
 const analyseOutcome = (outcome) => {
   const scoreMap = new Map();
   for (const c of categories) {
@@ -65,6 +68,8 @@ const analyseOutcome = (outcome) => {
   // console.log(scoreMap);
 };
 
+// Takes a list of courses and their outcomes and produces an output that 
+// is potentially more usable for generating a graph
 // Expects input to be of the form
 // [
 //   {
@@ -121,6 +126,7 @@ const analyseCourses = (courseList) => {
   return out;
 };
 
+// generates a png from an analysis and outputs it to a file
 const makePng = (analysis, name) => {
   const canvas = createCanvas(1000, 1000);
   const ctx = canvas.getContext('2d');
@@ -212,4 +218,4 @@ const makePng = (analysis, name) => {
   fs.writeFileSync(name, buffer);
 };
 
-export default { loadFile, analyseOutcome, analyseCourses, makePng };
+export default { categories, loadFile, analyseOutcome, analyseCourses, makePng };
