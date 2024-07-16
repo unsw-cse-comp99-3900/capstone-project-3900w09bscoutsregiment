@@ -47,7 +47,7 @@ const Profile = () => {
 
   return (
     <div className='bg-main-bkg min-h-screen'>
-      <div className='blue_background'>
+      <div className='blue_background'> {/* TODO , use login_background instead of blue background */}
         <div className='min-h-screen flex justify-center items-center gap-10'>
           <div className='flex justify-center items-center pt-12 text-main-txt'>
             <div className='flex flex-col gap-8 bg-secondary-bkg shadow-md rounded-xl py-10 px-20 w-full shadow-lg'>

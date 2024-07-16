@@ -46,13 +46,12 @@ const WaveSVG = () => {
       id="svg"
       viewBox="0 0 1440 390"
       xmlns="http://www.w3.org/2000/svg"
-      className="transition duration-300 ease-in-out delay-150"
+      className="transition duration-300 ease-in-out delay-150 fill-primary-theme-lb"
     >
       <path
         d="M 0,400 L 0,150 C 71.41626794258374,180.1531100478469 142.8325358851675,210.3062200956938 243,221 C 343.1674641148325,231.6937799043062 472.08612440191393,222.9282296650718 565,185 C 657.9138755980861,147.0717703349282 714.822966507177,79.98086124401912 814,85 C 913.177033492823,90.01913875598088 1054.622009569378,167.14832535885168 1166,190 C 1277.377990430622,212.85167464114832 1358.688995215311,181.42583732057415 1440,150 L 1440,400 L 0,400 Z"
         stroke="none"
         strokeWidth="0"
-        fill="#0075FF"
         fillOpacity="1"
         className="transition-all duration-300 ease-in-out delay-150 path-0"
         transform="rotate(-180 720 200)"

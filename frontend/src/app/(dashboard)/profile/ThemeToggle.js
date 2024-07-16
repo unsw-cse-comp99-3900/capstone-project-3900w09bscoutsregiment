@@ -60,7 +60,7 @@ const ThemeToggle = () => {
               </div>
             </div>
             <div class="flex items-center justify-end p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
-              <button data-modal-hide="default-modal" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 text-white focus:ring-gray-100 dark:focus:ring-gray-700 bg-red-600">Close</button>
+              <button data-modal-hide="default-modal" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none  rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 text-white focus:ring-gray-100 dark:focus:ring-gray-700 bg-red-600">Close</button>
             </div>
           </div>
         </div>
