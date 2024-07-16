@@ -56,13 +56,6 @@ const CoursesLayout = ({ children }) => {
             Courses
           </Link>
           <Link
-            href='/pathways'
-            className='text-white hover:bg-blue-800 px-4 py-2 rounded-md'
-          >
-            Pathways
-          </Link>
-
-          <Link
             href='/help'
             className='text-white hover:bg-blue-800 px-4 py-2 rounded-md'
           >
@@ -87,13 +80,6 @@ const CoursesLayout = ({ children }) => {
               onClick={closeDropdown}
             >
               Profile
-            </Link>
-            <Link
-              className='text-sm px-20 py-2 hover:bg-gray-100 font-semibold'
-              href='/theme'
-              onClick={closeDropdown}
-            >
-              Theme
             </Link>
             <button
               onClick={logout}
