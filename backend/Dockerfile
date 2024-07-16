@@ -1,6 +1,12 @@
-FROM node:20
+FROM node:18
 
-#RUN npm install -g nodemon
+# RUN apt-get update && apt-get install -y \
+#   build-essential \
+#   libcairo2-dev \
+#   libpango1.0-dev \
+#   libjpeg-dev \
+#   libgif-dev \
+#   librsvg2-dev
 
 WORKDIR /app
 
@@ -13,5 +19,7 @@ COPY . .
 #ENV PORT=8080
 
 EXPOSE 5000
+
+# RUN npm rebuild canvas
 
 CMD ["npm", "run", "dev"]
