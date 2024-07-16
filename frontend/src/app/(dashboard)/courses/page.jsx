@@ -1,42 +1,96 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './listingCourses.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faStar, faTrash, faUser, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-//import { useNavigate } from 'react-router-dom';
+import { faPlus, faStar, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 export default function ListingCourses() {
-  // Ensure stay logged in
   const router = useRouter();
   React.useEffect(() => {
-    const token = localStorage.getItem('token') || null
+    const token = localStorage.getItem('token') || null;
     if (token === null) {
       router.push('/');
-      return
+      return;
     }
-  }, [])
+  }, []);
 
-  //const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
-  //const [courses, setCourses]
-  const [courses, setCourses] = useState([
-    { code: 'COMP3311', name: 'Database Systems', term: 'Term 1', year: '2024', col: [] },
-    { code: 'COMP3331', name: 'Computer Networks and Applications', term: 'Term 1', year: '2024' , col: [] },
-    { code: 'COMP9417', name: 'Machine learning and data mining', term: 'Term 1', year: '2024' , col: [] },
-    { code: 'COMP1511', name: 'Programming fundamentals', term: 'Term 1', year: '2024' , col: [] }
-  ]);
+  const [courses, setCourses] = useState([]);
   const [visitedCourses, setVisitedCourses] = useState([]);
+  const port = 5000;
 
-  const handleCourseClick = (course) => {
+  useEffect(() => {
+    const fetchUserCourses = async () => {
+      try {
+        const response = await fetch(`http://localhost:${port}/api/course/list`, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        if (!response.ok) {
+          throw new Error('Failed to fetch user courses');
+        }
+        const data = await response.json();
+        console.log('course list', data);
+        setCourses(data);
+      } catch (error) {
+        console.error('Error fetching user courses:', error);
+      }
+    };
+
+    fetchUserCourses();
+  }, []);
+
+  const shortenTerm = (term) => {
+    if (!term.includes('Term')) {
+      return term;
+    }
+    return term.replace('Term ', 'T');
+  };
+
+  const handleShowDetails = async (course) => {
+    const shortenedTerm = shortenTerm(course.term);
+    try {
+      const response = await fetch(`http://localhost:${port}/api/course/${course.code}/${course.year}/${shortenedTerm}`, {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      console.log(data[0]);
+      return data[0];
+    } catch (error) {
+      console.error('Error fetching course details:', error);
+      return null;
+    }
+  };
+
+  const handleCourseClick = async (course) => {
+    console.log(course);
     if (visitedCourses.some((visitedCourse) => visitedCourse.code === course.code)) {
-      // Course already visited, remove it
       setVisitedCourses(visitedCourses.filter((visitedCourse) => visitedCourse.code !== course.code));
     } else {
-      // Course not visited, add it
-      setVisitedCourses([...visitedCourses, course]);
+      const fetchedCourse = await handleShowDetails(course);
+      if (fetchedCourse) {
+        const courseWithOutcomes = {
+          courseId: fetchedCourse.courseId,
+          title: fetchedCourse.title,
+          code: fetchedCourse.code,
+          year: fetchedCourse.year,
+          term: fetchedCourse.term,
+          favorite: course.favorite,
+          colour: course.colour,
+          outcomes: fetchedCourse.outcomes,
+        };
+        setVisitedCourses([...visitedCourses, courseWithOutcomes]);
+      }
     }
   };
 
@@ -44,106 +98,143 @@ export default function ListingCourses() {
     setSearchTerm(event.target.value);
   };
 
-  const handleSaveCourse = (course) => {
-    if (!visitedCourses.some((visitedCourse) => visitedCourse.code === course.code)) {
-      setVisitedCourses([...visitedCourses, course]);
+  const handleFavoriteCourse = async (course) => {
+    const endpoint = course.favorite ? 'unfavorite' : 'favorite';
+    try {
+      await fetch(`http://localhost:${port}/api/course/${endpoint}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({ courseId: course.courseId })
+      });
+      // Refresh course list
+      const updatedCourses = courses.map((c) => 
+        c.code === course.code ? { ...c, favorite: !c.favorite } : c
+      );
+      setCourses(updatedCourses);
+    } catch (error) {
+      console.error(`Error ${course.favorite ? 'unfavoriting' : 'favoriting'} course:`, error);
     }
   };
 
-  const handleDeleteCourse = (courseCode) => {
-    setCourses(courses.filter(course => course.code !== courseCode));
+  const handleDeleteCourse = async (courseId) => {
+    try {
+      await fetch(`http://localhost:${port}/api/course/delete`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({ courseId: courseId })
+      });
+      // Remove the course from the list
+      setCourses(courses.filter(course => course.courseId !== courseId));
+    } catch (error) {
+      console.error('Error deleting course:', error);
+    }
   };
 
-  const filteredCourses = courses.filter(course =>
-    course.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    course.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    course.term.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    course.year.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-  
-  /*
-  const handlePreviousClick = () => {
-    //navigate(-1);
-  };
+  const filteredCourses = courses.filter(course => {
+    const searchTermLower = searchTerm.toLowerCase();
+    return (
+      course.title.toLowerCase().includes(searchTermLower) ||
+      course.code.toLowerCase().includes(searchTermLower) ||
+      course.term.toLowerCase().includes(searchTermLower) ||
+      course.year.toString().includes(searchTermLower)
+    );
+  }).sort((a, b) => b.favorite - a.favorite);
 
-  */
   return (
-    <>
-      <div className="app">
-        <div className="content">
-          <div className="course-list">
-            <header className="header">
-              <input
-                type="text"
-                className='input-search'
-                placeholder="Search"
-                value={searchTerm}
-                onChange={handleSearchChange}
-              />
-            </header>
+    <div className="app">
+      <div className="content">
+        <div className="course-list">
+          <header className="header">
+            <input
+              type="text"
+              className='input-search'
+              placeholder="Search"
+              value={searchTerm}
+              onChange={handleSearchChange}
+            />
+          </header>
+          <Link href="/search">
             <button className="add-course-button">
-              <FontAwesomeIcon icon={faPlus} /> Add Course
+              <FontAwesomeIcon icon={faPlus} />Add Course
             </button>
-            <table className='courses'>
-              <thead>
-                <tr>
-                  <th>Code</th>
-                  <th>Name</th>
-                  <th>Term</th>
-                  <th>Year</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredCourses.map(course => (
-                  <tr 
-                  key={course.code}
-                  className={`course-item ${visitedCourses.some(vc => vc.code === course.code) ? 'selected' : ''}`}
-                  onClick={() => handleCourseClick(course)}
-                  >
-                    <td>{course.code}</td>
-                    <td className='description'>{course.name}</td>
-                    <td className='description'>{course.term}</td>
-                    <td className='description'>{course.year}</td>
-                    <td>
-                      <button className="action-button" onClick={() => handleSaveCourse(course)}>
-                        <FontAwesomeIcon icon={faStar} />
-                      </button>
-                      <button className="action-button" onClick={(e) => { e.stopPropagation(); handleDeleteCourse(course.code); }}>
-                        <FontAwesomeIcon icon={faTrash} />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <div className="analysis">
-            <div className="course-details-container">
-              {visitedCourses.length !== 0? (
-
-                visitedCourses.map((course) => (
-                    <div key={course.code} className="course-details">
-                      <h2>{course.code}</h2>
-                      <h3>{course.name}</h3>
-                      <p>{course.year} {course.term}</p>
-                    </div>
-                  ))
-                ) : (
-                  <div className='normal-details'>
-                    <h2>Select a course to analyse</h2>
-                    <p>Nothing is selected</p>
-                  </div>
-              )}
+          </Link>
+          <div className="courses">
+          {filteredCourses.length !== 0 ? (
+            filteredCourses.map(course => (
+              <div
+                key={course.code}
+                onClick={() => handleCourseClick(course)}
+                className={`course-item ${visitedCourses.some(vc => vc.code === course.code) ? 'selected' : ''}`}
+              >
+                <div className="course-info">
+                  <div className="course-code">{course.code}</div>
+                  <div className="course-title">{course.title}</div>
+                  <div className="course-term">{course.term}</div>
+                  <div className="course-year">{course.year}</div>
+                </div>
+                <div className="course-actions">
+                  <button className="action-button" onClick={(e) => { e.stopPropagation(); handleFavoriteCourse(course); }}>
+                    <FontAwesomeIcon icon={faStar} className={course.favorite ? 'favorite' : ''} />
+                  </button>
+                  <button className="action-button" onClick={(e) => { e.stopPropagation(); handleDeleteCourse(course.courseId); }}>
+                    <FontAwesomeIcon icon={faTrash} />
+                  </button>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="centered-container">
+              <div className='normal-details'>
+                <h2>Empty, No Courses</h2>
+                <p>Click on the Add Course Button to find courses</p>
+                <p>to can add to the list</p>
+              </div>
             </div>
-            {visitedCourses.length !== 0 && (
-                <button className="analysis-button">
-                  Analyse Course
-                </button>
-              )}
+          )}
           </div>
         </div>
+        <div className="analysis">
+          {visitedCourses.length !== 0 ? (
+            visitedCourses.map((course) => (
+              <div className="course-details-container">
+                <div key={course.courseId} className="course-details">
+                  <div className="course-header">
+                    <h2>{course.code}</h2>
+                    <h3>{course.title}</h3>
+                    <p>{course.year} {course.term}</p>
+                  </div>
+                  <h2>Learning Outcomes:</h2>
+                  <div className="course-outcomes">
+                    <ol>
+                      {course.outcomes.map((outcome, index) => (
+                        <li key={index}>{outcome}</li>
+                      ))}
+                    </ol>
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="centered-container">
+              <div className='normal-details'>
+                <h2>Select a course to analyse</h2>
+                <p>Nothing is selected</p>
+              </div>
+            </div>
+          )}
+          {visitedCourses.length !== 0 && (
+            <button className="analysis-button">
+              Analyse Course
+            </button>
+          )}
+        </div>
       </div>
-    </>
+    </div>
   );
 }
