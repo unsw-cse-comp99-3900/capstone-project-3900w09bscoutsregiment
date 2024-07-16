@@ -13,9 +13,9 @@ courseRouter.use(authMiddleware);
 // Gets the details of a specific course offering
 courseRouter.get('/:code/:year/:term', async (req, res) => {
   const query = Course.find({});
-  query.find({code: req.params.code});
-  query.find({year: Number(req.params.year)});
-  query.find({term: termToggle(req.params.term)});
+  query.find({ code: req.params.code });
+  query.find({ year: Number(req.params.year) });
+  query.find({ term: termToggle(req.params.term) });
   const course = await query.exec();
   res.json(course);
 });
@@ -29,24 +29,23 @@ courseRouter.get('/:code/:year/:term', async (req, res) => {
 courseRouter.get('/all', async (req, res) => {
   const query = Course.find({});
   if (req.query.search != null) {
-    const searchTerm = new RegExp(req.query.search, "i");
-    query.find({$or: [{title: searchTerm}, {code: searchTerm}]});
+    const searchTerm = new RegExp(req.query.search, 'i');
+    query.find({ $or: [{ title: searchTerm }, { code: searchTerm }] });
   }
   if (req.query.term != null && termIsSmall(req.query.term)) {
     const term = termToggle(req.query.term);
-    query.find({term: term});
+    query.find({ term: term });
   }
   if (req.query.year != null) {
     const year = Number(req.query.year);
     if (year !== NaN) {
-      query.find({year: year});
+      query.find({ year: year });
     }
   }
   query.select(['_id', 'title', 'code', 'term', 'year']);
   const courses = await query.exec();
   console.log(courses);
   res.json(courses);
-  
 });
 
 // provides the list of courses that are in the current user's account
@@ -67,13 +66,13 @@ courseRouter.get('/all', async (req, res) => {
 //   }
 // ]
 courseRouter.get('/list', async (req, res) => {
-  const user = await User.findOne({_id: req.userId}).exec();  
+  const user = await User.findOne({ _id: req.userId }).exec();
   if (user == null) {
     return res.status(400).json({ message: 'Provided user does not exists' });
   }
   const searchList = new Array();
   for (const course of user.courses) {
-    searchList.push({_id: course.courseId});
+    searchList.push({ _id: course.courseId });
   }
   if (searchList.length < 1) {
     return res.json([]);
@@ -91,7 +90,6 @@ courseRouter.get('/list', async (req, res) => {
       const infoBlock = infoList.find((i) => i.category == c);
       infoBlock.value += 1;
     }
-    console.log(infoList);
     output.push({
       courseId: course._id,
       title: course.title,
@@ -100,10 +98,9 @@ courseRouter.get('/list', async (req, res) => {
       term: course.term,
       favorite: tempCourse.favorite,
       colour: tempCourse.colour,
-      info: infoList
+      info: infoList,
     });
   }
-  console.log(output);
   return res.json(output);
 });
 
@@ -111,29 +108,42 @@ courseRouter.get('/list', async (req, res) => {
 // the course is provided in the body as courseId
 courseRouter.post('/add', async (req, res) => {
   const userId = req.userId;
-  const userExists = (await User.exists({_id: userId}).exec()) != null;
+  const userExists = (await User.exists({ _id: userId }).exec()) != null;
   if (!userExists) {
     console.log('user not exist');
-    return res.status(400).json({ message: 'Provided userId is not a user in the db' });
+    return res
+      .status(400)
+      .json({ message: 'Provided userId is not a user in the db' });
   }
   const courseId = req.body.courseId;
   if (!validIdString(courseId)) {
     console.log('bad cid');
-    return res.status(400).json({ message: 'courseId is not a valid ObjectId' });
+    return res
+      .status(400)
+      .json({ message: 'courseId is not a valid ObjectId' });
   }
-  const courseExists = (await Course.exists({_id: courseId}).exec()) != null;
+  const courseExists = (await Course.exists({ _id: courseId }).exec()) != null;
   if (!courseExists) {
     console.log('course not exist');
-    return res.status(400).json({ message: 'Provided courseId is not a course in the db' });
+    return res
+      .status(400)
+      .json({ message: 'Provided courseId is not a course in the db' });
   }
-  const userList = await User.findOne({_id: userId}, 'courses').exec();
+  const userList = await User.findOne({ _id: userId }, 'courses').exec();
   console.log(userList);
   if (userList.courses.includes(courseId)) {
     console.log('user already has');
     return res.status(400).json({ message: 'User already added course' });
   }
-  userList.courses.push({courseId: courseId, colour: "02b0f5", favorite: false});
-  const result = await User.updateOne({_id: userId}, {courses: userList.courses}).exec();
+  userList.courses.push({
+    courseId: courseId,
+    colour: '02b0f5',
+    favorite: false,
+  });
+  const result = await User.updateOne(
+    { _id: userId },
+    { courses: userList.courses }
+  ).exec();
   console.log(result);
   res.send('ok');
 });
@@ -144,9 +154,11 @@ courseRouter.post('/delete', async (req, res) => {
   const userId = req.userId;
   const courseId = req.body.courseId;
   if (!validIdString(courseId)) {
-    return res.status(400).json({ message: 'courseId is not a valid ObjectId' });
+    return res
+      .status(400)
+      .json({ message: 'courseId is not a valid ObjectId' });
   }
-  const userList = await User.findOne({_id: userId}, 'courses').exec();
+  const userList = await User.findOne({ _id: userId }, 'courses').exec();
   console.log(userList.courses);
   const newList = new Array();
   for (const e of userList.courses) {
@@ -154,7 +166,10 @@ courseRouter.post('/delete', async (req, res) => {
       newList.push(e);
     }
   }
-  const result = await User.updateOne({_id: userId}, {courses: newList}).exec();
+  const result = await User.updateOne(
+    { _id: userId },
+    { courses: newList }
+  ).exec();
   console.log(result);
   res.send('ok');
 });
@@ -162,25 +177,34 @@ courseRouter.post('/delete', async (req, res) => {
 // Favorites a course in the current user's account
 courseRouter.post('/favorite', async (req, res) => {
   const userId = req.userId;
-  const userExists = (await User.exists({_id: userId}).exec()) != null;
+  const userExists = (await User.exists({ _id: userId }).exec()) != null;
   if (!userExists) {
-    return res.status(400).json({ message: 'Provided userId is not a user in the db' });
+    return res
+      .status(400)
+      .json({ message: 'Provided userId is not a user in the db' });
   }
   const courseId = req.body.courseId;
   if (!validIdString(courseId)) {
-    return res.status(400).json({ message: 'courseId is not a valid ObjectId' });
+    return res
+      .status(400)
+      .json({ message: 'courseId is not a valid ObjectId' });
   }
-  const courseExists = (await Course.exists({_id: courseId}).exec()) != null;
+  const courseExists = (await Course.exists({ _id: courseId }).exec()) != null;
   if (!courseExists) {
-    return res.status(400).json({ message: 'Provided courseId is not a course in the db' });
+    return res
+      .status(400)
+      .json({ message: 'Provided courseId is not a course in the db' });
   }
-  const userList = await User.findOne({_id: userId}, 'courses').exec();
+  const userList = await User.findOne({ _id: userId }, 'courses').exec();
   for (const e of userList.courses) {
     if (e.courseId.toString() == courseId) {
       e.favorite = true;
     }
   }
-  const result = await User.updateOne({_id: userId}, {courses: userList.courses}).exec();
+  const result = await User.updateOne(
+    { _id: userId },
+    { courses: userList.courses }
+  ).exec();
   console.log(result);
   res.send('ok');
 });
@@ -188,25 +212,34 @@ courseRouter.post('/favorite', async (req, res) => {
 // Unfavorites a course in the current user's account
 courseRouter.post('/unfavorite', async (req, res) => {
   const userId = req.userId;
-  const userExists = (await User.exists({_id: userId}).exec()) != null;
+  const userExists = (await User.exists({ _id: userId }).exec()) != null;
   if (!userExists) {
-    return res.status(400).json({ message: 'Provided userId is not a user in the db' });
+    return res
+      .status(400)
+      .json({ message: 'Provided userId is not a user in the db' });
   }
   const courseId = req.body.courseId;
   if (!validIdString(courseId)) {
-    return res.status(400).json({ message: 'courseId is not a valid ObjectId' });
+    return res
+      .status(400)
+      .json({ message: 'courseId is not a valid ObjectId' });
   }
-  const courseExists = (await Course.exists({_id: courseId}).exec()) != null;
+  const courseExists = (await Course.exists({ _id: courseId }).exec()) != null;
   if (!courseExists) {
-    return res.status(400).json({ message: 'Provided courseId is not a course in the db' });
+    return res
+      .status(400)
+      .json({ message: 'Provided courseId is not a course in the db' });
   }
-  const userList = await User.findOne({_id: userId}, 'courses').exec();
+  const userList = await User.findOne({ _id: userId }, 'courses').exec();
   for (const e of userList.courses) {
     if (e.courseId.toString() == courseId) {
       e.favorite = false;
     }
   }
-  const result = await User.updateOne({_id: userId}, {courses: userList.courses}).exec();
+  const result = await User.updateOne(
+    { _id: userId },
+    { courses: userList.courses }
+  ).exec();
   console.log(result);
   res.send('ok');
 });
