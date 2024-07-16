@@ -9,7 +9,12 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
-
+/**
+ * TODO: CHANGE Z INDEX OF THE CHART (KEEPS clashing with the navbar)
+ *       Change font color for the y axis
+ * @param {*} visitedCourses 
+ * @returns 
+ */
 const displayChart = (visitedCourses) => {
   if (visitedCourses.length === 0) {
     return null;
@@ -54,12 +59,12 @@ const displayChart = (visitedCourses) => {
   ];
 
   return (
-    <div style={{ width: '100%', height: '300px', marginTop: '5em' }}>
+    <div style={{ width: '100%', height: '300px', marginTop: '5em' }} className='bg-gray-200' >
       <ResponsiveContainer>
         <BarChart layout='vertical' width={800} height={300} data={data}>
           <CartesianGrid strokeDasharray='3 3' />
           <XAxis type='number' domain={[0, maxValue]} ticks={xAxisTicks} />
-          <YAxis dataKey='category' type='category' width={150} />
+          <YAxis dataKey='category' type='category'  width={150} />
           <Tooltip />
           <Legend />
           {visitedCourses.map((course) => (

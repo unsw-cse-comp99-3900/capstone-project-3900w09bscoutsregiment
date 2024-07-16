@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 @import 'flowbite';
+
 /* Where is this used */
 .login-background {
   background: linear-gradient(to bottom, var(--primary-theme-db), var(--primary-theme-lb));
@@ -83,20 +84,27 @@
     --primary-txt: #000000;
     --secondary-bkg: #ffffff;
     --secondary-txt: #ffffff;
-    --color-bkg-light: #dbe9fd;
+    /* --color-bkg-light: #dbe9fd;
     --color-content: #ffffff;
     --color-text-primary: #000000;
-    --color-text-secondary: #ffffff;
+    --color-text-secondary: #ffffff; */
   }
 
   :root[class="color-blind"] {
-    --color-bkg: #14a720;
-    --color-bkg-light: #2d3748;
-    --color-bkg-lighter: #2269e3;
+    --primary-theme-lb: #63acbe;
+    --primary-theme-db: #EE442F;
+    /* #601A4A #63acbe EE442F 601A4A*/
+    --primary-bkg: #601A4A;
+    --primary-txt: #ffffff;
+    --secondary-bkg: #0b0f21;
+    /*fix thisr*/
+    --secondary-txt: #000000;
+    --color-bkg-lighter: #000000;
     --color-bkg-lightest: #718096;
-    --color-content: #26d223;
+    --color-content: #1c1f1c;
   }
 }
+
 /* .login_background {
   background: linear-gradient(to bottom, #0f1945, var(--primary-theme-lb));
   background-size: cover;

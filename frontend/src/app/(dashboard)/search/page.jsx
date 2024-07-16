@@ -1,5 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
+import '../../globals.css';
 import './search.css';
 
 const SearchPage = () => {
@@ -44,7 +45,7 @@ const SearchPage = () => {
 
     if (searchTerm) {
       const searchRegex = new RegExp(searchTerm, 'i');
-      filtered = filtered.filter(course => 
+      filtered = filtered.filter(course =>
         course.title.match(searchRegex) || course.code.match(searchRegex)
       );
     }
@@ -175,9 +176,9 @@ const SearchPage = () => {
             onChange={handleSearchChange}
           />
         </div>
-        <div className="filters">
-          <div className="filter">
-            <label>Year</label>
+        <div className="filters space-x-3">
+          <div className="filter ">
+            <label className='text-main-txt'>Year</label>
             <select value={year} onChange={handleYearChange}>
               <option value="2024">2024</option>
               <option value="2023">2023</option>
@@ -185,7 +186,7 @@ const SearchPage = () => {
             </select>
           </div>
           <div className="filter">
-            <label>Term</label>
+            <label className='text-main-txt'>Term</label>
             <select value={term} onChange={handleTermChange}>
               <option value="Term 1">Term 1</option>
               <option value="Term 2">Term 2</option>
@@ -195,16 +196,16 @@ const SearchPage = () => {
             </select>
           </div>
         </div>
-        <h2>Results :</h2>
+        <h2 className='text-main-txt'>Results :</h2>
         <div className="results">
           {currentCourses.map((course) => (
-            <div key={course._id} className="course">
+            <div key={course._id} className="course text-main-txt">
               <span>{course.code}</span>
               <span>{course.title}</span>
               <span>{course.year}</span>
               <span>{course.term}</span>
-              <button 
-                className="add-button" 
+              <button
+                className="add-button"
                 onClick={() => handleAddCourse(course._id)}
               >
                 +
@@ -239,15 +240,16 @@ const SearchPage = () => {
           </button>
         </div>
         <div className="direct-navigation">
-          <span>Go to page:</span>
+          <span className='text-main-txt'>Go to page:</span>
           <input
             type="number"
             min="1"
             max={totalPages}
             value={currentPage}
             onChange={handleDirectPageChange}
+            className='text-main-txt bg-main-bkg'
           />
-          <span>of {totalPages} pages</span>
+          <span className='text-main-txt'>of {totalPages} pages</span>
         </div>
       </div>
       {selectedCourse && selectedCourse.outcomes && (

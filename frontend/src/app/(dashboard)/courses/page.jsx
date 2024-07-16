@@ -211,11 +211,10 @@ export default function ListingCourses() {
                 <div
                   key={course.code}
                   onClick={() => handleCourseClick(course)}
-                  className={`course-item ${
-                    visitedCourses.some((vc) => vc.code === course.code)
+                  className={`course-item ${visitedCourses.some((vc) => vc.code === course.code)
                       ? 'selected'
                       : ''
-                  }`}
+                    }`}
                 >
                   <div className='course-info'>
                     <div className='course-code'>{course.code}</div>
@@ -251,7 +250,7 @@ export default function ListingCourses() {
             )}
           </div>
         </div>
-        <div className='analysis'>
+        <div className='analysis '>
           {!analysisChart ? (
             <div className='course-details-container'>
               {visitedCourses.length !== 0 ? (
@@ -277,21 +276,23 @@ export default function ListingCourses() {
               ) : (
                 <div className='centered-container'>
                   <div className='normal-details'>
-                    <h2>Select a course to analyse</h2>
-                    <p>Nothing is selected</p>
+                    <h2 className='text-main-txt'>Select a course to analyse</h2>
+                    <p className='text-main-txt'>Nothing is selected</p>
                   </div>
                 </div>
               )}
             </div>
           ) : (
-            <>
-              {displayChart(visitedCourses)}
-              <button
-                className='analysis-button'
-                onClick={() => hideAnalysis()}
-              >
-                <FontAwesomeIcon icon={faArrowLeft} /> Go Back
-              </button>
+            <> {/* BETTER to display with DIV , and change listing courses flex   */}
+              {/* <span className=''>  */}
+                {displayChart(visitedCourses)}
+                <button
+                  className='analysis-button'
+                  onClick={() => hideAnalysis()}
+                >
+                  <FontAwesomeIcon icon={faArrowLeft} /> Go Back
+                </button>
+              {/* </span> */}
             </>
           )}
 

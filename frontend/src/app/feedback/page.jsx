@@ -184,7 +184,7 @@ export default function sendFeedback() {
               Submit
             </button>
           </div>
-          <div className="flex items-center justify-center relative top-48">
+          <div className="flex items-center justify-center relative text-main-txt top-48">
             Return to &nbsp;
             <Link href="/" className="text-primary-theme-lb underline">
               Home
