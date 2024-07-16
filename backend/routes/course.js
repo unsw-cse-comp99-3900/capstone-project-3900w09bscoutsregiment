@@ -10,6 +10,7 @@ const courseRouter = express.Router();
 
 courseRouter.use(authMiddleware);
 
+// Gets the details of a specific course offering
 courseRouter.get('/:code/:year/:term', async (req, res) => {
   const query = Course.find({});
   query.find({code: req.params.code});
@@ -19,6 +20,12 @@ courseRouter.get('/:code/:year/:term', async (req, res) => {
   res.json(course);
 });
 
+// Gets a list of courses that fulfil any combination of
+// 3 filtering options provided in a query string.
+// search -- filters out courses that do not have search as a substring of the 
+//           title or code
+// term -- filters out courses that do not match the specified term
+// year -- filters out courses that do not match the specified year
 courseRouter.get('/all', async (req, res) => {
   const query = Course.find({});
   if (req.query.search != null) {
@@ -42,6 +49,7 @@ courseRouter.get('/all', async (req, res) => {
   
 });
 
+// provides the list of courses that are in the current user's account
 // resposnse format
 // [
 //   {
@@ -99,6 +107,8 @@ courseRouter.get('/list', async (req, res) => {
   return res.json(output);
 });
 
+// Adds a course to the current user's account
+// the course is provided in the body as courseId
 courseRouter.post('/add', async (req, res) => {
   const userId = req.userId;
   const userExists = (await User.exists({_id: userId}).exec()) != null;
@@ -128,6 +138,8 @@ courseRouter.post('/add', async (req, res) => {
   res.send('ok');
 });
 
+// Removes a course from the current user's account
+// the course is provided in the body as courseId
 courseRouter.post('/delete', async (req, res) => {
   const userId = req.userId;
   const courseId = req.body.courseId;
@@ -147,6 +159,7 @@ courseRouter.post('/delete', async (req, res) => {
   res.send('ok');
 });
 
+// Favorites a course in the current user's account
 courseRouter.post('/favorite', async (req, res) => {
   const userId = req.userId;
   const userExists = (await User.exists({_id: userId}).exec()) != null;
@@ -172,6 +185,7 @@ courseRouter.post('/favorite', async (req, res) => {
   res.send('ok');
 });
 
+// Unfavorites a course in the current user's account
 courseRouter.post('/unfavorite', async (req, res) => {
   const userId = req.userId;
   const userExists = (await User.exists({_id: userId}).exec()) != null;
