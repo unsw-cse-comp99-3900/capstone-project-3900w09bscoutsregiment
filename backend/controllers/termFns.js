@@ -1,5 +1,6 @@
 const termMap = new Map();
 
+// create a mapping from long names to short names.
 termMap.set('T1', 'Term 1');
 termMap.set('T2', 'Term 2');
 termMap.set('T3', 'Term 3');
@@ -24,6 +25,7 @@ termMap.set('Hexamester 5', 'H1');
 termMap.set('Hexamester 6', 'H1');
 termMap.set('Summer', 'Summer');
 
+// checks if two terms are equal regardless of being long or sort form
 export const termEq = (t1, t2) => {
   if (!termMap.has(t1) || !termMap.has(t2)) {
     return false;
@@ -37,10 +39,12 @@ export const termEq = (t1, t2) => {
   return false;
 };
 
+// swaps a term from one to the other
 export const termToggle = (term) => {
   return termMap.get(term);
 };
 
+// checks that a term is valid and in small form
 export const termIsSmall = (term) => {
   return (term.length == 2 && termMap.has(term));
 }
