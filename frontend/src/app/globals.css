@@ -1,7 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+@import 'flowbite';
 /* Where is this used */
 .login-background {
   background: linear-gradient(to bottom, var(--primary-theme-db), var(--primary-theme-lb));
@@ -14,16 +14,17 @@
   border-bottom-right-radius: 6em;
 }
 
+/*FOR LOGIN REGISTER RESETPASS*/
 .outline_btn {
-  @apply border border-white rounded-md py-2 px-10 hover:bg-white hover:text-blue-500;
+  @apply border border-white rounded-md py-2 px-10 hover:bg-white hover:text-primary-theme-lb;
 }
 
 .highlight_btn {
-  @apply bg-white rounded-md text-blue-500 py-2 px-10;
+  @apply bg-white rounded-md text-primary-theme-lb py-2 px-10;
 }
 
 .input_text {
-  @apply w-full rounded-md py-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-blue-400 focus:ring-2 focus:ring-inset sm:leading-3 px-2
+  @apply w-full rounded-md py-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-primary-theme-lb focus:ring-2 focus:ring-inset sm:leading-3 px-2
 }
 
 .login_background {
@@ -39,13 +40,11 @@
 
 .custom-login-hr {
   border: none;
-  border-top: 2px solid #0075FF;
+  border-top: 2px solid var(--primary-theme-db);
   color: #333;
   overflow: visible;
   text-align: center;
   position: relative;
-
-
 }
 
 .custom-login-hr::after {
@@ -63,14 +62,14 @@
 }
 
 @layer base {
-
   :root[class="dark"] {
     --primary-theme-lb: #0075FF;
-    --primary-theme-db:#004699;
-    /* #2236fd for new color? */
-    --primary-bkg: #0b0f21;
+    --primary-theme-db: #0f1945;
+    /* #2236fd for new color? 0f1945  0b0f21*/
+    --primary-bkg: #0f1945;
     --primary-txt: #ffffff;
-    --secondary-bkg: #ffffff; /*fix thisr*/
+    --secondary-bkg: #0b0f21;
+    /*fix thisr*/
     --secondary-txt: #000000;
     --color-bkg-lighter: #000000;
     --color-bkg-lightest: #718096;
@@ -82,7 +81,7 @@
     --primary-theme-db: #004699;
     --primary-bkg: #ffffff;
     --primary-txt: #000000;
-    --secondary-bkg: #000000;
+    --secondary-bkg: #ffffff;
     --secondary-txt: #ffffff;
     --color-bkg-light: #dbe9fd;
     --color-content: #ffffff;
@@ -98,10 +97,20 @@
     --color-content: #26d223;
   }
 }
+/* .login_background {
+  background: linear-gradient(to bottom, #0f1945, var(--primary-theme-lb));
+  background-size: cover;
+  background-position: center;
 
-/* body {
-  @apply bg-[color:var(--color-bkg)] text-[color:var(--color-content)];
+  background-position: center top fixed;
+  height: 50vh;
+  border-bottom-left-radius: 6em;
+  border-bottom-right-radius: 6em;
 } */
+
+body {
+  @apply bg-[color:var(--primary-bkg)];
+}
 
 .option_menu {
   @apply flex rounded-xl justify-between items-center border-b p-4 gap-10 hover:bg-gray-200 transition duration-300 ease-in-out

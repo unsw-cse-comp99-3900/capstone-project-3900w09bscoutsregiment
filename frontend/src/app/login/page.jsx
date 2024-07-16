@@ -41,17 +41,21 @@ export default function Login() {
     }
   };
 
+  /**
+   * 
+   * Main Background color is handled on globals.css on '@apply'->body directive
+   */
   return (
-    <div>
-      <div className='login_background'>
-        <div className='min-h-screen flex justify-center items-center'>
+    <div className=''>
+      <div className='login_background z-10'>
+        <div className='min-h-screen flex justify-center items-center '>
           <form
             name="publish-form"
             id="form"
-            className="justify-center mx-auto w-2/5 space-y-2 p-14 rounded-2xl bg-white shadow-2xl"
+            className="justify-center mx-auto w-2/5 space-y-2 p-14 rounded-2xl bg-secondary-bkg shadow-2xl"
           >
             <div>
-              <h2 className="block text-blue-500 text-[4rem] font-bold my-4">
+              <h2 className="block text-primary-theme-lb text-[4rem] font-bold my-4">
                 Log In
               </h2>
               <input
@@ -85,7 +89,7 @@ export default function Login() {
             <div className="items-center justify-between">
               <button
                 id="submit"
-                className="bg-blue-500 hover:bg-blue-700 text-white text-lg font-bold w-full italic py-2 px-4 pb-3: rounded focus:outline-none focus:shadow-outline"
+                className="bg-primary-theme-lb hover:bg-blue-700 text-white text-lg font-bold w-full italic py-2 px-4 pb-3: rounded focus:outline-none focus:shadow-outline"
                 type="button"
                 onClick={login}
               >
@@ -110,10 +114,11 @@ export default function Login() {
             </div>
             {/* sign up */}
             <div className="flex items-center justify-center gap-2">
-              <p> Don't have an account yet?</p>
+              <p className='text-main-txt'> Don't have an account yet?</p>
               <Link
                 href="/register"
                 style={{ textDecoration: 'underline', color: '#1d4ed8' }}
+                
               >
                 Sign up
               </Link>

@@ -31,7 +31,7 @@ export default function OAuth() {
           <path fill="none" d="M0 0h48v48H0z"></path>
         </svg>
       </span>
-      <span className=' text-xs '>Continue with Google</span>
+      <span className=' text-xs text-main-txt'>Continue with Google</span>
     </Button>
   );
 }

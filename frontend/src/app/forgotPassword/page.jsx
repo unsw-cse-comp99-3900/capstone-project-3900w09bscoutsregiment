@@ -29,58 +29,45 @@ export default function ForgotPassword() {
 
   return (
     <div>
-      <div
-        id="top-content"
-        className="text-white w-full bg-primary-theme-db flex justify-start gap-4 px-4 py-4"
-      >
-        <img src="Cotam-logo.png" alt="" className="rounded-md" />
-        <Link href="/" className="text-white" style={{ fontSize: '2rem' }}>
-          COTAM
-        </Link>
-      </div>
-
-      <div className="login-background">
-        <form
-          name="publish-form"
-          id="form"
-          className=" w-1/3 justify-center mx-auto pt-3" // POSTIION MUST BE ABOSLUTE
-        >
-          <div className="mb-5 relative top-32">
-            <label
-              className="block text-white text-[2rem] font-bold mb-5"
-              htmlFor="password"
-            >
-              Forgot Password
-            </label>
-            <div className="text-white mb-3 ">
-              We will send you an email with instructions on how to reset your
-              password.
+      <div className="login_background">
+        <div className='min-h-screen flex justify-center items-center'>
+          <form
+            name="publish-form"
+            id="form"
+            className="justify-center mx-auto w-2/5 bg-secondary-bkg space-y-2 p-14 rounded-2xl shadow-2xl"
+          >
+            <div>
+              <h2 className="block text-primary-theme-lb text-[3rem] font-bold my-4">
+                Forgot Password
+              </h2>
+              <div className="mb-3 text-main-txt">
+                We will send you an email with instructions on how to reset your
+                password.
+              </div>
+              <input
+                name="email-address"
+                className="shadow appearance-none border rounded w-full py-3 px-2 text-gray-700 placeholder-primary-theme-lb leading-tight focus:outline-none focus:shadow-outline"
+                id="email-address"
+                type="text"
+                placeholder="Email address"
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                }}
+              />
             </div>
-            <input
-              name="email-address"
-              className="shadow appearance-none border rounded w-full py-3 px-2 text-gray-700 placeholder-blue-400 leading-tight focus:outline-none focus:shadow-outline"
-              id="email-address"
-              type="text"
-              placeholder="Email address"
-              onChange={(e) => {
-                setEmail(e.target.value);
-              }}
-            // multiple
-            />
-          </div>
 
             {/* Send email */}
             <div className="items-center justify-between pt-2">
               <button
                 id="submit"
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold w-1/4 italic py-2 px-4 pb-3: rounded focus:outline-none focus:shadow-outline mb-5"
+                className="bg-primary-theme-lb hover:bg-blue-700 text-white font-bold w-1/4 italic py-2 px-4 pb-3: rounded focus:outline-none focus:shadow-outline mb-5"
                 type="button"
                 onClick={sendEmailForgotPassword}
               >
                 Send Email
               </button>
             </div>
-            <div className="flex items-center justify-center pt-2">
+            <div className="flex items-center justify-center pt-2 text-main-txt">
               Return to &nbsp;
               <Link href="/" className="text-primary-theme-lb underline">
                 Home

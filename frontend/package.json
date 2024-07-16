@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@emailjs/browser": "^4.4.1",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@fortawesome/fontawesome-svg-core": "^6.5.2",
@@ -20,6 +21,7 @@
     "@mui/material": "^5.15.20",
     "cookie": "^0.6.0",
     "firebase": "^10.12.2",
+    "flowbite": "^2.4.1",
     "next": "14.2.4",
     "openai": "^4.52.5",
     "react": "^18",

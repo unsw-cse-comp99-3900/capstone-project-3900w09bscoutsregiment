@@ -56,11 +56,11 @@ export default function Register() {
           <form
             name="publish-form"
             id="form"
-            className="justify-center mx-auto w-2/5 space-y-2 p-14 rounded-2xl bg-white shadow-2xl"
+            className="justify-center bg-secondary-bkg mx-auto w-2/5 space-y-2 p-14 rounded-2xl shadow-2xl"
           >
             {/* email */}
             <div>
-              <h2 className="block text-blue-500 text-[4rem] font-bold my-4">
+              <h2 className="block text-primary-theme-lb text-[4rem] font-bold my-4">
                 Sign Up
               </h2>
               <input
@@ -123,7 +123,7 @@ export default function Register() {
             <div className="flex items-center justify-between pb-2">
               <button
                 id="submit"
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold w-full italic py-2 px-4 pb-3: rounded focus:outline-none focus:shadow-outline"
+                className="bg-primary-theme-lb hover:bg-blue-700 text-white font-bold w-full italic py-2 px-4 pb-3: rounded focus:outline-none focus:shadow-outline"
                 type="button"
                 onClick={register}
               >
@@ -138,7 +138,7 @@ export default function Register() {
                 <OAuth></OAuth>
               </div>
               <div className="pt-2 flex items-center justify-center gap-2">
-                <p> Already have an account? </p>
+                <p className='text-main-txt'> Already have an account? </p>
                 <Link href="/login" style={{ textDecoration: 'underline', color: '#1d4ed8' }}>
                   Sign in
                 </Link>

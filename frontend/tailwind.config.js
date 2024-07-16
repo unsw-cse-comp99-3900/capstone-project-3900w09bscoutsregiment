@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: 'class',
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -20,15 +21,9 @@ module.exports = {
         'secondary-bkg': 'var(--secondary-bkg)',
         'secondary-txt': 'var(--secondary-txt)',
       },
-      // colors: {
-      //   accent: {
-      //     1: "hsl(var(--color-accent1) / <alpha-value>)",
-      //     2: "hsl(var(--color-accent2) / <alpha-value>)",
-      //   },
-      //   bkg: "hsl(var(--color-bkg) / <alpha-value>)",
-      //   content: "hsl(var(--color-content) / <alpha-value>)",
-      // },
     },
   },
-  plugins: [],
+  plugins: [
+    require('flowbite/plugin')
+  ],
 };
