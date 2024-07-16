@@ -143,7 +143,7 @@ export default function ListingCourses() {
     }
   };
 
-  const handleDeleteCourse = async (courseCode) => {
+  const handleDeleteCourse = async (courseId) => {
     try {
       await fetch(`http://localhost:${port}/api/course/delete`, {
         method: 'POST',
@@ -151,10 +151,10 @@ export default function ListingCourses() {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
-        body: JSON.stringify({ courseId: courseCode }),
+        body: JSON.stringify({ courseId: courseId }),
       });
       // Remove the course from the list
-      setCourses(courses.filter((course) => course.code !== courseCode));
+      setCourses(courses.filter((course) => course.courseId !== courseId));
     } catch (error) {
       console.error('Error deleting course:', error);
     }
@@ -198,47 +198,57 @@ export default function ListingCourses() {
             <Link href='/search'>Add Course</Link>
           </button>
           <div className='courses'>
-            {filteredCourses.map((course) => (
-              <div
-                key={course.code}
-                onClick={() => handleCourseClick(course)}
-                className={`course-item ${
-                  visitedCourses.some((vc) => vc.code === course.code)
-                    ? 'selected'
-                    : ''
-                }`}
-              >
-                <div className='course-info'>
-                  <div className='course-code'>{course.code}</div>
-                  <div className='course-title'>{course.title}</div>
-                  <div className='course-term'>{course.term}</div>
-                  <div className='course-year'>{course.year}</div>
-                </div>
-                <div className='course-actions'>
-                  <button
-                    className='action-button'
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleFavoriteCourse(course);
-                    }}
-                  >
-                    <FontAwesomeIcon
-                      icon={faStar}
-                      className={course.favorite ? 'favorite' : ''}
-                    />
-                  </button>
-                  <button
-                    className='action-button'
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDeleteCourse(course.code);
-                    }}
-                  >
-                    <FontAwesomeIcon icon={faTrash} />
-                  </button>
+            {filteredCourses.length === 0 ? (
+              <div className='centered-container'>
+                <div className='normal-details'>
+                  <h2>Empty, No Courses</h2>
+                  <p>Click on the Add Course Button to find courses</p>
+                  <p>to can add to the list</p>
                 </div>
               </div>
-            ))}
+            ) : (
+              filteredCourses.map((course) => (
+                <div
+                  key={course.code}
+                  onClick={() => handleCourseClick(course)}
+                  className={`course-item ${
+                    visitedCourses.some((vc) => vc.code === course.code)
+                      ? 'selected'
+                      : ''
+                  }`}
+                >
+                  <div className='course-info'>
+                    <div className='course-code'>{course.code}</div>
+                    <div className='course-title'>{course.title}</div>
+                    <div className='course-term'>{course.term}</div>
+                    <div className='course-year'>{course.year}</div>
+                  </div>
+                  <div className='course-actions'>
+                    <button
+                      className='action-button'
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleFavoriteCourse(course);
+                      }}
+                    >
+                      <FontAwesomeIcon
+                        icon={faStar}
+                        className={course.favorite ? 'favorite' : ''}
+                      />
+                    </button>
+                    <button
+                      className='action-button'
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteCourse(course.courseId);
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faTrash} />
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
         <div className='analysis'>
