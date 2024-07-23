@@ -130,6 +130,73 @@ const analyseCourses = (courseList) => {
   return out;
 };
 
+// Takes a list of courses and their outcomes and produces an output that 
+// is potentially more usable for generating a graph
+// Expects input to be of the form
+// [
+//   {
+//     _id: ...
+//     code: ...
+//     colour: ...
+//     outcomes: [
+//       "...",
+//       "..."
+//     ]
+//   },
+// ]
+// output will have the form
+// {
+//   courses: [
+//     {
+//       code: ...
+//       analysis: [..., ...] (number for each category)
+//     },
+//   ],
+//   categories: {
+//     "categoryName": {
+//       count: ...(number of outcomes in this block)
+//       courses: [
+//         { _id: ..., code: ..., outcomes: ["...", "..."] },
+//       ]
+//     }
+//   }
+// }
+const analyseCourses2 = (courseList) => {
+  const out = {courses: new Array(), categories: {}};
+  for (const c of categories) {
+    out.categories[c] = {
+      count: 0,
+      courses: new Array()
+    }; 
+  }
+  for (const course of courseList) {
+    const courseOut = {
+      code: course.code,
+      analysis: new Array(categories.length)
+    };
+    for (const outcome of course.outcomes) {
+      const analysis = analyseOutcome(outcome);
+      courseOut.analysis[categories.indexOf(analysis)] += 1;
+      out.categories[analysis].count += 1;
+      const cb = out.categories[analysis].courses.find((x) => x._id == course._id);
+      if (cb == undefined) {
+        out.categories[analysis].courses.push(
+          {
+            _id: course._id,
+            code: course.code,
+            outcomes: [outcome]
+          }
+        );
+      } else {
+        cb.outcomes.push(outcome);
+      }
+    }
+    out.courses.push(courseOut);
+  }
+  console.log(out);
+  return out;
+};
+
 // generates a png from an analysis and outputs it to a file
 const makePng = (analysis) => {
   const canvas = createCanvas(1000, 600);
@@ -241,6 +308,14 @@ const makePDF = (analysis, name) => {
   doc.text('hello world');
   doc.text('hello world');
   doc.end();
-}
+};
 
-export default { categories, loadFile, analyseOutcome, analyseCourses, makePng, makePDF };
+export default { 
+  categories,
+  loadFile,
+  analyseOutcome,
+  analyseCourses,
+  analyseCourses2,
+  makePng,
+  makePDF
+};
