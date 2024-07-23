@@ -7,7 +7,7 @@ const verbMap = new Map();
 const categories = new Array();
 
 Chart.defaults.font.family = 'Helvetica';
-Chart.defaults.font.size = 30;
+Chart.defaults.font.size = 60;
 
 // loads a file that contains the verb mappings into a map
 const loadFile = (name) => {
@@ -172,8 +172,11 @@ const analyseCourses2 = (courseList) => {
   for (const course of courseList) {
     const courseOut = {
       code: course.code,
-      analysis: new Array(categories.length)
+      analysis: new Array()
     };
+    for (let i = 0; i < categories.length; i++) {
+      courseOut.analysis.push(0);
+    }
     for (const outcome of course.outcomes) {
       const analysis = analyseOutcome(outcome);
       courseOut.analysis[categories.indexOf(analysis)] += 1;
@@ -289,6 +292,73 @@ const makePng = (analysis) => {
   return buffer;
 };
 
+const makePng2 = (analysis) => {
+  const canvas = createCanvas(2000, 1200);
+  const ctx = canvas.getContext('2d');
+  const plugin = {
+    id: 'customCanvasBackgroundImage',
+    beforeDraw: (chart) => {
+      const ctx = chart.ctx;
+      ctx.save();
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.restore();
+    }
+  };
+  const data = {}
+  data.labels = categories;
+  data.datasets = new Array();
+  for (const c of analysis.courses) {
+    data.datasets.push({
+      label: c.code,
+      data: c.analysis
+    });
+  }
+  console.log(data);
+  for (const d of data.datasets) {
+    console.log(d.data);
+  }
+  new Chart(ctx, {
+    type: 'bar',
+    data: data,
+    // data: {
+    //   labels: [1, 2, 3, 4, 5],
+    //   datasets: [{
+    //     label: 'data',
+    //     data: [4, 2, 1, 0, 3],
+    //     backgroundColor: 'lightblue'
+    //   },
+    //   {
+    //     label: 'data2',
+    //     data: [2, 0, 3, 2, 2],
+    //     backgroundColor: 'lightgreen'
+    //   }]
+    // },
+    options: {
+      indexAxis: 'y',
+      scales: {
+        x: {
+          stacked: true
+        },
+        y: {
+          stacked: true
+        }
+      },
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: 'horizontal bars'
+      }
+    },
+    plugins: [plugin]
+  });
+
+  const buffer = canvas.toBuffer('image/png');
+  return buffer;
+};
+
 const makePDF = (analysis, name) => {
   const doc = new PDFDocument();
   const dir = './outputs/';
@@ -299,7 +369,7 @@ const makePDF = (analysis, name) => {
   doc.font('Helvetica')
   doc.fontSize(20);
   doc.text('hello world');
-  doc.image(makePng(analysis), undefined, undefined, 
+  doc.image(makePng2(analysis), undefined, undefined, 
     {
       width: 400
     }
