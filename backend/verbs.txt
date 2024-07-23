@@ -39,6 +39,7 @@ characterize
 characterise
 clarify
 classify
+communicate
 compare
 compute
 contrast
@@ -116,6 +117,7 @@ investigate
 manipulate
 modify
 operate
+perform
 personalise
 personalize
 plot
