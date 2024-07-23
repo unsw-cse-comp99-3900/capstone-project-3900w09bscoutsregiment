@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import { createCanvas } from 'canvas';
 import Chart from 'chart.js/auto';
+import { jsPDF } from 'jspdf';
 
 const verbMap = new Map();
 const categories = new Array();
@@ -127,7 +128,7 @@ const analyseCourses = (courseList) => {
 };
 
 // generates a png from an analysis and outputs it to a file
-const makePng = (analysis, name) => {
+const makePng = (analysis) => {
   const canvas = createCanvas(1000, 1000);
   const ctx = canvas.getContext('2d');
   const plugin = {
@@ -215,7 +216,13 @@ const makePng = (analysis, name) => {
   });
 
   const buffer = canvas.toBuffer('image/png');
-  fs.writeFileSync(name, buffer);
+  return buffer;
 };
 
-export default { categories, loadFile, analyseOutcome, analyseCourses, makePng };
+const makePDF = (analysis, name) => {
+  const doc = new jsPDF();
+  doc.text("Hello world", 30, 30);
+  doc.save(name + ".pdf")
+}
+
+export default { categories, loadFile, analyseOutcome, analyseCourses, makePng, makePDF };

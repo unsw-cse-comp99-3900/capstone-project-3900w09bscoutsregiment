@@ -85,11 +85,9 @@ db.once('open', async () => {
       ]
     }
   ]);
-  console.log(analysis);
-  analyseFns.makePng(analysis, './test.png');
-  // console.log(analyseOutcome('Describe biomaterial classes, their general properties, and predict how specific materials may be affected by physiological conditions'));
-  // console.log(analyseOutcome('Develop the basis for a material with specified flow and dynamic properties using key ingredients like polymers, particles, and emulsifiers.'));
-  // console.log(analyseOutcome('Analyse experimental data on product properties to deliver quantitative measures of product performance.'));
+  analyseFns.makePDF(analysis, "testing")
+  // console.log(analysis);
+  // analyseFns.makePng(analysis, './test.png');
   app.listen(port, () => {
     console.log(`Backend running at http://localhost:${port}`);
   });
