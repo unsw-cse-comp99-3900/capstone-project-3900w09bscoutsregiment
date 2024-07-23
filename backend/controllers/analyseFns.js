@@ -8,6 +8,7 @@ const categories = new Array();
 
 Chart.defaults.font.family = 'Helvetica';
 Chart.defaults.font.size = 60;
+Chart.defaults.color = '#000';
 
 // loads a file that contains the verb mappings into a map
 const loadFile = (name) => {
@@ -188,10 +189,10 @@ const makePng = (analysis) => {
       indexAxis: 'y',
       scales: {
         x: {
-          stacked: true
+          stacked: true,
         },
         y: {
-          stacked: true
+          stacked: true,
         }
       },
       legend: {
@@ -200,6 +201,10 @@ const makePng = (analysis) => {
       title: {
         display: true,
         text: 'horizontal bars'
+      },
+      grid: {
+        color: 'black',
+        lineWidth: 5
       }
     },
     plugins: [plugin]
@@ -210,6 +215,10 @@ const makePng = (analysis) => {
 };
 
 const makePDF = (analysis, name) => {
+  const headingSize = 24;
+  const sub1Size = 20;
+  const sub2Size = 16;
+  const fontSize = 13;
   const doc = new PDFDocument();
   const dir = './outputs/';
   if (!fs.existsSync(dir)) {
@@ -217,16 +226,26 @@ const makePDF = (analysis, name) => {
   }
   doc.pipe(fs.createWriteStream(dir + name + '.pdf'));
   doc.font('Helvetica')
-  doc.fontSize(20);
-  doc.text('hello world');
-  doc.image(makePng2(analysis), undefined, undefined, 
+  doc.fontSize(headingSize);
+  doc.text('Analysis', 70, 70);
+  doc.image(makePng(analysis), 70, 100, 
     {
-      width: 400
+      width: 410
     }
   );
-  doc.text('hello world');
-  doc.text('hello world');
-  doc.text('hello world');
+  doc.text('Categories', 70, 370);
+  for (const c in analysis.categories) {
+    const block = analysis.categories[c];
+    doc.fontSize(sub1Size);
+    doc.moveDown(1);
+    doc.text(`${c} (${block.count})`);
+    for (const course of block.courses) {
+      doc.fontSize(sub2Size);
+      doc.moveDown(1);
+      doc.text(course.code);
+      doc.list(course.outcomes);
+    }
+  }
   doc.end();
 };
 
