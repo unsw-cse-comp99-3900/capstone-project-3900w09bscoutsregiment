@@ -88,64 +88,6 @@ const analyseOutcome = (outcome) => {
 // ]
 // output will have the form
 // {
-//   "categoryName": [
-//     {
-//       colour: ...(hexadecimal)
-//       count: ...(number of outcomes in this block)
-//       courses: [
-//         { _id: ..., code: ..., outcomes: ["...", "..."] },
-//       ]
-//     }
-//   ]
-// }
-const analyseCourses = (courseList) => {
-  const out = new Array();
-  for (const c of categories) {
-    out[c] = new Array(); 
-  }
-  for (const course of courseList) {
-    for (const outcome of course.outcomes) {
-      const analysis = analyseOutcome(outcome);
-      const colourBlock = out[analysis].find((x) => x.colour == course.colour);
-      if (colourBlock == undefined) {
-        out[analysis].push(
-          {
-            colour: course.colour,
-            count: 1,
-            courses: [{_id: course._id, code: course.code, outcomes: [outcome]}]}
-        );
-        continue;
-      }
-      const innerCourse = colourBlock.courses.find((x) => x._id == course._id);
-      if (innerCourse == undefined) {
-        colourBlock.courses.push(
-          {_id: course._id, code: course.code, outcomes: [outcome]}
-        );
-        continue;
-      }
-      colourBlock.count += 1;
-      innerCourse.outcomes.push(outcome);
-    }
-  }
-  return out;
-};
-
-// Takes a list of courses and their outcomes and produces an output that 
-// is potentially more usable for generating a graph
-// Expects input to be of the form
-// [
-//   {
-//     _id: ...
-//     code: ...
-//     colour: ...
-//     outcomes: [
-//       "...",
-//       "..."
-//     ]
-//   },
-// ]
-// output will have the form
-// {
 //   courses: [
 //     {
 //       code: ...
@@ -161,7 +103,7 @@ const analyseCourses = (courseList) => {
 //     }
 //   }
 // }
-const analyseCourses2 = (courseList) => {
+const analyseCourses = (courseList) => {
   const out = {courses: new Array(), categories: {}};
   for (const c of categories) {
     out.categories[c] = {
@@ -200,99 +142,7 @@ const analyseCourses2 = (courseList) => {
   return out;
 };
 
-// generates a png from an analysis and outputs it to a file
 const makePng = (analysis) => {
-  const canvas = createCanvas(1000, 600);
-  const ctx = canvas.getContext('2d');
-  const plugin = {
-    id: 'customCanvasBackgroundImage',
-    beforeDraw: (chart) => {
-      const ctx = chart.ctx;
-      ctx.save();
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.restore();
-    }
-  };
-  const data = {}; 
-  data.labels = categories;
-  data.datasets = new Array();
-  for (const [i, c] of categories.entries()) {
-    const blocks = analysis[c];
-    for (const b of blocks) {
-      const existingSet = data.datasets.find((x) => x.backgroundColor == b.colour)
-      if (existingSet == undefined) {
-        var label = '';
-        var values = new Array();
-        for (const course of b.courses) {
-          label += course.code + ' ';
-        }
-        var j = 0;
-        while (j < i) {
-          values.push(0);
-          j++;
-        }
-        values.push(b.count);
-        data.datasets.push({label: label, data: values, backgroundColor: b.colour});
-      } else {
-        var labelBits = existingSet.label.split(' ');
-        for (const course of b.courses) {
-          if (!labelBits.includes(course.code)) {
-            existingSet.label += course.code + ' ';
-          }
-        }
-        var j = existingSet.data.length;
-        while (j < i) {
-          existingSet.data.push(0);
-          j++;
-        }
-        existingSet.data.push(b.count);
-      }
-    }
-  }
-
-  new Chart(ctx, {
-    type: 'bar',
-    data: data,
-    // data: {
-    //   labels: [1, 2, 3, 4, 5],
-    //   datasets: [{
-    //     label: 'data',
-    //     data: [4, 2, 1, 0, 3],
-    //     backgroundColor: 'lightblue'
-    //   },
-    //   {
-    //     label: 'data2',
-    //     data: [2, 0, 3, 2, 2],
-    //     backgroundColor: 'lightgreen'
-    //   }]
-    // },
-    options: {
-      indexAxis: 'y',
-      scales: {
-        x: {
-          stacked: true
-        },
-        y: {
-          stacked: true
-        }
-      },
-      legend: {
-        position: 'top',
-      },
-      title: {
-        display: true,
-        text: 'horizontal bars'
-      }
-    },
-    plugins: [plugin]
-  });
-
-  const buffer = canvas.toBuffer('image/png');
-  return buffer;
-};
-
-const makePng2 = (analysis) => {
   const canvas = createCanvas(2000, 1200);
   const ctx = canvas.getContext('2d');
   const plugin = {
@@ -385,7 +235,6 @@ export default {
   loadFile,
   analyseOutcome,
   analyseCourses,
-  analyseCourses2,
   makePng,
   makePDF
 };
