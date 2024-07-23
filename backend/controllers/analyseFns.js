@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import { createCanvas } from 'canvas';
 import Chart from 'chart.js/auto';
-import { jsPDF } from 'jspdf';
+import PDFDocument from 'pdfkit';
 
 const verbMap = new Map();
 const categories = new Array();
@@ -220,9 +220,12 @@ const makePng = (analysis) => {
 };
 
 const makePDF = (analysis, name) => {
-  const doc = new jsPDF();
-  doc.text("Hello world", 30, 30);
-  doc.save("outputs/" + name + ".pdf")
+  const doc = new PDFDocument();
+  doc.pipe(fs.createWriteStream('outputs/' + name + '.pdf'));
+  doc.font('Times-Roman')
+  doc.fontSize(20);
+  doc.text('hello world');
+  doc.end();
 }
 
 export default { categories, loadFile, analyseOutcome, analyseCourses, makePng, makePDF };
