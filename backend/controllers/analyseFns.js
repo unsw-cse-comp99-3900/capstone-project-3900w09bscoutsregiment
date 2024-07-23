@@ -222,7 +222,7 @@ const makePng = (analysis) => {
 const makePDF = (analysis, name) => {
   const doc = new jsPDF();
   doc.text("Hello world", 30, 30);
-  doc.save(name + ".pdf")
+  doc.save("outputs/" + name + ".pdf")
 }
 
 export default { categories, loadFile, analyseOutcome, analyseCourses, makePng, makePDF };
