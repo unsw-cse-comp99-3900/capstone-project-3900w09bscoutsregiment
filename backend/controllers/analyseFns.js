@@ -6,6 +6,9 @@ import PDFDocument from 'pdfkit';
 const verbMap = new Map();
 const categories = new Array();
 
+Chart.defaults.font.family = 'Helvetica';
+Chart.defaults.font.size = 30;
+
 // loads a file that contains the verb mappings into a map
 const loadFile = (name) => {
   try {
@@ -129,7 +132,7 @@ const analyseCourses = (courseList) => {
 
 // generates a png from an analysis and outputs it to a file
 const makePng = (analysis) => {
-  const canvas = createCanvas(1000, 1000);
+  const canvas = createCanvas(1000, 600);
   const ctx = canvas.getContext('2d');
   const plugin = {
     id: 'customCanvasBackgroundImage',
@@ -221,9 +224,21 @@ const makePng = (analysis) => {
 
 const makePDF = (analysis, name) => {
   const doc = new PDFDocument();
-  doc.pipe(fs.createWriteStream('outputs/' + name + '.pdf'));
-  doc.font('Times-Roman')
+  const dir = './outputs/';
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir);
+  }
+  doc.pipe(fs.createWriteStream(dir + name + '.pdf'));
+  doc.font('Helvetica')
   doc.fontSize(20);
+  doc.text('hello world');
+  doc.image(makePng(analysis), undefined, undefined, 
+    {
+      width: 400
+    }
+  );
+  doc.text('hello world');
+  doc.text('hello world');
   doc.text('hello world');
   doc.end();
 }
