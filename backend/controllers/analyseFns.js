@@ -157,7 +157,7 @@ const makePng = (analysis) => {
     }
   };
   const data = {}
-  data.labels = categories;
+  data.labels = categories.map((c) => c.toUpperCase());
   data.datasets = new Array();
   for (const c of analysis.courses) {
     data.datasets.push({
@@ -238,7 +238,7 @@ const makePDF = (analysis, name) => {
     const block = analysis.categories[c];
     doc.fontSize(sub1Size);
     doc.moveDown(1);
-    doc.text(`${c} (${block.count})`);
+    doc.text(`${c.toUpperCase()} (${block.count})`);
     for (const course of block.courses) {
       doc.fontSize(sub2Size);
       doc.moveDown(1);
