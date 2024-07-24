@@ -25,8 +25,7 @@ courseRouter.get('/:code/:year/:term', async (req, res) => {
   for (const o of c.outcomes) {
     const a = analyseFns.analyseOutcome(o);
     const words = analyseFns.getKeywords(o, a);
-    words.category = a;
-    c.keywords.push(words);
+    c.keywords.push({category: a, words: words});
   }
   console.log(c);
   res.json([c]);
