@@ -192,7 +192,7 @@ export default function ListingCourses() {
               onChange={handleSearchChange}
             />
           </header>
-          <button className='flex items-center justify-center w-full my-2.5 p-2.5 bg-blue-700 text-white border-none rounded cursor-pointer transition duration-300 hover:bg-blue-600'>
+          <button className='flex items-center justify-center w-full my-2.5 p-2.5 bg-blue-600 text-white border-none rounded cursor-pointer transition duration-300 hover:bg-blue-700'>
             <FontAwesomeIcon icon={faPlus} />
             <Link href='/search' className='ml-2.5'>Add Course</Link>
           </button>
@@ -283,7 +283,7 @@ export default function ListingCourses() {
               {/* <span className=''>  */}
                 {displayChart(visitedCourses)}
                 <button
-                  className='mt-5 p-2.5 bg-blue-700 text-white border-none rounded cursor-pointer'
+                  className='mt-5 p-2.5 bg-blue-600 text-white border-none rounded cursor-pointer hover:bg-blue-700'
                   onClick={() => hideAnalysis()}
                 >
                   <FontAwesomeIcon icon={faArrowLeft} /> Go Back
@@ -293,7 +293,7 @@ export default function ListingCourses() {
           )}
 
           {visitedCourses.length !== 0 && !analysisChart && (
-            <button className='mt-5 p-2.5 bg-blue-700 text-white border-none rounded cursor-pointer' onClick={() => showAnalysis()}>
+            <button className='mt-5 p-2.5 bg-blue-600 text-white border-none rounded cursor-pointer hover:bg-blue-700' onClick={() => showAnalysis()}>
             Analyse Course
             </button>
           )}
