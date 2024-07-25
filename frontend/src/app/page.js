@@ -16,6 +16,10 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import 'flowbite';
 
+/**
+ * Function that builds the main page of the app when the STATE is NOT logged in
+ * @returns the main home page of the app
+ */
 export default function Home() {
   // Ensure stay logged in
   const router = useRouter();
@@ -44,10 +48,12 @@ export default function Home() {
           </div>
         </div>
       </div>
+      {/* Section: WaveSVG */}
       <WaveSVG />
       <br></br>
 
       <br></br>
+      {/* Section: Simple description of the app */}
       <div className='text-4xl font-bold text-primary-theme-lb items-center justify-center '>What we Offer</div>
       <div className='mt-12 p-5'>
         <div className='flex space-x-8 items-center justify-center home-background-how-it-works'>
@@ -75,7 +81,7 @@ export default function Home() {
       </div>
 
       <br></br>
-
+      {/* Section: Video tutorial */}
       <div className="bg-primary-theme-lb text-secondary-txt p-4 flex items-center justify-center">
         <iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
       </div>
@@ -83,6 +89,7 @@ export default function Home() {
         <Link href={"/feedback"} className="flex justify-start mt-4 px-6 py-2 bg-primary-theme-lb hover:bg-blue-700 text-secondary-txt italic bg-primary-theme-lb font-semibold rounded-lg">Feedback</Link>
       </div>
       <div className='text-main-txt'>Want to help improve our app? Share your feedback!</div>
+      {/* Section: Footer of the page */}
       <FooterPage />
     </main>
 

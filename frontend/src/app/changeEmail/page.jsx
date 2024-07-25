@@ -1,12 +1,11 @@
 'use client'; // needed for useState to work
 import React from 'react';
 import Link from 'next/link';
-
 export default function ChangeEmail() {
   const [oldEmail, setOldEmail] = React.useState('');
   const [newEmail, setNewEmail] = React.useState('');
 
-  let port = 5000;
+  let port = process.env.NEXT_PUBLIC_PORT_NUM;
 
   const handleUpdateEmail = async () => {
     const response = await fetch(`http://localhost:${port}/api/profile/update/email`, {

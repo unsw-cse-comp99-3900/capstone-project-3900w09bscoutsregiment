@@ -4,7 +4,8 @@ import '../../globals.css';
 import './search.css';
 
 const SearchPage = () => {
-  let port = 5000;
+  let port = process.env.NEXT_PUBLIC_PORT_NUM;
+
   const [searchTerm, setSearchTerm] = useState('');
   const [year, setYear] = useState('2024');
   const [term, setTerm] = useState('Term 2');

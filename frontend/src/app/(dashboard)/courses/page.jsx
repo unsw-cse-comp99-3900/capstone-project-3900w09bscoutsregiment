@@ -27,7 +27,7 @@ export default function ListingCourses() {
   const [courses, setCourses] = useState([]);
   const [visitedCourses, setVisitedCourses] = useState([]);
   const [analysisChart, setAnalysisChart] = useState(false);
-  const port = 5000;
+  const port = process.env.NEXT_PUBLIC_PORT_NUM;
 
   useEffect(() => {
     const fetchUserCourses = async () => {

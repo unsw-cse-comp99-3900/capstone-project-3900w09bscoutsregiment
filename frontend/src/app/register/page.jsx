@@ -10,7 +10,7 @@ export default function Register() {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [confirmPassword, setConfirmPassword] = React.useState('');
-  let port = 5000; // change later
+  let port = process.env.NEXT_PUBLIC_PORT_NUM;
 
   // Ensure stay logged in
   const router = useRouter();

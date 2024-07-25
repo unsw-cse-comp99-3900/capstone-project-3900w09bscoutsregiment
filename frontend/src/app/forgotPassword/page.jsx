@@ -8,7 +8,7 @@ import OAuth from '../components/OAuth';
 export default function ForgotPassword() {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
-  let port = 5000;
+  let port = process.env.NEXT_PUBLIC_PORT_NUM;
 
   // backend stuff
   // TODO: CHANGE THIS TO FORGOT PASSWORD

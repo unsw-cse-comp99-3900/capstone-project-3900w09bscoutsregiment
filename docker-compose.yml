@@ -1,20 +1,10 @@
 version: '3.8'
 services:
-  mongo:
-    image: mongo
-    container_name: mongo
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo-data:/data/db
-
   backend:
     build: ./backend
     container_name: backend
     ports:
-      - "5000:5000"
-    depends_on:
-      - mongo
+      - "5100:5100"
     volumes:
       - ./backend:/app
       - /app/node_modules
@@ -33,8 +23,3 @@ services:
       #- NODE_ENV=development
     depends_on:
       - backend
-
-volumes:
-  mongo-data:
-  # backend-node-modules:
-  # frontend-node-modules:
