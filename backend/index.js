@@ -51,6 +51,8 @@ db.once('open', async () => {
     {
       _id: 1,
       code: "COMP1511",
+      term: "Term 2",
+      year: 2024,
       colour: "#ffccff",
       outcomes: [
         "Apply C programming language to solve simple decision, looping, array, and linked list problems programmatically",
@@ -62,6 +64,8 @@ db.once('open', async () => {
     {
       _id: 2,
       code: "COMP1521",
+      term: "Term 1",
+      year: 2024,
       colour: "#ffccff",
       outcomes: [
         "Describe the architectural layers (fundamental parts) of a modern computer systems from hardware device (chip) levels upwards",
@@ -76,6 +80,8 @@ db.once('open', async () => {
     {
       _id: 3,
       code: "CEIC6711",
+      term: "Term 1",
+      year: 2024,
       colour: "#eeeeaa",
       outcomes: [
         "Describe the phenomenological changes wrought on the raw materials of a commercial product during processing to produce specific properties including viscosity, stability, or colour.",
