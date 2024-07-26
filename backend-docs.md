@@ -95,13 +95,35 @@ paired with the number of outcomes that fall into the category.
 
 ## POST `/add` and `/delete`
 
+### Body Parameters
+
+- `courseId` should be a 24 character hexadecimal string.
+
+### Description
+
 These URLs are used to add or delete courses from the current user's account.
 The body of the request contains the `courseId` that is to be added.
 
 ## POST `/favorite` and `/unfavorite`
 
+### Body Parameters
+
+- `courseId` should be a 24 character hexadecimal string.
+
+### Description
+
 These URLs are used to record the favorite status of a course in the user's 
 account. The body of the request provides the `courseId` that is to be favorited.
+
+## POST `/pdf`
+
+### Body Parameters
+
+- `courses` is an array of `courseId`s that are used to produce the analysis.
+
+### Description
+
+Generates analysis as a pdf and returns it in the response.
 
 # `analyseFns` file
 
