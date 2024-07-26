@@ -237,7 +237,7 @@ const makePDF = (analysis, name) => {
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir);
   }
-  doc.pipe(fs.createWriteStream(dir + name + '.pdf'));
+  // doc.pipe(fs.createWriteStream(dir + name + '.pdf'));
   doc.font('Helvetica')
   doc.fontSize(headingSize);
   doc.text('Analysis', 70, 70);
@@ -261,6 +261,7 @@ const makePDF = (analysis, name) => {
     }
   }
   doc.end();
+  return doc;
 };
 
 export default { 

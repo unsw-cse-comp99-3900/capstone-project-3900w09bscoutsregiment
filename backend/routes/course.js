@@ -253,9 +253,20 @@ courseRouter.post('/pdf', async (req, res) => {
   if (!(courses instanceof Array)) {
     res.status(400).json({ message: 'Did not provide array of courses' });
   }
-  const analysisList = new Array();
-  for (const cId of courses) {
+  const orList = new Array();
+  if (courses.length < 1) {
+    res.status(400).json({ message: 'Did not provide any ids in courses array' });
   }
+  for (const cId of courses) {
+    orList.push({ _id: cId });
+  }
+  const query = Course.find({ $or: orList });
+  query.select(['_id', 'code', 'term', 'year', 'outcomes']);
+  const results = await query.exec();
+  const doc = analysisFns.makePDF(analyseFns.analyseCourses(results));
+  res.setHeader('Content-disposition', 'attachment; filename=report.pdf');
+  res.setHeader('Content-type', 'application/pdf');
+  doc.pipe(res);
 });
 
 // courseRouter.post('/analyse', async (req, res) => {
