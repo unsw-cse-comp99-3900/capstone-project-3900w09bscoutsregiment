@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import { createCanvas } from 'canvas';
 import Chart from 'chart.js/auto';
 import PDFDocument from 'pdfkit';
+import { termToggle } from './termFns.js';
 
 const verbMap = new Map();
 const categories = new Array();
@@ -74,12 +75,14 @@ const analyseOutcome = (outcome) => {
 };
 
 // Takes a list of courses and their outcomes and produces an output that 
-// is potentially more usable for generating a graph
+// is potentially more usable for generating a graph and pdf
 // Expects input to be of the form
 // [
 //   {
 //     _id: ...
 //     code: ...
+//     term: ...
+//     year: ...
 //     outcomes: [
 //       "...",
 //       "..."
@@ -91,6 +94,8 @@ const analyseOutcome = (outcome) => {
 //   courses: [
 //     {
 //       code: ...
+//       term: ...
+//       year: ...
 //       analysis: [..., ...] (number for each category)
 //     },
 //   ],
@@ -98,7 +103,12 @@ const analyseOutcome = (outcome) => {
 //     "categoryName": {
 //       count: ...(number of outcomes in this block)
 //       courses: [
-//         { _id: ..., code: ..., outcomes: ["...", "..."] },
+//         {
+//           _id: ...,
+//           code: ...,
+//           term: ...,
+//           year: ...,
+//           outcomes: ["...", "..."] },
 //       ]
 //     }
 //   }
@@ -114,6 +124,8 @@ const analyseCourses = (courseList) => {
   for (const course of courseList) {
     const courseOut = {
       code: course.code,
+      term: course.term,
+      year: course.year,
       analysis: new Array()
     };
     for (let i = 0; i < categories.length; i++) {
@@ -129,6 +141,8 @@ const analyseCourses = (courseList) => {
           {
             _id: course._id,
             code: course.code,
+            term: course.term,
+            year: course.year,
             outcomes: [outcome]
           }
         );
@@ -160,7 +174,7 @@ const makePng = (analysis) => {
   data.datasets = new Array();
   for (const c of analysis.courses) {
     data.datasets.push({
-      label: c.code,
+      label: c.code + ' (' + termToggle(c.term) + ' ' + c.year + ')',
       data: c.analysis
     });
   }
@@ -217,7 +231,7 @@ const makePDF = (analysis, name) => {
   const headingSize = 24;
   const sub1Size = 20;
   const sub2Size = 16;
-  const fontSize = 13;
+  const textSize = 13;
   const doc = new PDFDocument();
   const dir = './outputs/';
   if (!fs.existsSync(dir)) {
@@ -241,7 +255,8 @@ const makePDF = (analysis, name) => {
     for (const course of block.courses) {
       doc.fontSize(sub2Size);
       doc.moveDown(1);
-      doc.text(course.code);
+      doc.text(course.code + ' (' + termToggle(course.term) + ' ' + course.year + ')');
+      doc.fontSize(textSize);
       doc.list(course.outcomes);
     }
   }
