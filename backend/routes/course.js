@@ -244,6 +244,20 @@ courseRouter.post('/unfavorite', async (req, res) => {
   res.send('ok');
 });
 
+courseRouter.post('/pdf', async (req, res) => {
+  const userId = req.userId;
+  const courses = req.body.courses;
+  if (courses == undefined) {
+    res.status(400).json({ message: 'Did not provide courses' });
+  }
+  if (!(courses instanceof Array)) {
+    res.status(400).json({ message: 'Did not provide array of courses' });
+  }
+  const analysisList = new Array();
+  for (const cId of courses) {
+  }
+});
+
 // courseRouter.post('/analyse', async (req, res) => {
 //   const courses = req.body.courses;
 //   // maybe check input is ok
