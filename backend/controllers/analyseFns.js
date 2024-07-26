@@ -227,7 +227,8 @@ const makePng = (analysis) => {
   return buffer;
 };
 
-const makePDF = (analysis, name) => {
+const makePDF = (analysis) => {
+  console.log('making pdf');
   const headingSize = 24;
   const sub1Size = 20;
   const sub2Size = 16;
@@ -238,6 +239,7 @@ const makePDF = (analysis, name) => {
     fs.mkdirSync(dir);
   }
   // doc.pipe(fs.createWriteStream(dir + name + '.pdf'));
+  // doc.pipe(outStream);
   doc.font('Helvetica')
   doc.fontSize(headingSize);
   doc.text('Analysis', 70, 70);

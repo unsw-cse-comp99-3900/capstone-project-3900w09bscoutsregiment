@@ -91,7 +91,7 @@ db.once('open', async () => {
       ]
     }
   ]);
-  analyseFns.makePDF(analysis, "testing")
+  // analyseFns.makePDF(analysis, "testing")
   // console.log(analysis);
   // analyseFns.makePng(analysis, './test.png');
   app.listen(port, () => {

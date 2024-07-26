@@ -247,15 +247,20 @@ courseRouter.post('/unfavorite', async (req, res) => {
 courseRouter.post('/pdf', async (req, res) => {
   const userId = req.userId;
   const courses = req.body.courses;
+  // const courses = [ '66794f6696723a5b858c8654', '66794fc19e0ec7e1bda06b7e' ];
+  console.log(courses);
   if (courses == undefined) {
     res.status(400).json({ message: 'Did not provide courses' });
+    return;
   }
   if (!(courses instanceof Array)) {
     res.status(400).json({ message: 'Did not provide array of courses' });
+    return;
   }
   const orList = new Array();
   if (courses.length < 1) {
     res.status(400).json({ message: 'Did not provide any ids in courses array' });
+    return;
   }
   for (const cId of courses) {
     orList.push({ _id: cId });
@@ -263,10 +268,13 @@ courseRouter.post('/pdf', async (req, res) => {
   const query = Course.find({ $or: orList });
   query.select(['_id', 'code', 'term', 'year', 'outcomes']);
   const results = await query.exec();
-  const doc = analysisFns.makePDF(analyseFns.analyseCourses(results));
-  res.setHeader('Content-disposition', 'attachment; filename=report.pdf');
-  res.setHeader('Content-type', 'application/pdf');
-  doc.pipe(res);
+  // analyseFns.makePDF(analyseFns.analyseCourses(results));
+  // res.set('Content-Disposition', 'attachment; filename=/usr/report.pdf');
+  // res.set('Content-Type', 'application/pdf');
+  const pdf = analyseFns.makePDF(analyseFns.analyseCourses(results));
+  res.attachment();
+  res.type('pdf');
+  pdf.pipe(res);
 });
 
 // courseRouter.post('/analyse', async (req, res) => {
