@@ -223,7 +223,6 @@ const makePng = (analysis) => {
     },
     plugins: [plugin]
   });
-
   const buffer = canvas.toBuffer('image/png');
   return buffer;
 };
