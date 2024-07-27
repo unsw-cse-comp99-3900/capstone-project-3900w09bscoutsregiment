@@ -69,17 +69,21 @@ const SearchPage = () => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${localStorage.getItem('token')}`
         },
-        body: JSON.stringify({ userId: "teehee", courseId }),
+        body: JSON.stringify({ userId: "teehee", courseId }), // Ensure userId is dynamically set
       });
+      const data = await response.json();
       if (response.ok) {
         console.log('Course added successfully');
+        alert('Course added successfully');
       } else {
-        console.error('Failed to add course');
+        console.error('Failed to add course:', data.message);
+        alert(data.message); // Display the backend error message
       }
     } catch (error) {
       console.error('Error adding course:', error);
+      alert('An error occurred while adding the course.');
     }
-  };
+  };  
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
@@ -108,10 +112,17 @@ const SearchPage = () => {
   };
 
   const shortenTerm = (term) => {
-    if (!term.includes('Term')) {
-      return term;
+    if (term.includes('Hexamester')) {
+      return term.replace('Hexamester ', 'H');
     }
-    return term.replace('Term ', 'T');
+    if (term.includes('Semester')) {
+      return term.replace('Semester ', 'S');
+    }
+    if (term.includes('Term')) {
+      return term.replace('Term ', 'T');
+    }
+    
+    return term;
   };
 
   const handleShowDetails = async (course) => {
@@ -191,6 +202,15 @@ const SearchPage = () => {
               <option value="Term 2">Term 2</option>
               <option value="Term 3">Term 3</option>
               <option value="Summer">Summer</option>
+              <option value="Semester 1">Semester 1</option>
+              <option value="Semester 2">Semester 2</option>
+              <option value="Semester 3">Semester 3</option>
+              <option value="Hexamester 1">Hexamester 1</option>
+              <option value="Hexamester 2">Hexamester 2</option>
+              <option value="Hexamester 3">Hexamester 3</option>
+              <option value="Hexamester 4">Hexamester 4</option>
+              <option value="Hexamester 5">Hexamester 5</option>
+              <option value="Hexamester 6">Hexamester 6</option>
               {/* Add more terms as needed */}
             </select>
           </div>
