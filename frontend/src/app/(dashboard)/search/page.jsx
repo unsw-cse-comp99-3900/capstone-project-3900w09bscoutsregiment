@@ -69,21 +69,17 @@ const SearchPage = () => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${localStorage.getItem('token')}`
         },
-        body: JSON.stringify({ userId: "teehee", courseId }), // Ensure userId is dynamically set
+        body: JSON.stringify({ userId: "teehee", courseId }),
       });
-      const data = await response.json();
       if (response.ok) {
         console.log('Course added successfully');
-        alert('Course added successfully');
       } else {
-        console.error('Failed to add course:', data.message);
-        alert(data.message); // Display the backend error message
+        console.error('Failed to add course');
       }
     } catch (error) {
       console.error('Error adding course:', error);
-      alert('An error occurred while adding the course.');
     }
-  };  
+  };
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
@@ -101,6 +97,10 @@ const SearchPage = () => {
     setCurrentPage(page);
   };
 
+  /**
+   * Handle event when you want to jump to certain page of the list
+   * @param {*} event 
+   */
   const handleDirectPageChange = (event) => {
     let page = parseInt(event.target.value, 10);
     if (isNaN(page) || page < 1) {
@@ -110,7 +110,12 @@ const SearchPage = () => {
     }
     setCurrentPage(page);
   };
-
+  /**
+   * Helper function to help with the search term
+   * This is done by shorten their term
+   * @param {string} term 
+   * @returns {string} term
+   */
   const shortenTerm = (term) => {
     if (term.includes('Hexamester')) {
       return term.replace('Hexamester ', 'H');
@@ -124,7 +129,11 @@ const SearchPage = () => {
     
     return term;
   };
-
+  
+  /**
+   * Help To fetch indept details on a specific course
+   * @param {course} course 
+   */
   const handleShowDetails = async (course) => {
     const shortenedTerm = shortenTerm(course.term);
     try {
@@ -237,6 +246,7 @@ const SearchPage = () => {
             </div>
           ))}
         </div>
+        {/* Navigation Menu */}
         <div className="flex justify-center mt-5">
           <button
             className={`p-2 mr-2 rounded ${currentPage === 1 ? 'bg-gray-300 cursor-not-allowed' : 'bg-blue-600 text-white hover:bg-blue-700 transition'}`}
@@ -275,6 +285,7 @@ const SearchPage = () => {
           <span className="text-main-txt">of {totalPages} pages</span>
         </div>
       </div>
+      {/* Show detail of a course */}
       {selectedCourse && selectedCourse.outcomes && (
         <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-5 rounded-lg w-4/5 max-w-2xl max-h-4/5 overflow-y-auto shadow-lg">
