@@ -8,10 +8,13 @@ import {
   faStar,
   faTrash,
   faArrowLeft,
+  faArrowRight,
 } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import displayChart from './analysisChart';
+import Image from 'next/image';
+import CourseReasoning from './reasoning/page';
 
 export default function ListingCourses() {
   const router = useRouter();
@@ -27,6 +30,8 @@ export default function ListingCourses() {
   const [courses, setCourses] = useState([]);
   const [visitedCourses, setVisitedCourses] = useState([]);
   const [analysisChart, setAnalysisChart] = useState(false);
+  const [breakdown, setBreakdown] = useState(false)
+  const [reasoningPopup, setReasoningPopup] = useState(null)
   const port = 5000;
 
   useEffect(() => {
@@ -51,9 +56,10 @@ export default function ListingCourses() {
       }
     };
 
+    
     fetchUserCourses();
   }, []);
-
+  
   const shortenTerm = (term) => {
     if (!term.includes('Term')) {
       return term;
@@ -95,6 +101,7 @@ export default function ListingCourses() {
 
       if (newVisitedCourses.length === 0) {
         setAnalysisChart(false);
+        setBreakdown(false)
       }
     } else {
       const fetchedCourse = await handleShowDetails(course);
@@ -108,6 +115,7 @@ export default function ListingCourses() {
           favorite: course.favorite,
           colour: course.colour,
           outcomes: fetchedCourse.outcomes,
+          keywords: fetchedCourse.keywords,
           info: course.info,
         };
         setVisitedCourses([...visitedCourses, courseWithOutcomes]);
@@ -174,11 +182,49 @@ export default function ListingCourses() {
 
   const showAnalysis = () => {
     setAnalysisChart(true);
+    setBreakdown(false)
   };
 
   const hideAnalysis = () => {
     setAnalysisChart(false);
+    setBreakdown(false)
   };
+  
+  const showBreakdown = () => {
+    setBreakdown(true)
+  }
+  
+  const hideBreakdown = () => {
+    setBreakdown(false)
+    showAnalysis()
+  }
+
+  const showPopup = (courseId, indexCLO) => {
+    setReasoningPopup({ courseId, indexCLO })
+  };
+
+  const hidePopup = () => {
+    setReasoningPopup(null);
+  };
+
+  const highlightKeywords = (outcome, keyword) => {
+    const words = outcome.split(' ').map((x) => x.replace(/\W/g, '').toLowerCase())
+    const keywords = keyword.map((x) => x.toLowerCase())
+
+    return words.map((word, index) => {
+      if (keywords.includes(word)) {
+        return <span key={index} className="bg-blue-800 text-white font-bold">{word}</span>;
+      } else {
+        return <span key={index}> {word} </span>;
+      }
+    })
+  }
+
+  const findCourseFromId = (courseId, visitedCourse) => {
+    return visitedCourse.find(course => course.courseId === courseId)
+  }
+
+  // console.log(reasoningPopup)
 
   return (
     <div className='app'>
@@ -285,13 +331,65 @@ export default function ListingCourses() {
           ) : (
             <> {/* BETTER to display with DIV , and change listing courses flex   */}
               {/* <span className=''>  */}
-                {displayChart(visitedCourses)}
-                <button
-                  className='analysis-button'
-                  onClick={() => hideAnalysis()}
-                >
-                  <FontAwesomeIcon icon={faArrowLeft} /> Go Back
-                </button>
+              {!breakdown ? (
+                <>
+                  {displayChart(visitedCourses)}
+                  <div className='flex gap-5'>
+                    <button
+                      className='analysis-button'
+                      onClick={() => hideAnalysis()}
+                    >
+                      <FontAwesomeIcon icon={faArrowLeft} /> Go Back
+                    </button>
+                    <button className='analysis-button' onClick={() => showBreakdown()}>
+                      <FontAwesomeIcon icon={faArrowRight} /> Break down
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  {/* Breakdown courses */}
+                  <div className='course-details-container'>
+                    {visitedCourses.length !== 0 ? (
+                      visitedCourses.map((course, idx) => (
+                        <div key={idx} className='course-details'>
+                          <div className='course-header'>
+                            <h2>{course.code}</h2>
+                            <h3>{course.title}</h3>
+                            <p>
+                              {course.year} {course.term}
+                            </p>
+                          </div>
+                          <h2>Learning Outcomes:</h2>
+                          <div className='course-outcomes'>
+                            <ol>
+                              {course.outcomes.map((outcome , index) => (
+                                <div className='flex justify-between gap-20 items-center'>
+                                  <li className='h-12' key={index}>{highlightKeywords(outcome, course.keywords[index].words)}</li>
+                                  <Image src='/assets/icons/details.svg' width={30} height={30} onClick={() => showPopup(course.courseId, index)} alt='details' />
+                                </div>
+                              ))}
+                            </ol>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className='centered-container'>
+                        <div className='normal-details'>
+                          <h2 className='text-main-txt'>Select a course to analyse</h2>
+                          <p className='text-main-txt'>Nothing is selected</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  <button
+                    className='analysis-button'
+                    onClick={() => hideBreakdown()}
+                  >
+                    <FontAwesomeIcon icon={faArrowLeft} /> Go Back
+                  </button>
+                </>
+              )}
               {/* </span> */}
             </>
           )}
@@ -303,6 +401,34 @@ export default function ListingCourses() {
           )}
         </div>
       </div>
+      {reasoningPopup && (
+        <div className='fixed flex justify-center items-center min-h-screen w-full bg-opacity-50 bg-gray-500'>
+          <div className='bg-white p-10 rounded-xl space-y-3 w-[50rem]'>
+            <h2 className='font-bold text-lg text-center text-xl'>{findCourseFromId(reasoningPopup.courseId, visitedCourses).outcomes[reasoningPopup.indexCLO]}</h2>
+            <hr className='border-2' />
+            <p><span className='font-bold'>Category: </span>{findCourseFromId(reasoningPopup.courseId, visitedCourses).keywords[reasoningPopup.indexCLO].category}</p>
+            {
+              findCourseFromId(reasoningPopup.courseId, visitedCourses).keywords[reasoningPopup.indexCLO].words.length === 0 ? (
+                <span></span>
+              ) : (
+                <p className='font-bold'>Matched Keywords: </p>
+              )
+            }
+            <ul>
+              {findCourseFromId(reasoningPopup.courseId, visitedCourses).keywords[reasoningPopup.indexCLO].words.map((word, index) => (
+                <li className='list-disc ml-10' key={index}>{word}</li>
+              ))}
+            </ul>
+            <p className='font-bold'>Reasoning:</p>
+            <CourseReasoning 
+              CLO={findCourseFromId(reasoningPopup.courseId, visitedCourses).outcomes[reasoningPopup.indexCLO]} 
+              category={findCourseFromId(reasoningPopup.courseId, visitedCourses).keywords[reasoningPopup.indexCLO].category} 
+              keywords={findCourseFromId(reasoningPopup.courseId, visitedCourses).keywords[reasoningPopup.indexCLO].words}
+              reasoningPopup={reasoningPopup} />
+            <button className='analysis-button' onClick={hidePopup}>Close</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
