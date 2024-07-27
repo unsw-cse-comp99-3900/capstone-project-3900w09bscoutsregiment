@@ -16,8 +16,19 @@ courseRouter.get('/:code/:year/:term', async (req, res) => {
   query.find({ code: req.params.code });
   query.find({ year: Number(req.params.year) });
   query.find({ term: termToggle(req.params.term) });
-  const course = await query.exec();
-  res.json(course);
+  const course = await query.lean().exec();
+  if (course.length < 1) {
+    res.json([]);
+  }
+  const c = course[0];
+  c.keywords = new Array();
+  for (const o of c.outcomes) {
+    const a = analyseFns.analyseOutcome(o);
+    const words = analyseFns.getKeywords(o, a);
+    c.keywords.push({category: a, words: words});
+  }
+  console.log(c);
+  res.json([c]);
 });
 
 // Gets a list of courses that fulfil any combination of

@@ -204,7 +204,6 @@ const SearchPage = () => {
               <option value="Summer">Summer</option>
               <option value="Semester 1">Semester 1</option>
               <option value="Semester 2">Semester 2</option>
-              <option value="Semester 3">Semester 3</option>
               <option value="Hexamester 1">Hexamester 1</option>
               <option value="Hexamester 2">Hexamester 2</option>
               <option value="Hexamester 3">Hexamester 3</option>
