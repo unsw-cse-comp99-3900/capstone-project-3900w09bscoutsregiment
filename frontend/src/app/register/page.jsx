@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import OAuth from '../components/OAuth';
+import { toast } from 'react-toastify';
 
 export default function Register() {
   const [name, setName] = React.useState('');
@@ -20,7 +21,7 @@ export default function Register() {
       router.push('/courses');
       return;
     }
-  }, [])
+  }, []);
 
   // backend stuff starts here
   const register = async () => {
@@ -42,16 +43,26 @@ export default function Register() {
       const data = await response.json();
       if (response.ok) {
         localStorage.setItem('token', data.token);
-        router.push('/courses');
+        toast.success('User signed up successfully', {
+          position: 'bottom-center',
+          pauseOnHover: false,
+        });
+        setTimeout(() => {
+          router.push('/courses');
+        }, 1500);
       } else {
         console.error(data.message);
+        toast.error('Something went wrong, please try again', {
+          position: 'bottom-center',
+          pauseOnHover: false,
+        });
       }
     }
   };
   return (
     <div>
-      <div className='login_background'>
-        <div className='min-h-screen flex justify-center items-center'>
+      <div className="login_background">
+        <div className="min-h-screen flex justify-center items-center">
           {/* start of form */}
           <form
             name="publish-form"
@@ -138,8 +149,11 @@ export default function Register() {
                 <OAuth></OAuth>
               </div>
               <div className="pt-2 flex items-center justify-center gap-2">
-                <p className='text-main-txt'> Already have an account? </p>
-                <Link href="/login" style={{ textDecoration: 'underline', color: '#1d4ed8' }}>
+                <p className="text-main-txt"> Already have an account? </p>
+                <Link
+                  href="/login"
+                  style={{ textDecoration: 'underline', color: '#1d4ed8' }}
+                >
                   Sign in
                 </Link>
               </div>

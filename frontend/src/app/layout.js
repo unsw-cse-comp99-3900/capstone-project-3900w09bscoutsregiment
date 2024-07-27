@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from './context/ThemeContext';
 import Link from "next/link";
+import ToastNotificationComp from './Components/ToastNotificationComp';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
@@ -26,6 +27,7 @@ export default function RootLayout({ children }) {
             </div>
           </div>
           {children}
+          <ToastNotificationComp/>
         </ThemeProvider>
 
       </body>

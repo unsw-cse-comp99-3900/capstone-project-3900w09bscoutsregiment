@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import '../../globals.css';
 import './search.css';
+import { toast } from 'react-toastify';
 
 const SearchPage = () => {
   let port = 5000;
@@ -26,15 +27,15 @@ const SearchPage = () => {
     try {
       const response = await fetch(`http://localhost:${port}/api/course/all`, {
         headers: {
-          authorization: `Bearer ${localStorage.getItem('token')}`
-        }
+          authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
       });
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
       const data = await response.json();
-      setCourses(data);  // Assuming data is an array of courses
-      setFilteredCourses(data);  // Ensure filteredCourses is updated as an array
+      setCourses(data); // Assuming data is an array of courses
+      setFilteredCourses(data); // Ensure filteredCourses is updated as an array
     } catch (error) {
       console.error('Error fetching courses:', error);
     }
@@ -45,17 +46,18 @@ const SearchPage = () => {
 
     if (searchTerm) {
       const searchRegex = new RegExp(searchTerm, 'i');
-      filtered = filtered.filter(course =>
-        course.title.match(searchRegex) || course.code.match(searchRegex)
+      filtered = filtered.filter(
+        (course) =>
+          course.title.match(searchRegex) || course.code.match(searchRegex)
       );
     }
 
     if (year) {
-      filtered = filtered.filter(course => course.year.toString() === year);
+      filtered = filtered.filter((course) => course.year.toString() === year);
     }
 
     if (term) {
-      filtered = filtered.filter(course => course.term === term);
+      filtered = filtered.filter((course) => course.term === term);
     }
 
     setFilteredCourses(filtered);
@@ -63,18 +65,22 @@ const SearchPage = () => {
   };
 
   const handleAddCourse = async (courseId) => {
-    console.log("addCourse");
+    console.log('addCourse');
     try {
       const response = await fetch(`http://localhost:${port}/api/course/add`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
-        body: JSON.stringify({ userId: "teehee", courseId }),
+        body: JSON.stringify({ userId: 'teehee', courseId }),
       });
       if (response.ok) {
         console.log('Course added successfully');
+        toast.success('Course added successfully', {
+          position: 'bottom-center',
+          pauseOnHover: false,
+        });
       } else {
         console.error('Failed to add course');
       }
@@ -119,11 +125,14 @@ const SearchPage = () => {
   const handleShowDetails = async (course) => {
     const shortenedTerm = shortenTerm(course.term);
     try {
-      const response = await fetch(`http://localhost:${port}/api/course/${course.code}/${course.year}/${shortenedTerm}`, {
-        headers: {
-          authorization: `Bearer ${localStorage.getItem('token')}`
+      const response = await fetch(
+        `http://localhost:${port}/api/course/${course.code}/${course.year}/${shortenedTerm}`,
+        {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
         }
-      });
+      );
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -141,7 +150,10 @@ const SearchPage = () => {
   // Get current courses for the page
   const indexOfLastCourse = currentPage * coursesPerPage;
   const indexOfFirstCourse = indexOfLastCourse - coursesPerPage;
-  const currentCourses = filteredCourses.slice(indexOfFirstCourse, Math.min(indexOfLastCourse, filteredCourses.length));
+  const currentCourses = filteredCourses.slice(
+    indexOfFirstCourse,
+    Math.min(indexOfLastCourse, filteredCourses.length)
+  );
 
   // Pagination control
   const totalPages = Math.ceil(filteredCourses.length / coursesPerPage);
@@ -178,7 +190,7 @@ const SearchPage = () => {
         </div>
         <div className="filters space-x-3">
           <div className="filter ">
-            <label className='text-main-txt'>Year</label>
+            <label className="text-main-txt">Year</label>
             <select value={year} onChange={handleYearChange}>
               <option value="2024">2024</option>
               <option value="2023">2023</option>
@@ -186,7 +198,7 @@ const SearchPage = () => {
             </select>
           </div>
           <div className="filter">
-            <label className='text-main-txt'>Term</label>
+            <label className="text-main-txt">Term</label>
             <select value={term} onChange={handleTermChange}>
               <option value="Term 1">Term 1</option>
               <option value="Term 2">Term 2</option>
@@ -196,7 +208,7 @@ const SearchPage = () => {
             </select>
           </div>
         </div>
-        <h2 className='text-main-txt'>Results :</h2>
+        <h2 className="text-main-txt">Results :</h2>
         <div className="results">
           {currentCourses.map((course) => (
             <div key={course._id} className="course text-main-txt">
@@ -210,7 +222,12 @@ const SearchPage = () => {
               >
                 +
               </button>
-              <button className="details-button" onClick={() => handleShowDetails(course)}>Details</button>
+              <button
+                className="details-button"
+                onClick={() => handleShowDetails(course)}
+              >
+                Details
+              </button>
             </div>
           ))}
         </div>
@@ -240,22 +257,26 @@ const SearchPage = () => {
           </button>
         </div>
         <div className="direct-navigation">
-          <span className='text-main-txt'>Go to page:</span>
+          <span className="text-main-txt">Go to page:</span>
           <input
             type="number"
             min="1"
             max={totalPages}
             value={currentPage}
             onChange={handleDirectPageChange}
-            className='text-main-txt bg-main-bkg'
+            className="text-main-txt bg-main-bkg"
           />
-          <span className='text-main-txt'>of {totalPages} pages</span>
+          <span className="text-main-txt">of {totalPages} pages</span>
         </div>
       </div>
       {selectedCourse && selectedCourse.outcomes && (
         <div className="modal">
           <div className="modal-content">
-            <h2><u>({selectedCourse.code}) {selectedCourse.title}</u></h2>
+            <h2>
+              <u>
+                ({selectedCourse.code}) {selectedCourse.title}
+              </u>
+            </h2>
             <h3>Learning Outcomes:</h3>
             <ol>
               {selectedCourse.outcomes.map((outcome, index) => (

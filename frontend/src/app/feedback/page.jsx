@@ -2,8 +2,10 @@
 import React, { useRef, useState } from 'react';
 import emailjs from '@emailjs/browser';
 import Link from 'next/link';
+import { toast } from 'react-toastify';
 
 export default function sendFeedback() {
+  const notify = () => toast('Wow so easy !');
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState(false);
   const [name, setName] = useState('');
@@ -83,13 +85,17 @@ export default function sendFeedback() {
           console.log('FAILED...', error.text);
         }
       );
+    toast.success('Your feedback is sent, thank you for reaching out to us', {
+      position: 'bottom-center',
+      pauseOnHover: false,
+    });
   };
 
   return (
     <div>
       <div className="login_background z-10">
         {/* start of form */}
-        <div className='min-h-screen flex justify-center items-center '>
+        <div className="min-h-screen flex justify-center items-center ">
           <form
             name="publish-form"
             id="form"
