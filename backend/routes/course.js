@@ -131,7 +131,7 @@ courseRouter.post('/add', async (req, res) => {
   }
   const userList = await User.findOne({ _id: userId }, 'courses').exec();
   console.log(userList);
-  if (userList.courses.includes(courseId)) {
+  if (userList.courses.find((x) => x.courseId == courseId) != undefined) {
     console.log('user already has');
     return res.status(400).json({ message: 'User already added course' });
   }

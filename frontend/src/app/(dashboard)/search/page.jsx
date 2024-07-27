@@ -82,6 +82,10 @@ const SearchPage = () => {
           pauseOnHover: false,
         });
       } else {
+        toast.warning('Course is already added', {
+          position: 'bottom-center',
+          pauseOnHover: false,
+        });
         console.error('Failed to add course');
       }
     } catch (error) {
