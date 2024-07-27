@@ -59,11 +59,24 @@ export default function ListingCourses() {
     fetchUserCourses();
   }, []);
   
+  /**
+   * Helper function to help with the search term
+   * This is done by shorten their term
+   * @param {string} term 
+   * @returns {string} term
+   */
   const shortenTerm = (term) => {
-    if (!term.includes('Term')) {
-      return term;
+    if (term.includes('Hexamester')) {
+      return term.replace('Hexamester ', 'H');
     }
-    return term.replace('Term ', 'T');
+    if (term.includes('Semester')) {
+      return term.replace('Semester ', 'S');
+    }
+    if (term.includes('Term')) {
+      return term.replace('Term ', 'T');
+    }
+    
+    return term;
   };
 
   const handleShowDetails = async (course) => {
@@ -88,6 +101,14 @@ export default function ListingCourses() {
     }
   };
 
+  /**
+   * When a course is click handle the necessary actions
+   * Unselected a course, if previous the course had been selected and
+   * remove them from visitedCourses
+   * Select a course and fetch details of the course that was selected
+   * add them to visitedCourses
+   * @param {course} course 
+   */
   const handleCourseClick = async (course) => {
     if (
       visitedCourses.some((visitedCourse) => visitedCourse.code === course.code)
@@ -167,6 +188,11 @@ export default function ListingCourses() {
     }
   };
 
+  /**
+   * Handle the search filter for courses base on their:
+   * title, code, term, and year.
+   * and sort term base on favorite.
+   */
   const filteredCourses = courses
     .filter((course) => {
       const searchTermLower = searchTerm.toLowerCase();
@@ -242,6 +268,7 @@ export default function ListingCourses() {
             <FontAwesomeIcon icon={faPlus} />
             <Link href='/search' className='ml-2.5'>Add Course</Link>
           </button>
+          {/* Show list of user's courses */}
           <div className='flex flex-col gap-2.5 p-2.5'>
             {filteredCourses.length === 0 ? (
               <div className='flex items-center justify-center h-full'>
