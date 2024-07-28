@@ -224,6 +224,61 @@ become
 Once all the words have been scanned, the method picks the category with the highest
 count, or first in case of a tie, to be the final output category.
 
+## `analyseCourse` method
+
+The `analyseCourse` method takes a list of courses and their details, and reformats
+them into a new object, that contains the analysis data for each course and 
+the details for each category.
+
+### Input
+
+The method takes one parameter `courseList`, which has the following format
+
+```
+[
+  {
+    _id: ...
+    code: ...
+    term: ...
+    year: ...
+    outcomes: [
+      "...",
+      "..."
+    ]
+  },
+]
+```
+
+Which is a list of the courses that are to be analysed.
+
+### Output
+
+```
+{
+  courses: [
+    {
+      code: ...
+      term: ...
+      year: ...
+      analysis: [..., ...] (number for each category)
+    },
+  ],
+  categories: {
+    "categoryName": {
+      count: ...(number of outcomes in this block)
+      courses: [
+        {
+          _id: ...,
+          code: ...,
+          term: ...,
+          year: ...,
+          outcomes: ["...", "..."] },
+      ]
+    }
+  }
+}
+```
+
 # Terms
 
 We want to be able to track terms, but terms are more complicated than 
