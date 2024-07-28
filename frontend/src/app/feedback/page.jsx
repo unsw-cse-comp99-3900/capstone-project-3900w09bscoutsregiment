@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { toast } from 'react-toastify';
 
 export default function sendFeedback() {
-  const notify = () => toast('Wow so easy !');
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState(false);
   const [name, setName] = useState('');
