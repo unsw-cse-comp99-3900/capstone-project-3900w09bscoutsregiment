@@ -224,9 +224,9 @@ become
 Once all the words have been scanned, the method picks the category with the highest
 count, or first in case of a tie, to be the final output category.
 
-## `analyseCourse` method
+## `analyseCourses` method
 
-The `analyseCourse` method takes a list of courses and their details, and reformats
+The `analyseCourses` method takes a list of courses and their details, and reformats
 them into a new object, that contains the analysis data for each course and 
 the details for each category.
 
