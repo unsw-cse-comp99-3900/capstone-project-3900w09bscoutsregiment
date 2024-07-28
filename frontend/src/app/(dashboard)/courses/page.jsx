@@ -388,7 +388,7 @@ export default function ListingCourses() {
                               <ol className='list-decimal'>
                                 {course.outcomes.map((outcome , index) => (
                                   <div className='flex justify-between gap-20 items-center'>
-                                    <li className='h-12' key={index}>{highlightKeywords(outcome, course.keywords[index].words)}</li>
+                                    <li key={index}>{highlightKeywords(outcome, course.keywords[index].words)}</li>
                                     <Image src='/assets/icons/details.svg' width={30} height={30} onClick={() => showPopup(course.courseId, index)} alt='details' />
                                   </div>
                                 ))}
