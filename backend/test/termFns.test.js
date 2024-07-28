@@ -63,11 +63,36 @@ describe('termEq function', () => {
 
 describe('termToggle function', () => {
   for (let i = 0; i < shorts.length; i++) {
-    it (`should turn short (${shorts[i]}) into long (${longs[i]})`, () => {
+    it(`should turn short (${shorts[i]}) into long (${longs[i]})`, () => {
       assert.strictEqual(termToggle(shorts[i]), longs[i]);
     })
-    it (`should turn long (${longs[i]}) into short (${shorts[i]})`, () => {
+    it(`should turn long (${longs[i]}) into short (${shorts[i]})`, () => {
       assert.strictEqual(termToggle(longs[i]), shorts[i]);
     })
+  }
+});
+
+describe('termIsSmall function', () => {
+  const fakes = [
+    'He1',
+    'T5',
+    'H0',
+    'h7',
+    't2',
+    'Summer',
+    'S3'
+  ];
+  for (let i = 0; i < shorts.length; i++) {
+    it(`should be true for ${shorts[i]}`, () => {
+      assert.strictEqual(termIsSmall(shorts[i]), true);
+    });
+    it(`should be false for ${longs[i]}`, () => {
+      assert.strictEqual(termIsSmall(longs[i]), false);
+    });
+  }
+  for (let i = 0; i < fakes.length; i++) {
+    it(`should be false for ${fakes[i]}`, () => {
+      assert.strictEqual(termIsSmall(fakes[i]), false);
+    });
   }
 });
