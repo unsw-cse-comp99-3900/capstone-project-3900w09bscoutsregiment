@@ -229,18 +229,18 @@ const SearchPage = () => {
                         className="w-full max-w-xl p-2 border border-gray-300 rounded"
                     />
                 </div>
-                <div className="filters space-x-3">
-                    <div className="filter ">
-                        <label className="text-main-txt">Year</label>
-                        <select value={year} onChange={handleYearChange}>
+                <div className="flex justify-center space-x-3 mb-5">
+                  <div className="flex flex-col items-center">
+                    <label className="font-bold text-main-txt mb-1">Year</label>
+                        <select value={year} onChange={handleYearChange} className="border border-gray-300 rounded">
                             <option value="2024">2024</option>
                             <option value="2023">2023</option>
                             {/* Add more years as needed */}
                         </select>
                     </div>
-                    <div className="filter">
-                        <label className="text-main-txt">Term</label>
-                        <select value={term} onChange={handleTermChange}>
+                    <div className="flex flex-col items-center">
+                      <label className="font-bold text-main-txt mb-1">Term</label>
+                        <select value={term} onChange={handleTermChange} className="border border-gray-300 rounded">
                             <option value="Term 1">Term 1</option>
                             <option value="Term 2">Term 2</option>
                             <option value="Term 3">Term 3</option>
@@ -257,8 +257,8 @@ const SearchPage = () => {
                         </select>
                     </div>
                 </div>
-                <h2 className="text-main-txt">Results :</h2>
-                <div className="results">
+                <h2 className="text-main-txt font-bold text-xl">Results :</h2>
+                <div className="border-t-2 border-primary-theme-lb pt-2">
                     {currentCourses.map((course) => (
                         <div
                             key={course._id}
@@ -283,10 +283,10 @@ const SearchPage = () => {
                                 +
                             </button>
                             <button
-                                className="details-button"
-                                onClick={() => handleShowDetails(course)}
+                              className="bg-blue-600 text-white p-2 rounded hover:bg-blue-700 transition ml-2"
+                              onClick={() => handleShowDetails(course)}
                             >
-                                Details
+                              Details
                             </button>
                         </div>
                     ))}
@@ -334,43 +334,37 @@ const SearchPage = () => {
                         Next
                     </button>
                 </div>
-                <div className="direct-navigation">
-                    <span className="text-main-txt">Go to page:</span>
-                    <input
-                        type="number"
-                        min="1"
-                        max={totalPages}
-                        value={currentPage}
-                        onChange={handleDirectPageChange}
-                        className="text-main-txt bg-main-bkg"
-                    />
-                    <span className="text-main-txt">of {totalPages} pages</span>
+                <div className="flex items-center justify-center mt-3">
+                  <span className="text-main-txt mr-2">Go to page:</span>
+                  <input
+                    type="number"
+                    min="1"
+                    max={totalPages}
+                    value={currentPage}
+                    onChange={handleDirectPageChange}
+                    className="w-16 p-2 border border-gray-300 rounded text-main-txt bg-main-bkg mr-2"
+                  />
+                  <span className="text-main-txt">of {totalPages} pages</span>
                 </div>
             </div>
             {/* Show detail of a course */}
             {selectedCourse && selectedCourse.outcomes && (
-                <div className="modal">
-                    <div className="modal-content">
-                        <h2>
-                            <u>
-                                ({selectedCourse.code}) {selectedCourse.title}
-                            </u>
-                        </h2>
-                        <h3>Learning Outcomes:</h3>
-                        <ol>
-                            {selectedCourse.outcomes.map((outcome, index) => (
-                                <li key={index} className="mt-2">
-                                    {outcome}
-                                </li>
-                            ))}
-                        </ol>
-                        <button
-                            onClick={handleCloseModal}
-                            className="mt-5 p-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-                        >
-                            Close
-                        </button>
-                    </div>
+                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
+                  <div className="bg-white p-5 rounded-lg w-4/5 max-w-2xl max-h-4/5 overflow-y-auto shadow-lg">
+                    <h2 className="text-xl font-bold"><u>({selectedCourse.code}) {selectedCourse.title}</u></h2>
+                    <h3 className="text-lg font-bold mt-3">Learning Outcomes:</h3>
+                    <ol className="list-decimal pl-5">
+                      {selectedCourse.outcomes.map((outcome, index) => (
+                        <li key={index} className="mt-2">{outcome}</li>
+                      ))}
+                    </ol>
+                    <button
+                      onClick={handleCloseModal}
+                      className="mt-5 p-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+                    >
+                      Close
+                    </button>
+                  </div>
                 </div>
             )}
         </div>

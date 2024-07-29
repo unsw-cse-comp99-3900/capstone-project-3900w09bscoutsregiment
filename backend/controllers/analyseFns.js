@@ -15,7 +15,7 @@ Chart.defaults.color = '#000';
 const loadFile = (name) => {
   try {
     const data = fs.readFileSync(name, 'utf8');
-    const lines = data.split('\n').map((x) => x.trim());
+    const lines = data.split('\n').map((x) => x.trim().toLowerCase());
     var category = '';
     for (const l of lines) {
       if (l == '') {
@@ -241,6 +241,7 @@ const makePng = (analysis) => {
   return buffer;
 };
 
+<<<<<<< HEAD
 const makePDF = (analysis) => {
   console.log('making pdf');
   const headingSize = 24;
@@ -281,6 +282,7 @@ const makePDF = (analysis) => {
 };
 
 export default {
+  verbMap,
   categories,
   loadFile,
   analyseOutcome,
