@@ -1,14 +1,38 @@
 'use client'; // needed for useState to work
 import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFacebook, faGoogle } from '@fortawesome/free-brands-svg-icons';
 import Link from 'next/link';
-import OAuth from '../components/OAuth';
+// import { toast } from 'react-toastify';
 
 export default function ForgotPassword() {
   const [email, setEmail] = React.useState('');
+  const [emailError, setEmailError] = React.useState(false);
   const [password, setPassword] = React.useState('');
   let port = 5000;
+
+  /**
+   * Keeps track of whether the email form is in focus or not
+   * @param {*} event
+   * if the form is empty or is not a valid email when its out of focus, updates the state of EmailError to true, otherwise false
+   */
+  const handleEmailBlur = (event) => {
+    if (event.target.validity.typeMismatch || event.target.value === '') {
+      setEmailError(true);
+    } else {
+      setEmailError(false);
+    }
+  };
+
+  /**
+   * Keeps track of the changes inside the email form
+   * @param {*} event
+   * if the current value inside the email form is valid, updates the state of EmailError to true
+   */
+  const handleEmailChange = (event) => {
+    setEmail(event.target.value);
+    if (event.target.validity.valid) {
+      setEmailError(false);
+    }
+  };
 
   // backend stuff
   // TODO: CHANGE THIS TO FORGOT PASSWORD
@@ -17,20 +41,26 @@ export default function ForgotPassword() {
       method: 'POST',
       body: JSON.stringify({
         email,
-        password,
+        // password,
       }),
       headers: {
         'Content-type': 'application/json',
       },
     });
     const data = await response.json();
+    // if (response.ok) {
+    //   toast.success('You will receive an email shortly!', {
+    //     position: 'bottom-center',
+    //     pauseOnHover: false,
+    //   });
+    // }
     console.log(data);
   };
 
   return (
     <div>
       <div className="login_background">
-        <div className='min-h-screen flex justify-center items-center'>
+        <div className="min-h-screen flex justify-center items-center">
           <form
             name="publish-form"
             id="form"
@@ -50,10 +80,15 @@ export default function ForgotPassword() {
                 id="email-address"
                 type="text"
                 placeholder="Email address"
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                }}
+                onChange={handleEmailChange}
+                onBlur={handleEmailBlur}
+                value={email}
               />
+              {emailError && (
+                <p role="alert" className="text-red-600 font-bold">
+                  Please make sure you've entered an <em>email address</em>
+                </p>
+              )}
             </div>
 
             {/* Send email */}
