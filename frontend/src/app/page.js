@@ -14,7 +14,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import 'flowbite';
 
 /**
  * Function that builds the main page of the app when the STATE is NOT logged in

@@ -4,7 +4,6 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import "flowbite";
 import ThemeToggle from "./ThemeToggle";
 const Profile = () => {
   const [userDetails, setUserDetails] = React.useState({
@@ -105,7 +104,7 @@ const Profile = () => {
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 512 512"
-                class="fill-main-txt"
+                className="fill-main-txt"
                 width={30}
                 height={30}
               >
@@ -123,7 +122,7 @@ const Profile = () => {
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 512 512"
-                class="fill-main-txt"
+                className="fill-main-txt"
                 width={30}
                 height={30}
               >
@@ -141,7 +140,7 @@ const Profile = () => {
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 512 512"
-                class="fill-main-txt"
+                className="fill-main-txt"
                 width={30}
                 height={30}
               >
@@ -159,7 +158,7 @@ const Profile = () => {
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 512 512"
-                class="fill-main-txt"
+                className="fill-main-txt"
                 width={30}
                 height={30}
               >

@@ -14,12 +14,8 @@ export default function Register() {
   const [password, setPassword] = React.useState('');
   const [passwordError, setPasswordError] = React.useState(false);
   const [confirmPassword, setConfirmPassword] = React.useState('');
-<<<<<<< HEAD
-  let port = process.env.NEXT_PUBLIC_PORT_NUM;
-=======
   const [confirmPasswordError, setConfirmPasswordError] = React.useState('');
-  let port = 5000; // change later
->>>>>>> main
+  let port = process.env.NEXT_PUBLIC_PORT_NUM;
 
   // form validation
   const handleEmailBlur = (e) => {
@@ -152,7 +148,7 @@ export default function Register() {
                 onChange={handleEmailChange}
                 onBlur={handleEmailBlur}
                 value={email}
-                // multiple
+              // multiple
               />
               {emailError && (
                 <p role="alert" className="text-red-600 font-bold">

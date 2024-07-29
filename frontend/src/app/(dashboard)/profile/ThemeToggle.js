@@ -3,7 +3,7 @@
 import { useTheme } from '../../context/ThemeContext';
 import Image from 'next/image';
 
-import 'flowbite';
+// import 'flowbite';
 
 const ThemeToggle = () => {
   const { theme, toggleTheme } = useTheme();

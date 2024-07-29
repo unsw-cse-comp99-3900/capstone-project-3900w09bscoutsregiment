@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 
 const SearchPage = () => {
-<<<<<<< HEAD
   let port = process.env.NEXT_PUBLIC_PORT_NUM;
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -14,17 +13,6 @@ const SearchPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [coursesPerPage] = useState(10); // Number of courses per page
   const [selectedCourse, setSelectedCourse] = useState(null);
-=======
-    let port = 5000;
-    const [searchTerm, setSearchTerm] = useState("");
-    const [year, setYear] = useState("2024");
-    const [term, setTerm] = useState("Term 2");
-    const [courses, setCourses] = useState([]);
-    const [filteredCourses, setFilteredCourses] = useState([]);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [coursesPerPage] = useState(10); // Number of courses per page
-    const [selectedCourse, setSelectedCourse] = useState(null);
->>>>>>> main
 
     useEffect(() => {
         fetchCourses();
