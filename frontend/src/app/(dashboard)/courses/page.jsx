@@ -364,6 +364,9 @@ export default function ListingCourses() {
                     >
                       <FontAwesomeIcon icon={faArrowLeft} /> Go Back
                     </button>
+                    <button className='mt-5 p-2.5 bg-blue-600 text-white border-none rounded cursor-pointer hover:bg-blue-700' onClick={{/* Add your download handle */}}>
+                      Download PDF
+                    </button>
                     <button className='mt-5 p-2.5 bg-blue-600 text-white border-none rounded cursor-pointer hover:bg-blue-700' onClick={() => showBreakdown()}>
                       <FontAwesomeIcon icon={faArrowRight} /> Break down
                     </button>
@@ -405,12 +408,17 @@ export default function ListingCourses() {
                         </div>
                       </div>
                     )}
-                  <button
-                    className='mt-5 p-2.5 bg-blue-600 text-white border-none rounded cursor-pointer hover:bg-blue-700'
-                    onClick={() => hideBreakdown()}
-                  >
-                    <FontAwesomeIcon icon={faArrowLeft} /> Go Back
-                  </button>
+                  <div className='flex gap-5'>
+                    <button
+                      className='mt-5 p-2.5 bg-blue-600 text-white border-none rounded cursor-pointer hover:bg-blue-700'
+                      onClick={() => hideBreakdown()}
+                    >
+                      <FontAwesomeIcon icon={faArrowLeft} /> Go Back
+                    </button>
+                    <button className='mt-5 p-2.5 bg-blue-600 text-white border-none rounded cursor-pointer hover:bg-blue-700' onClick={{/* Add your download handle */}}>
+                      Download PDF
+                    </button>
+                  </div>
                 </>
               )}
               {/* </span> */}
