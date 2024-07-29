@@ -108,7 +108,7 @@ export default function Register() {
                     },
                 }
             );
-            const data = await response.json();
+
             if (response.ok) {
                 toast.success("User signed up successfully", {
                     position: "bottom-center",
