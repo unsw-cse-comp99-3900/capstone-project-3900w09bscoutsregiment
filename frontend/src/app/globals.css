@@ -1,7 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import 'flowbite';
+/* @import 'flowbite'; */
 
 /* Where is this used */
 .login-background {
