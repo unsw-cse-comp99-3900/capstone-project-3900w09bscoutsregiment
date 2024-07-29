@@ -1,3 +1,46 @@
+import { slowCypressDown } from "cypress-slow-down";
+
+slowCypressDown(400);
+
+const performRegisterAndLogin = (testEmail) => {
+    cy.visit("localhost:3000/");
+
+    cy.get("#register-btn").click();
+    cy.url().should("include", "localhost:3000/register");
+
+    cy.get("input[name=email-address]").first().focus().type(testEmail);
+    cy.get("input[name=name]").first().focus().type("alitest");
+    cy.get("input[name=password]").first().focus().type("alitest123");
+    cy.get("input[name=confirm-password]").first().focus().type("alitest123");
+
+    cy.get("#register-submit-btn").click();
+
+    cy.url().should("include", "localhost:3000/login");
+
+    cy.get("input[name=email-address]").first().focus().type(testEmail);
+    cy.get("input[name=password]").first().focus().type("alitest123");
+
+    cy.get("#login-submit-btn").click();
+    cy.url().should("include", "localhost:3000/courses");
+};
+
+const addACourse = (courseName) => {
+    cy.get("#add-course-btn").click();
+
+    cy.visit("localhost:3000/search");
+
+    cy.url().should("include", "localhost:3000/search");
+
+    cy.get("input[name=course-name-input]").focus().type(courseName);
+
+    cy.get("#add-course-COMP1511").click();
+
+    cy.get("#navbar-courses-btn").click();
+    cy.url().should("include", "localhost:3000/courses");
+
+    cy.get(`#${courseName}`).should("exist");
+};
+
 describe("Happy path", () => {
     // 1. land on homepage
     // 2. go to register page
@@ -10,79 +53,54 @@ describe("Happy path", () => {
     // 9. go back to courses page
     // 10. analyze the course
 
-    it("check if we are at homepage", () => {
+    it("Happy Path", () => {
         cy.visit("localhost:3000/");
         cy.url().should("include", "localhost:3000");
-    });
 
-    it("successful register", () => {
-        cy.visit("localhost:3000/", { failOnStatusCode: false });
+        const timestamp = Date.now();
+        const testEmail = `alitest${timestamp}@gmail.com`;
+        performRegisterAndLogin(testEmail);
 
-        cy.get("#register-btn").click();
-        cy.url().should("include", "localhost:3000/register");
+        const courseName = "COMP1511";
+        addACourse(courseName);
 
-        cy.get("input[name=email-address]").focus().type("alitest1@gmail.com");
-
-        cy.get("input[name=name]").focus().type("alitest");
-
-        cy.get("input[name=password]").focus().type("alitest123");
-
-        cy.get("input[name=confirm-password]").focus().type("alitest123");
-
-        cy.get("#register-submit-btn").click();
-        console.log("register buttoned clicked");
-        console.log(cy.url());
-        cy.url().then((url) => {
-            cy.log("Current URL is: " + url);
-        });
-        cy.url().should("include", "localhost:3000/login");
-    });
-
-    it("successful login", () => {
-        cy.visit("localhost:3000/login", { failOnStatusCode: false });
-
-        cy.get("input[name=email-address]").focus().type("alitest1@gmail.com");
-        cy.get("input[name=password]").focus().type("alitest123");
-
-        cy.get("#login-submit-btn").click();
-        console.log("login button clicked");
-        console.log(cy.url());
-        cy.url().then((url) => {
-            cy.log("Current URL is: " + url);
-        });
-        cy.url().should("include", "localhost:3000/courses");
-    });
-
-    it("Add a course to your courses list", () => {
-        cy.visit("localhost:3000/courses", { failOnStatusCode: false });
-        cy.url().should("include", "localhost:3000/courses");
-
-        cy.get("#add-course-btn").click();
-        console.log("login button clicked");
-
-        cy.url().should("include", "localhost:3000/search");
-
-        cy.get("input[name=course-name-input]").focus().type("COMP1511");
-
-        cy.get("#first-course").click();
-
-        cy.get("#navbar-courses-btn").click();
-        cy.url().should("include", "localhost:3000/courses");
-
-        cy.get("#COMP1511").should("exist");
-    });
-
-    it("Analyze a course", () => {
-        cy.visit("localhost:3000/courses", { failOnStatusCode: false });
-        cy.url().should("include", "localhost:3000/courses");
-
-        cy.get("#COMP1511").should("exist");
-
-        cy.get("#COMP1511").click();
+        cy.get(`#${courseName}`).should("exist");
+        cy.get(`#${courseName}`).click();
 
         cy.get("#analysis-btn").should("exist");
         cy.get("#analysis-btn").click();
 
         cy.get("#analysis-chart").should("exist");
     });
+
+    // it("User Authentication", () => {
+    //     const timestamp = Date.now();
+    //     const testEmail = `alitest${timestamp}@gmail.com`;
+    //     performRegisterAndLogin(testEmail);
+    // });
+
+    // it("Add a course to the courses list", () => {
+    //     const timestamp = Date.now();
+    //     const testEmail = `alitest${timestamp}@gmail.com`;
+    //     performRegisterAndLogin(testEmail);
+
+    //     addACourse("COMP1511");
+    // });
+
+    // it("Analyze a course", () => {
+    //     const timestamp = Date.now();
+    //     const testEmail = `alitest${timestamp}@gmail.com`;
+    //     performRegisterAndLogin(testEmail);
+
+    //     const courseName = "COMP1511";
+    //     addACourse(courseName);
+
+    //     cy.get(`#${courseName}`).should("exist");
+    //     cy.get(`#${courseName}`).click();
+
+    //     cy.get("#analysis-btn").should("exist");
+    //     cy.get("#analysis-btn").click();
+
+    //     cy.get("#analysis-chart").should("exist");
+    // });
 });
