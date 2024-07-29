@@ -228,7 +228,8 @@ count, or first in case of a tie, to be the final output category.
 
 The `analyseCourses` method takes a list of courses and their details, and reformats
 them into a new object, that contains the analysis data for each course and 
-the details for each category.
+the details for each category. In the process it will be analysing course 
+outcomes using the `analyseOutcome` method.
 
 ### Input
 
@@ -278,6 +279,18 @@ Which is a list of the courses that are to be analysed.
   }
 }
 ```
+
+## `makePng` method
+
+This method takes in analysis in the structure produced by `analyseCourses`
+and generates `png` encoded image data. This data could be used to write to 
+a file, but for now is placed directly into the pdf via the `makePDF` method.
+
+## `makePDF` method
+
+This method takes analysis in the structure produced by `analyseCourses`
+and generates a PDF file that can be saved to a file or sent to a client 
+to be downloaded.
 
 # Terms
 
