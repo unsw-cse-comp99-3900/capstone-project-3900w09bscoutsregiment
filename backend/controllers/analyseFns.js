@@ -1,15 +1,21 @@
 import fs from 'node:fs';
 import { createCanvas } from 'canvas';
 import Chart from 'chart.js/auto';
+import PDFDocument from 'pdfkit';
+import { termToggle } from './termFns.js';
 
 const verbMap = new Map();
 const categories = new Array();
+
+Chart.defaults.font.family = 'Helvetica';
+Chart.defaults.font.size = 60;
+Chart.defaults.color = '#000';
 
 // loads a file that contains the verb mappings into a map
 const loadFile = (name) => {
   try {
     const data = fs.readFileSync(name, 'utf8');
-    const lines = data.split('\n').map((x) => x.trim());
+    const lines = data.split('\n').map((x) => x.trim().toLowerCase());
     var category = '';
     for (const l of lines) {
       if (l == '') {
@@ -32,10 +38,10 @@ const loadFile = (name) => {
     // console.log(verbMap);
   } catch (err) {
     console.err(err);
-  };
+  }
 };
 
-// takes an outcome and gives the best fitting category based on 
+// takes an outcome and gives the best fitting category based on
 // the verb mapping algorithm
 const analyseOutcome = (outcome) => {
   const scoreMap = new Map();
@@ -83,14 +89,15 @@ const getKeywords = (outcome, category) => {
   return outwords;
 };
 
-// Takes a list of courses and their outcomes and produces an output that 
-// is potentially more usable for generating a graph
+// Takes a list of courses and their outcomes and produces an output that
+// is potentially more usable for generating a graph and pdf
 // Expects input to be of the form
 // [
 //   {
 //     _id: ...
 //     code: ...
-//     colour: ...
+//     term: ...
+//     year: ...
 //     outcomes: [
 //       "...",
 //       "..."
@@ -99,51 +106,73 @@ const getKeywords = (outcome, category) => {
 // ]
 // output will have the form
 // {
-//   "categoryName": [
+//   courses: [
 //     {
-//       colour: ...(hexadecimal)
+//       code: ...
+//       term: ...
+//       year: ...
+//       analysis: [..., ...] (number for each category)
+//     },
+//   ],
+//   categories: {
+//     "categoryName": {
 //       count: ...(number of outcomes in this block)
 //       courses: [
-//         { _id: ..., code: ..., outcomes: ["...", "..."] },
+//         {
+//           _id: ...,
+//           code: ...,
+//           term: ...,
+//           year: ...,
+//           outcomes: ["...", "..."] },
 //       ]
 //     }
-//   ]
+//   }
 // }
 const analyseCourses = (courseList) => {
-  const out = new Array();
+  const out = { courses: new Array(), categories: {} };
   for (const c of categories) {
-    out[c] = new Array(); 
+    out.categories[c] = {
+      count: 0,
+      courses: new Array(),
+    };
   }
   for (const course of courseList) {
+    const courseOut = {
+      code: course.code,
+      term: course.term,
+      year: course.year,
+      analysis: new Array(),
+    };
+    for (let i = 0; i < categories.length; i++) {
+      courseOut.analysis.push(0);
+    }
     for (const outcome of course.outcomes) {
       const analysis = analyseOutcome(outcome);
-      const colourBlock = out[analysis].find((x) => x.colour == course.colour);
-      if (colourBlock == undefined) {
-        out[analysis].push(
-          {
-            colour: course.colour,
-            count: 1,
-            courses: [{_id: course._id, code: course.code, outcomes: [outcome]}]}
-        );
-        continue;
+      courseOut.analysis[categories.indexOf(analysis)] += 1;
+      out.categories[analysis].count += 1;
+      const cb = out.categories[analysis].courses.find(
+        (x) => x._id == course._id,
+      );
+      if (cb == undefined) {
+        out.categories[analysis].courses.push({
+          _id: course._id,
+          code: course.code,
+          term: course.term,
+          year: course.year,
+          outcomes: [outcome],
+        });
+      } else {
+        cb.outcomes.push(outcome);
       }
-      const innerCourse = colourBlock.courses.find((x) => x._id == course._id);
-      if (innerCourse == undefined) {
-        colourBlock.courses.push(
-          {_id: course._id, code: course.code, outcomes: [outcome]}
-        );
-        continue;
-      }
-      colourBlock.count += 1;
-      innerCourse.outcomes.push(outcome);
     }
+    out.courses.push(courseOut);
   }
+  console.log(out);
   return out;
 };
 
-// generates a png from an analysis and outputs it to a file
-const makePng = (analysis, name) => {
-  const canvas = createCanvas(1000, 1000);
+const makePng = (analysis) => {
+  const canvas = createCanvas(2000, 1200);
   const ctx = canvas.getContext('2d');
   const plugin = {
     id: 'customCanvasBackgroundImage',
@@ -153,45 +182,21 @@ const makePng = (analysis, name) => {
       ctx.fillStyle = '#ffffff';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.restore();
-    }
+    },
   };
-  const data = {}; 
-  data.labels = categories;
+  const data = {};
+  data.labels = categories.map((c) => c.toUpperCase());
   data.datasets = new Array();
-  for (const [i, c] of categories.entries()) {
-    const blocks = analysis[c];
-    for (const b of blocks) {
-      const existingSet = data.datasets.find((x) => x.backgroundColor == b.colour)
-      if (existingSet == undefined) {
-        var label = '';
-        var values = new Array();
-        for (const course of b.courses) {
-          label += course.code + ' ';
-        }
-        var j = 0;
-        while (j < i) {
-          values.push(0);
-          j++;
-        }
-        values.push(b.count);
-        data.datasets.push({label: label, data: values, backgroundColor: b.colour});
-      } else {
-        var labelBits = existingSet.label.split(' ');
-        for (const course of b.courses) {
-          if (!labelBits.includes(course.code)) {
-            existingSet.label += course.code + ' ';
-          }
-        }
-        var j = existingSet.data.length;
-        while (j < i) {
-          existingSet.data.push(0);
-          j++;
-        }
-        existingSet.data.push(b.count);
-      }
-    }
+  for (const c of analysis.courses) {
+    data.datasets.push({
+      label: c.code + ' (' + termToggle(c.term) + ' ' + c.year + ')',
+      data: c.analysis,
+    });
   }
-
+  console.log(data);
+  for (const d of data.datasets) {
+    console.log(d.data);
+  }
   new Chart(ctx, {
     type: 'bar',
     data: data,
@@ -212,25 +217,76 @@ const makePng = (analysis, name) => {
       indexAxis: 'y',
       scales: {
         x: {
-          stacked: true
+          stacked: true,
         },
         y: {
-          stacked: true
-        }
+          stacked: true,
+        },
       },
       legend: {
         position: 'top',
       },
       title: {
         display: true,
-        text: 'horizontal bars'
-      }
+        text: 'horizontal bars',
+      },
+      grid: {
+        color: 'black',
+        lineWidth: 5,
+      },
     },
-    plugins: [plugin]
+    plugins: [plugin],
   });
-
   const buffer = canvas.toBuffer('image/png');
-  fs.writeFileSync(name, buffer);
+  return buffer;
 };
 
-export default { categories, loadFile, analyseOutcome, getKeywords, analyseCourses, makePng };
+const makePDF = (analysis) => {
+  console.log('making pdf');
+  const headingSize = 24;
+  const sub1Size = 20;
+  const sub2Size = 16;
+  const textSize = 13;
+  const doc = new PDFDocument();
+  const dir = './outputs/';
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir);
+  }
+  // doc.pipe(fs.createWriteStream(dir + name + '.pdf'));
+  // doc.pipe(outStream);
+  doc.font('Helvetica');
+  doc.fontSize(headingSize);
+  doc.text('Analysis', 70, 70);
+  doc.image(makePng(analysis), 70, 100, {
+    width: 410,
+  });
+  doc.text('Categories', 70, 370);
+  for (const c in analysis.categories) {
+    const block = analysis.categories[c];
+    doc.fontSize(sub1Size);
+    doc.moveDown(1);
+    doc.text(`${c.toUpperCase()} (${block.count})`);
+    for (const course of block.courses) {
+      doc.fontSize(sub2Size);
+      doc.moveDown(1);
+      doc.text(
+        course.code + ' (' + termToggle(course.term) + ' ' + course.year + ')',
+      );
+      doc.fontSize(textSize);
+      doc.list(course.outcomes);
+    }
+  }
+  doc.end();
+  return doc;
+};
+
+export default {
+  verbMap,
+  categories,
+  loadFile,
+  analyseOutcome,
+  getKeywords,
+  analyseCourses,
+  makePng,
+  makePDF,
+};

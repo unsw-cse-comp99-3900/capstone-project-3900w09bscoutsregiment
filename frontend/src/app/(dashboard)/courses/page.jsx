@@ -115,11 +115,11 @@ export default function ListingCourses() {
     const handleCourseClick = async (course) => {
         if (
             visitedCourses.some(
-                (visitedCourse) => visitedCourse.code === course.code
+                (visitedCourse) => visitedCourse.courseId === course.courseId
             )
         ) {
             const newVisitedCourses = visitedCourses.filter(
-                (visitedCourse) => visitedCourse.code !== course.code
+                (visitedCourse) => visitedCourse.courseId !== course.courseId
             );
 
             setVisitedCourses(newVisitedCourses);
@@ -165,7 +165,9 @@ export default function ListingCourses() {
             });
             // Refresh course list
             const updatedCourses = courses.map((c) =>
-                c.code === course.code ? { ...c, favorite: !c.favorite } : c
+                c.courseId === course.courseId
+                    ? { ...c, favorite: !c.favorite }
+                    : c
             );
             setCourses(updatedCourses);
         } catch (error) {
@@ -214,7 +216,36 @@ export default function ListingCourses() {
         })
         .sort((a, b) => b.favorite - a.favorite);
 
+    const getPDF = async () => {
+        const courses = visitedCourses.map((c) => c.courseId);
+        try {
+            const result = await fetch(
+                `http://localhost:${port}/api/course/pdf`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${localStorage.getItem(
+                            "token"
+                        )}`,
+                    },
+                    body: JSON.stringify({ courses: courses }),
+                }
+            );
+            const blob = await result.blob();
+            const objectURL = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = objectURL;
+            link.setAttribute("download", "file.pdf");
+            document.body.appendChild(link);
+            link.click();
+        } catch (error) {
+            console.error("Error fetching pdf:", error);
+        }
+    };
+
     const showAnalysis = () => {
+        // getPDF();
         setAnalysisChart(true);
         setBreakdown(false);
     };
@@ -282,10 +313,7 @@ export default function ListingCourses() {
                             onChange={handleSearchChange}
                         />
                     </header>
-                    <button
-                        id="add-course-btn"
-                        className="flex items-center justify-center w-full my-2.5 p-2.5 bg-blue-600 text-white border-none rounded cursor-pointer transition duration-300 hover:bg-blue-700"
-                    >
+                    <button className="flex items-center justify-center w-full my-2.5 p-2.5 bg-blue-600 text-white border-none rounded cursor-pointer transition duration-300 hover:bg-blue-700">
                         <FontAwesomeIcon icon={faPlus} />
                         <Link href="/search" className="ml-2.5">
                             Add Course
@@ -307,12 +335,12 @@ export default function ListingCourses() {
                         ) : (
                             filteredCourses.map((course) => (
                                 <div
-                                    id={course.code}
-                                    key={course.code}
+                                    key={course.courseId}
                                     onClick={() => handleCourseClick(course)}
                                     className={`flex justify-between items-center p-2.5 rounded border border-gray-300 cursor-pointer transition duration-300 ${
                                         visitedCourses.some(
-                                            (vc) => vc.code === course.code
+                                            (vc) =>
+                                                vc.courseId === course.courseId
                                         )
                                             ? "bg-blue-200"
                                             : ""
@@ -423,6 +451,12 @@ export default function ListingCourses() {
                                         </button>
                                         <button
                                             className="mt-5 p-2.5 bg-blue-600 text-white border-none rounded cursor-pointer hover:bg-blue-700"
+                                            onClick={getPDF}
+                                        >
+                                            Download PDF
+                                        </button>
+                                        <button
+                                            className="mt-5 p-2.5 bg-blue-600 text-white border-none rounded cursor-pointer hover:bg-blue-700"
                                             onClick={() => showBreakdown()}
                                         >
                                             <FontAwesomeIcon
@@ -460,7 +494,6 @@ export default function ListingCourses() {
                                                                 ) => (
                                                                     <div className="flex justify-between gap-20 items-center">
                                                                         <li
-                                                                            className="h-12"
                                                                             key={
                                                                                 index
                                                                             }
@@ -510,13 +543,27 @@ export default function ListingCourses() {
                                             </div>
                                         </div>
                                     )}
-                                    <button
-                                        className="mt-5 p-2.5 bg-blue-600 text-white border-none rounded cursor-pointer hover:bg-blue-700"
-                                        onClick={() => hideBreakdown()}
-                                    >
-                                        <FontAwesomeIcon icon={faArrowLeft} />{" "}
-                                        Go Back
-                                    </button>
+                                    <div className="flex gap-5">
+                                        <button
+                                            className="mt-5 p-2.5 bg-blue-600 text-white border-none rounded cursor-pointer hover:bg-blue-700"
+                                            onClick={() => hideBreakdown()}
+                                        >
+                                            <FontAwesomeIcon
+                                                icon={faArrowLeft}
+                                            />{" "}
+                                            Go Back
+                                        </button>
+                                        <button
+                                            className="mt-5 p-2.5 bg-blue-600 text-white border-none rounded cursor-pointer hover:bg-blue-700"
+                                            onClick={
+                                                {
+                                                    /* Add your download handle */
+                                                }
+                                            }
+                                        >
+                                            Download PDF
+                                        </button>
+                                    </div>
                                 </>
                             )}
                             {/* </span> */}
