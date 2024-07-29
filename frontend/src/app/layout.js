@@ -17,7 +17,7 @@ export const metadata = {
  */
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <ThemeProvider>
           <div className="px-16 py-4 text-white w-full flex items-center justify-between absolute">

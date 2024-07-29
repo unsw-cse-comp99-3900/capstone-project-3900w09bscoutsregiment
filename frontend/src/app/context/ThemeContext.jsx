@@ -15,19 +15,18 @@ export const ThemeProvider = ({ children }) => {
 
   useEffect(() => {
     // Ensure this runs only on the client side
-    if (typeof window !== 'undefined') {
-      const storedTheme = localStorage.getItem('theme') || 'light';
-      setTheme(storedTheme);
-      document.documentElement.className = storedTheme;
-    }
+    const storedTheme = localStorage.getItem('theme') || 'light';
+    setTheme(storedTheme);
+    document.documentElement.className = storedTheme;
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem('theme', theme);
+    document.documentElement.className = theme;
+  }, [theme]);
 
   const toggleTheme = (newTheme) => {
     setTheme(newTheme);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('theme', newTheme);
-      document.documentElement.className = newTheme;
-    }
   };
 
   return (

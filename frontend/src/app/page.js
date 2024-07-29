@@ -42,9 +42,16 @@ export default function Home() {
             </button>
             <p className="mt-2 text-left text-white">We will help you find a pathway</p>
           </div>
-          <div className=' p-1'>
-            <Image src="/homepage/images/clip.svg" alt="Example3" className="p-0 m-0 scale-150" width={500} height={500} />
-
+          <div className='p-1'>
+            <Image
+              src="/homepage/images/clip.svg"
+              alt="Example3"
+              className="p-0 m-0 scale-150"
+              width={500}
+              height={500}
+              style={{ width: 'auto', height: 'auto' }}
+              priority
+            />
           </div>
         </div>
       </div>
@@ -58,19 +65,37 @@ export default function Home() {
       <div className='mt-12 p-5'>
         <div className='flex space-x-8 items-center justify-center home-background-how-it-works'>
           <div className='w-1/5 border-solid border-2 border-black rounded-xl h-60 p-2 flex flex-col justify-center items-center bg-white'>
-            <Image src="/homepage/images/left-img.png" alt="Example2" width={70} height={70} />
+            <Image
+              src="/homepage/images/left-img.png"
+              alt="Example2"
+              width={70}
+              height={70}
+              style={{ width: 'auto', height: 'auto' }}
+            />
             <div className='font-bold'>Accurate Mapping</div>
-            <div>Our app uses bloom's taxonomy to carefully map all the course outline </div>
+            <div>Our app uses bloom's taxonomy to carefully map all the course outline</div>
           </div>
           <div className='w-1/5 border-solid border-2 border-black rounded-xl h-60 p-2 pt-0 flex flex-col justify-center items-center bg-white'>
-            <Image src="/homepage/images/mid-img.png" alt="Example3" width={70} height={70} />
+            <Image
+              src="/homepage/images/mid-img.png"
+              alt="Example3"
+              width={70}
+              height={70}
+              style={{ width: 'auto', height: 'auto' }}
+            />
             <div className='font-bold'>Breakdown Analysis</div>
-            <div>Our app give a detail analysis for each of the taxonomy level</div>
+            <div>Our app gives a detailed analysis for each of the taxonomy levels</div>
           </div>
           <div className='w-1/5 border-solid border-2 border-black rounded-xl h-60 p-2 pt-4 flex flex-col justify-center items-center bg-white'>
-            <Image src="/homepage/images/right-img.png" alt="Example" width={70} height={70} className='' />
+            <Image
+              src="/homepage/images/right-img.png"
+              alt="Example"
+              width={70}
+              height={70}
+              style={{ width: 'auto', height: 'auto' }}
+            />
             <div className='font-bold'>Multiple Course Comparison</div>
-            <div>Our app support multiple course comparison for a better understanding</div>
+            <div>Our app supports multiple course comparisons for a better understanding</div>
           </div>
         </div>
       </div>
@@ -92,6 +117,5 @@ export default function Home() {
       {/* Section: Footer of the page */}
       <FooterPage />
     </main>
-
   );
 }
