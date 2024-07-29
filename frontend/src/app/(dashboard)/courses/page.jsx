@@ -111,10 +111,10 @@ export default function ListingCourses() {
    */
   const handleCourseClick = async (course) => {
     if (
-      visitedCourses.some((visitedCourse) => visitedCourse.code === course.code)
+      visitedCourses.some((visitedCourse) => visitedCourse.courseId === course.courseId)
     ) {
       const newVisitedCourses = visitedCourses.filter(
-        (visitedCourse) => visitedCourse.code !== course.code
+        (visitedCourse) => visitedCourse.courseId !== course.courseId
       );
 
       setVisitedCourses(newVisitedCourses);
@@ -160,7 +160,7 @@ export default function ListingCourses() {
       });
       // Refresh course list
       const updatedCourses = courses.map((c) =>
-        c.code === course.code ? { ...c, favorite: !c.favorite } : c
+        c.courseId === course.courseId ? { ...c, favorite: !c.favorite } : c
       );
       setCourses(updatedCourses);
     } catch (error) {
@@ -281,9 +281,9 @@ export default function ListingCourses() {
             ) : (
               filteredCourses.map((course) => (
                 <div
-                  key={course.code}
+                  key={course.courseId}
                   onClick={() => handleCourseClick(course)}
-                  className={`flex justify-between items-center p-2.5 rounded border border-gray-300 cursor-pointer transition duration-300 ${visitedCourses.some((vc) => vc.code === course.code) ? 'bg-blue-200' : ''}`}
+                  className={`flex justify-between items-center p-2.5 rounded border border-gray-300 cursor-pointer transition duration-300 ${visitedCourses.some((vc) => vc.courseId === course.courseId) ? 'bg-blue-200' : ''}`}
                 >
                   <div className='flex flex-col'>
                     <div className='font-bold'>{course.code}</div>
@@ -364,6 +364,9 @@ export default function ListingCourses() {
                     >
                       <FontAwesomeIcon icon={faArrowLeft} /> Go Back
                     </button>
+                    <button className='mt-5 p-2.5 bg-blue-600 text-white border-none rounded cursor-pointer hover:bg-blue-700' onClick={{/* Add your download handle */}}>
+                      Download PDF
+                    </button>
                     <button className='mt-5 p-2.5 bg-blue-600 text-white border-none rounded cursor-pointer hover:bg-blue-700' onClick={() => showBreakdown()}>
                       <FontAwesomeIcon icon={faArrowRight} /> Break down
                     </button>
@@ -388,7 +391,7 @@ export default function ListingCourses() {
                               <ol className='list-decimal'>
                                 {course.outcomes.map((outcome , index) => (
                                   <div className='flex justify-between gap-20 items-center'>
-                                    <li className='h-12' key={index}>{highlightKeywords(outcome, course.keywords[index].words)}</li>
+                                    <li key={index}>{highlightKeywords(outcome, course.keywords[index].words)}</li>
                                     <Image src='/assets/icons/details.svg' width={30} height={30} onClick={() => showPopup(course.courseId, index)} alt='details' />
                                   </div>
                                 ))}
@@ -405,12 +408,17 @@ export default function ListingCourses() {
                         </div>
                       </div>
                     )}
-                  <button
-                    className='mt-5 p-2.5 bg-blue-600 text-white border-none rounded cursor-pointer hover:bg-blue-700'
-                    onClick={() => hideBreakdown()}
-                  >
-                    <FontAwesomeIcon icon={faArrowLeft} /> Go Back
-                  </button>
+                  <div className='flex gap-5'>
+                    <button
+                      className='mt-5 p-2.5 bg-blue-600 text-white border-none rounded cursor-pointer hover:bg-blue-700'
+                      onClick={() => hideBreakdown()}
+                    >
+                      <FontAwesomeIcon icon={faArrowLeft} /> Go Back
+                    </button>
+                    <button className='mt-5 p-2.5 bg-blue-600 text-white border-none rounded cursor-pointer hover:bg-blue-700' onClick={{/* Add your download handle */}}>
+                      Download PDF
+                    </button>
+                  </div>
                 </>
               )}
               {/* </span> */}
