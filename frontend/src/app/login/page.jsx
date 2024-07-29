@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import OAuth from '../components/OAuth';
+import { toast } from 'react-toastify';
 
 export default function Login() {
   const [email, setEmail] = React.useState('');
@@ -18,8 +19,8 @@ export default function Login() {
     if (token !== null) {
       router.push('/courses');
       return;
-    }  
-  }, [])
+    }
+  }, []);
 
   // backend stuff
   const login = async () => {
@@ -36,20 +37,30 @@ export default function Login() {
     const data = await response.json();
     if (response.ok) {
       localStorage.setItem('token', data.token);
-      router.push('/courses');
+      toast.success('User signed in successfully', {
+        position: 'bottom-center',
+        pauseOnHover: false,
+      });
+      setTimeout(() => {
+        router.push('/courses');
+      }, 1500);
     } else {
       console.error(data.message);
+      toast.error('Login details are incorrect, please try again', {
+        position: 'bottom-center',
+        pauseOnHover: false,
+      });
     }
   };
 
   /**
-   * 
+   *
    * Main Background color is handled on globals.css on '@apply'->body directive
    */
   return (
-    <div className=''>
-      <div className='login_background z-10'>
-        <div className='min-h-screen flex justify-center items-center '>
+    <div className="">
+      <div className="login_background z-10">
+        <div className="min-h-screen flex justify-center items-center ">
           <form
             name="publish-form"
             id="form"
@@ -61,7 +72,7 @@ export default function Login() {
               </h2>
               <input
                 name="email-address"
-                className='input_text'
+                className="input_text"
                 id="email-address"
                 type="text"
                 placeholder="Email address"
@@ -76,7 +87,7 @@ export default function Login() {
             <div className="mb-6">
               <input
                 name="password"
-                className='input_text'
+                className="input_text"
                 id="password"
                 type="password"
                 placeholder="Password"
@@ -115,11 +126,10 @@ export default function Login() {
             </div>
             {/* sign up */}
             <div className="flex items-center justify-center gap-2">
-              <p className='text-main-txt'> Don't have an account yet?</p>
+              <p className="text-main-txt"> Don't have an account yet?</p>
               <Link
                 href="/register"
                 style={{ textDecoration: 'underline', color: '#1d4ed8' }}
-                
               >
                 Sign up
               </Link>
