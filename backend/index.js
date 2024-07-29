@@ -9,7 +9,7 @@ import courseRouter from './routes/course.js';
 import analyseFns from './controllers/analyseFns.js';
 
 const app = express();
-const port = 5000;
+const port = process.env.NEXT_PUBLIC_PORT_NUM;
 
 // Middleware
 app.use(express.json());

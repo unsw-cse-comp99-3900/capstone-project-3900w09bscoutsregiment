@@ -7,7 +7,7 @@ export default function ChangeEmail() {
     const [oldEmail, setOldEmail] = React.useState("");
     const [newEmail, setNewEmail] = React.useState("");
 
-    let port = 5000;
+  let port = process.env.NEXT_PUBLIC_PORT_NUM;
 
     const handleUpdateEmail = async () => {
         if (oldEmail === "" || newEmail === "") {

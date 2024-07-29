@@ -7,7 +7,8 @@ export default function ResetPassword() {
     const [oldPassword, setOldPassword] = React.useState("");
     const [newPassword, setNewPassword] = React.useState("");
     const [confirmPassword, setConfirmPassword] = React.useState("");
-    let port = 5000;
+    let port = process.env.NEXT_PUBLIC_PORT_NUM;
+
 
     const handleResetPassword = async () => {
         if (

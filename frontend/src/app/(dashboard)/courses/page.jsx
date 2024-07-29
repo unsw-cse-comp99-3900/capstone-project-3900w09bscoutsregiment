@@ -31,7 +31,7 @@ export default function ListingCourses() {
   const [analysisChart, setAnalysisChart] = useState(false);
   const [breakdown, setBreakdown] = useState(false)
   const [reasoningPopup, setReasoningPopup] = useState(null)
-  const port = 5000;
+  const port = process.env.NEXT_PUBLIC_PORT_NUM;
 
   useEffect(() => {
     const fetchUserCourses = async () => {

@@ -18,7 +18,7 @@ COPY . .
 
 #ENV PORT=8080
 
-EXPOSE 5000
+EXPOSE 5100
 
 # RUN npm rebuild canvas
 

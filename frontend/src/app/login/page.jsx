@@ -9,7 +9,8 @@ import { toast } from 'react-toastify';
 export default function Login() {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
-  let port = 5000;
+  let port = process.env.NEXT_PUBLIC_PORT_NUM;
+
 
   // Ensure stay logged in
   const router = useRouter();
