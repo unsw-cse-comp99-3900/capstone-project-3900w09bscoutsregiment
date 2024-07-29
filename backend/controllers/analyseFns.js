@@ -68,6 +68,21 @@ const analyseOutcome = (outcome) => {
   // console.log(scoreMap);
 };
 
+const getKeywords = (outcome, category) => {
+  const words = outcome.split(' ').map((x) => x.replace(/\W/g, ''));
+  const outwords = new Array();
+  for (const w of words) {
+    const cs = verbMap.get(w.toLowerCase());
+    if (cs == undefined) {
+      continue;
+    }
+    if (cs.includes(category)) {
+      outwords.push(w);
+    }
+  }
+  return outwords;
+};
+
 // Takes a list of courses and their outcomes and produces an output that 
 // is potentially more usable for generating a graph
 // Expects input to be of the form
@@ -218,4 +233,4 @@ const makePng = (analysis, name) => {
   fs.writeFileSync(name, buffer);
 };
 
-export default { categories, loadFile, analyseOutcome, analyseCourses, makePng };
+export default { categories, loadFile, analyseOutcome, getKeywords, analyseCourses, makePng };

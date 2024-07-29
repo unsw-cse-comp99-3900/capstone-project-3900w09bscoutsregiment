@@ -16,8 +16,19 @@ courseRouter.get('/:code/:year/:term', async (req, res) => {
   query.find({ code: req.params.code });
   query.find({ year: Number(req.params.year) });
   query.find({ term: termToggle(req.params.term) });
-  const course = await query.exec();
-  res.json(course);
+  const course = await query.lean().exec();
+  if (course.length < 1) {
+    res.json([]);
+  }
+  const c = course[0];
+  c.keywords = new Array();
+  for (const o of c.outcomes) {
+    const a = analyseFns.analyseOutcome(o);
+    const words = analyseFns.getKeywords(o, a);
+    c.keywords.push({category: a, words: words});
+  }
+  console.log(c);
+  res.json([c]);
 });
 
 // Gets a list of courses that fulfil any combination of
@@ -131,7 +142,7 @@ courseRouter.post('/add', async (req, res) => {
   }
   const userList = await User.findOne({ _id: userId }, 'courses').exec();
   console.log(userList);
-  if (userList.courses.includes(courseId)) {
+  if (userList.courses.find((x) => x.courseId == courseId) != undefined) {
     console.log('user already has');
     return res.status(400).json({ message: 'User already added course' });
   }

@@ -1,5 +1,10 @@
 import React from 'react';
 
+/**
+ * The Footer of the home page which inclucdes the wave svg 
+ * Wave Svg is created with tools from softr.io
+ * @returns Html element for the footer of home page
+ */
 const FooterPage = () => {
   return (
     <>
