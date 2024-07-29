@@ -46,6 +46,5 @@ export const termToggle = (term) => {
 
 // checks that a term is valid and in small form
 export const termIsSmall = (term) => {
-  return (term.length == 2 && termMap.has(term));
-}
-
+  return term.length == 2 && termMap.has(term);
+};

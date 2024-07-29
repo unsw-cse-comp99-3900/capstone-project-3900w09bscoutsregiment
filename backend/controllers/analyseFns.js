@@ -38,10 +38,10 @@ const loadFile = (name) => {
     // console.log(verbMap);
   } catch (err) {
     console.err(err);
-  };
+  }
 };
 
-// takes an outcome and gives the best fitting category based on 
+// takes an outcome and gives the best fitting category based on
 // the verb mapping algorithm
 const analyseOutcome = (outcome) => {
   const scoreMap = new Map();
@@ -89,7 +89,7 @@ const getKeywords = (outcome, category) => {
   return outwords;
 };
 
-// Takes a list of courses and their outcomes and produces an output that 
+// Takes a list of courses and their outcomes and produces an output that
 // is potentially more usable for generating a graph and pdf
 // Expects input to be of the form
 // [
@@ -129,19 +129,19 @@ const getKeywords = (outcome, category) => {
 //   }
 // }
 const analyseCourses = (courseList) => {
-  const out = {courses: new Array(), categories: {}};
+  const out = { courses: new Array(), categories: {} };
   for (const c of categories) {
     out.categories[c] = {
       count: 0,
-      courses: new Array()
-    }; 
+      courses: new Array(),
+    };
   }
   for (const course of courseList) {
     const courseOut = {
       code: course.code,
       term: course.term,
       year: course.year,
-      analysis: new Array()
+      analysis: new Array(),
     };
     for (let i = 0; i < categories.length; i++) {
       courseOut.analysis.push(0);
@@ -150,17 +150,17 @@ const analyseCourses = (courseList) => {
       const analysis = analyseOutcome(outcome);
       courseOut.analysis[categories.indexOf(analysis)] += 1;
       out.categories[analysis].count += 1;
-      const cb = out.categories[analysis].courses.find((x) => x._id == course._id);
+      const cb = out.categories[analysis].courses.find(
+        (x) => x._id == course._id,
+      );
       if (cb == undefined) {
-        out.categories[analysis].courses.push(
-          {
-            _id: course._id,
-            code: course.code,
-            term: course.term,
-            year: course.year,
-            outcomes: [outcome]
-          }
-        );
+        out.categories[analysis].courses.push({
+          _id: course._id,
+          code: course.code,
+          term: course.term,
+          year: course.year,
+          outcomes: [outcome],
+        });
       } else {
         cb.outcomes.push(outcome);
       }
@@ -182,15 +182,15 @@ const makePng = (analysis) => {
       ctx.fillStyle = '#ffffff';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.restore();
-    }
+    },
   };
-  const data = {}
+  const data = {};
   data.labels = categories.map((c) => c.toUpperCase());
   data.datasets = new Array();
   for (const c of analysis.courses) {
     data.datasets.push({
       label: c.code + ' (' + termToggle(c.term) + ' ' + c.year + ')',
-      data: c.analysis
+      data: c.analysis,
     });
   }
   console.log(data);
@@ -221,21 +221,21 @@ const makePng = (analysis) => {
         },
         y: {
           stacked: true,
-        }
+        },
       },
       legend: {
         position: 'top',
       },
       title: {
         display: true,
-        text: 'horizontal bars'
+        text: 'horizontal bars',
       },
       grid: {
         color: 'black',
-        lineWidth: 5
-      }
+        lineWidth: 5,
+      },
     },
-    plugins: [plugin]
+    plugins: [plugin],
   });
   const buffer = canvas.toBuffer('image/png');
   return buffer;
@@ -254,14 +254,12 @@ const makePDF = (analysis) => {
   }
   // doc.pipe(fs.createWriteStream(dir + name + '.pdf'));
   // doc.pipe(outStream);
-  doc.font('Helvetica')
+  doc.font('Helvetica');
   doc.fontSize(headingSize);
   doc.text('Analysis', 70, 70);
-  doc.image(makePng(analysis), 70, 100, 
-    {
-      width: 410
-    }
-  );
+  doc.image(makePng(analysis), 70, 100, {
+    width: 410,
+  });
   doc.text('Categories', 70, 370);
   for (const c in analysis.categories) {
     const block = analysis.categories[c];
@@ -271,7 +269,9 @@ const makePDF = (analysis) => {
     for (const course of block.courses) {
       doc.fontSize(sub2Size);
       doc.moveDown(1);
-      doc.text(course.code + ' (' + termToggle(course.term) + ' ' + course.year + ')');
+      doc.text(
+        course.code + ' (' + termToggle(course.term) + ' ' + course.year + ')',
+      );
       doc.fontSize(textSize);
       doc.list(course.outcomes);
     }
@@ -280,12 +280,12 @@ const makePDF = (analysis) => {
   return doc;
 };
 
-export default { 
+export default {
   categories,
   loadFile,
   analyseOutcome,
   getKeywords,
   analyseCourses,
   makePng,
-  makePDF
+  makePDF,
 };

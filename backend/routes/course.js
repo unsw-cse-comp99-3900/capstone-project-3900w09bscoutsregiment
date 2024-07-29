@@ -25,7 +25,7 @@ courseRouter.get('/:code/:year/:term', async (req, res) => {
   for (const o of c.outcomes) {
     const a = analyseFns.analyseOutcome(o);
     const words = analyseFns.getKeywords(o, a);
-    c.keywords.push({category: a, words: words});
+    c.keywords.push({ category: a, words: words });
   }
   console.log(c);
   res.json([c]);
@@ -33,7 +33,7 @@ courseRouter.get('/:code/:year/:term', async (req, res) => {
 
 // Gets a list of courses that fulfil any combination of
 // 3 filtering options provided in a query string.
-// search -- filters out courses that do not have search as a substring of the 
+// search -- filters out courses that do not have search as a substring of the
 //           title or code
 // term -- filters out courses that do not match the specified term
 // year -- filters out courses that do not match the specified year
@@ -88,13 +88,18 @@ courseRouter.get('/list', async (req, res) => {
   if (searchList.length < 1) {
     return res.json([]);
   }
-  const courseList = await Course.find({$or: searchList}, '_id title code year term outcomes').exec();
+  const courseList = await Course.find(
+    { $or: searchList },
+    '_id title code year term outcomes',
+  ).exec();
   const output = new Array();
   for (const course of courseList) {
-    const tempCourse = user.courses.find((elem) => elem.courseId.toString() == course._id.toString());
+    const tempCourse = user.courses.find(
+      (elem) => elem.courseId.toString() == course._id.toString(),
+    );
     const infoList = new Array();
     for (const c of analyseFns.categories) {
-      infoList.push({category: c, value: 0}); 
+      infoList.push({ category: c, value: 0 });
     }
     for (const outcome of course.outcomes) {
       const c = analyseFns.analyseOutcome(outcome);
@@ -153,7 +158,7 @@ courseRouter.post('/add', async (req, res) => {
   });
   const result = await User.updateOne(
     { _id: userId },
-    { courses: userList.courses }
+    { courses: userList.courses },
   ).exec();
   console.log(result);
   res.send('ok');
@@ -179,7 +184,7 @@ courseRouter.post('/delete', async (req, res) => {
   }
   const result = await User.updateOne(
     { _id: userId },
-    { courses: newList }
+    { courses: newList },
   ).exec();
   console.log(result);
   res.send('ok');
@@ -214,7 +219,7 @@ courseRouter.post('/favorite', async (req, res) => {
   }
   const result = await User.updateOne(
     { _id: userId },
-    { courses: userList.courses }
+    { courses: userList.courses },
   ).exec();
   console.log(result);
   res.send('ok');
@@ -249,7 +254,7 @@ courseRouter.post('/unfavorite', async (req, res) => {
   }
   const result = await User.updateOne(
     { _id: userId },
-    { courses: userList.courses }
+    { courses: userList.courses },
   ).exec();
   console.log(result);
   res.send('ok');
@@ -270,7 +275,9 @@ courseRouter.post('/pdf', async (req, res) => {
   }
   const orList = new Array();
   if (courses.length < 1) {
-    res.status(400).json({ message: 'Did not provide any ids in courses array' });
+    res
+      .status(400)
+      .json({ message: 'Did not provide any ids in courses array' });
     return;
   }
   for (const cId of courses) {
