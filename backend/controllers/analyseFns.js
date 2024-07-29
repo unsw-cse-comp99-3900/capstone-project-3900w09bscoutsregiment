@@ -241,7 +241,6 @@ const makePng = (analysis) => {
   return buffer;
 };
 
-<<<<<<< HEAD
 const makePDF = (analysis) => {
   console.log('making pdf');
   const headingSize = 24;
