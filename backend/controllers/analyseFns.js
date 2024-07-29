@@ -9,7 +9,7 @@ const categories = new Array();
 const loadFile = (name) => {
   try {
     const data = fs.readFileSync(name, 'utf8');
-    const lines = data.split('\n').map((x) => x.trim());
+    const lines = data.split('\n').map((x) => x.trim().toLowerCase());
     var category = '';
     for (const l of lines) {
       if (l == '') {
@@ -233,4 +233,12 @@ const makePng = (analysis, name) => {
   fs.writeFileSync(name, buffer);
 };
 
-export default { categories, loadFile, analyseOutcome, getKeywords, analyseCourses, makePng };
+export default {
+  verbMap,
+  categories,
+  loadFile,
+  analyseOutcome,
+  getKeywords,
+  analyseCourses,
+  makePng
+};
