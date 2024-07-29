@@ -7,11 +7,11 @@ const courseSchema = new Schema({
   title: String,
   code: {
     type: String,
-    required: true
+    required: true,
   },
   year: Number,
   term: String,
-  outcomes: [String]
+  outcomes: [String],
 });
 
 // Create the model in the db with mongoose

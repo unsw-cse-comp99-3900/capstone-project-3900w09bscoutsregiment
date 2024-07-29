@@ -205,7 +205,31 @@ export default function ListingCourses() {
     })
     .sort((a, b) => b.favorite - a.favorite);
 
+  const getPDF = async () => {
+    const courses = visitedCourses.map((c) => c.courseId);
+    try {
+      const result = await fetch(`http://localhost:${port}/api/course/pdf`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+        body: JSON.stringify({ courses: courses }),
+      });
+      const blob = await result.blob();
+      const objectURL = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = objectURL;
+      link.setAttribute('download', 'file.pdf');
+      document.body.appendChild(link);
+      link.click();
+    } catch (error) {
+      console.error('Error fetching pdf:', error);
+    }
+  };
+
   const showAnalysis = () => {
+    // getPDF();
     setAnalysisChart(true);
     setBreakdown(false)
   };
@@ -364,7 +388,7 @@ export default function ListingCourses() {
                     >
                       <FontAwesomeIcon icon={faArrowLeft} /> Go Back
                     </button>
-                    <button className='mt-5 p-2.5 bg-blue-600 text-white border-none rounded cursor-pointer hover:bg-blue-700' onClick={{/* Add your download handle */}}>
+                    <button className='mt-5 p-2.5 bg-blue-600 text-white border-none rounded cursor-pointer hover:bg-blue-700' onClick={getPDF}>
                       Download PDF
                     </button>
                     <button className='mt-5 p-2.5 bg-blue-600 text-white border-none rounded cursor-pointer hover:bg-blue-700' onClick={() => showBreakdown()}>

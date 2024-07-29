@@ -95,13 +95,35 @@ paired with the number of outcomes that fall into the category.
 
 ## POST `/add` and `/delete`
 
+### Body Parameters
+
+- `courseId` should be a 24 character hexadecimal string.
+
+### Description
+
 These URLs are used to add or delete courses from the current user's account.
 The body of the request contains the `courseId` that is to be added.
 
 ## POST `/favorite` and `/unfavorite`
 
+### Body Parameters
+
+- `courseId` should be a 24 character hexadecimal string.
+
+### Description
+
 These URLs are used to record the favorite status of a course in the user's 
 account. The body of the request provides the `courseId` that is to be favorited.
+
+## POST `/pdf`
+
+### Body Parameters
+
+- `courses` is an array of `courseId`s that are used to produce the analysis.
+
+### Description
+
+Generates analysis as a pdf and returns it in the response.
 
 # `analyseFns` file
 
@@ -201,6 +223,74 @@ become
 
 Once all the words have been scanned, the method picks the category with the highest
 count, or first in case of a tie, to be the final output category.
+
+## `analyseCourses` method
+
+The `analyseCourses` method takes a list of courses and their details, and reformats
+them into a new object, that contains the analysis data for each course and 
+the details for each category. In the process it will be analysing course 
+outcomes using the `analyseOutcome` method.
+
+### Input
+
+The method takes one parameter `courseList`, which has the following format
+
+```
+[
+  {
+    _id: ...
+    code: ...
+    term: ...
+    year: ...
+    outcomes: [
+      "...",
+      "..."
+    ]
+  },
+]
+```
+
+Which is a list of the courses that are to be analysed.
+
+### Output
+
+```
+{
+  courses: [
+    {
+      code: ...
+      term: ...
+      year: ...
+      analysis: [..., ...] (number for each category)
+    },
+  ],
+  categories: {
+    "categoryName": {
+      count: ...(number of outcomes in this block)
+      courses: [
+        {
+          _id: ...,
+          code: ...,
+          term: ...,
+          year: ...,
+          outcomes: ["...", "..."] },
+      ]
+    }
+  }
+}
+```
+
+## `makePng` method
+
+This method takes in analysis in the structure produced by `analyseCourses`
+and generates `png` encoded image data. This data could be used to write to 
+a file, but for now is placed directly into the pdf via the `makePDF` method.
+
+## `makePDF` method
+
+This method takes analysis in the structure produced by `analyseCourses`
+and generates a PDF file that can be saved to a file or sent to a client 
+to be downloaded.
 
 # Terms
 
