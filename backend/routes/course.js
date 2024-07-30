@@ -79,6 +79,7 @@ courseRouter.get('/all', async (req, res) => {
 courseRouter.get('/list', async (req, res) => {
   const user = await User.findOne({ _id: req.userId }).exec();
   if (user == null) {
+    console.log('user was null');
     return res.status(400).json({ message: 'Provided user does not exists' });
   }
   const searchList = new Array();

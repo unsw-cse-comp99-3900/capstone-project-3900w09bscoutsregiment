@@ -14,8 +14,8 @@ import Link from "next/link";
 import displayChart from "./analysisChart";
 import Image from "next/image";
 import CourseReasoning from "./reasoning/page";
-import { jwtDecode } from 'jwt-decode';
-import { toast } from 'react-toastify';
+import { jwtDecode } from "jwt-decode";
+import { toast } from "react-toastify";
 
 export default function ListingCourses() {
     const router = useRouter();
@@ -25,14 +25,14 @@ export default function ListingCourses() {
             router.push("/");
             return;
         } else {
-          const expiryTime = jwtDecode(token).exp
-          const currentTime = Date.now() / 1000;
+            const expiryTime = jwtDecode(token).exp;
+            const currentTime = Date.now() / 1000;
 
-          if (expiryTime < currentTime) {
-            localStorage.removeItem("token");
-            toast.error("Session expired, please log in again");
-            router.push("/login");
-          }
+            if (expiryTime < currentTime) {
+                localStorage.removeItem("token");
+                toast.error("Session expired, please log in again");
+                router.push("/login");
+            }
         }
     }, []);
 
@@ -324,12 +324,12 @@ export default function ListingCourses() {
                             onChange={handleSearchChange}
                         />
                     </header>
-                    <button className="flex items-center justify-center w-full my-2.5 p-2.5 bg-blue-600 text-white border-none rounded cursor-pointer transition duration-300 hover:bg-blue-700">
-                        <FontAwesomeIcon icon={faPlus} />
-                        <Link href="/search" className="ml-2.5">
+                    <Link href="/search" className="ml-2.5">
+                        <button className="flex items-center justify-center w-full my-2.5 p-2.5 bg-blue-600 text-white border-none rounded cursor-pointer transition duration-300 hover:bg-blue-700">
+                            <FontAwesomeIcon icon={faPlus} />
                             Add Course
-                        </Link>
-                    </button>
+                        </button>
+                    </Link>
                     {/* Show list of user's courses */}
                     <div className="flex flex-col gap-2.5 p-2.5">
                         {filteredCourses.length === 0 ? (
