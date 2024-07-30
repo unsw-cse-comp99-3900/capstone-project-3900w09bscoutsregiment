@@ -1,32 +1,41 @@
-"use client";
+'use client';
 
-import React from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import OAuth from "../components/OAuth";
-import { toast } from "react-toastify";
-import { jwtDecode } from "jwt-decode";
+import React from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import OAuth from '../components/OAuth';
+import { toast } from 'react-toastify';
+import { jwtDecode } from 'jwt-decode';
 
 export default function Register() {
-  const [name, setName] = React.useState("");
+  const [name, setName] = React.useState('');
   const [nameError, setNameError] = React.useState(false);
-  const [email, setEmail] = React.useState("");
+  const [email, setEmail] = React.useState('');
   const [emailError, setEmailError] = React.useState(false);
-  const [password, setPassword] = React.useState("");
+  const [password, setPassword] = React.useState('');
   const [passwordError, setPasswordError] = React.useState(false);
-  const [confirmPassword, setConfirmPassword] = React.useState("");
-  const [confirmPasswordError, setConfirmPasswordError] = React.useState("");
+  const [confirmPassword, setConfirmPassword] = React.useState('');
+  const [confirmPasswordError, setConfirmPasswordError] = React.useState('');
   let port = process.env.NEXT_PUBLIC_PORT_NUM;
 
-  // form validation
-  const handleEmailBlur = (e) => {
-    if (e.target.validity.typeMismatch || e.target.value === "") {
+  /**
+   * Keeps track of whether the email form is in focus or not
+   * @param {*} event
+   * if the form is empty or is not a valid email when its out of focus, updates the state of EmailError to true, otherwise false
+   */
+  const handleEmailBlur = (event) => {
+    if (event.target.validity.typeMismatch || event.target.value === '') {
       setEmailError(true);
     } else {
       setEmailError(false);
     }
   };
 
+  /**
+   * Keeps track of the changes inside the email form
+   * @param {*} event
+   * if the current value inside the email form is valid, updates the state of EmailError to true
+   */
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
     if (event.target.validity.valid) {
@@ -34,47 +43,78 @@ export default function Register() {
     }
   };
 
-  const handleNameBlur = (e) => {
-    if (e.target.value === "") {
+  /**
+   * Keeps track of whether the name form is in focus or not
+   * @param {*} event
+   * if the name form is empty or is not a valid name when its out of focus, updates the state of NameError to true, otherwise false
+   */
+  const handleNameBlur = (event) => {
+    if (event.target.value === '') {
       setNameError(true);
     } else {
       setNameError(false);
     }
   };
 
+  /**
+   * Keeps track of the changes inside the name form
+   * @param {*} event
+   * if the current value inside the name form is valid (not empty), updates the state of NameError to false
+   */
   const handleNameChange = (event) => {
     setName(event.target.value);
-    if (event.target.value !== "") {
+    if (event.target.value !== '') {
       setNameError(false);
     }
   };
 
-  const handlePasswordBlur = (e) => {
-    if (e.target.value === "") {
+  /**
+   * Keeps track of whether the password form is in focus or not
+   * @param {*} event
+   * if the password form is empty when its out of focus, updates the state of PasswordError to true, otherwise false
+   */
+  const handlePasswordBlur = (event) => {
+    if (event.target.value === '') {
       setPasswordError(true);
     } else {
       setPasswordError(false);
     }
   };
 
+  /**
+   * Keeps track of the changes inside the password form
+   * @param {*} event
+   * if the current value inside the password form is valid (not empty), updates the state of PasswordError to false
+   */
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
-    if (event.target.value !== "") {
+    if (event.target.value !== '') {
       setPasswordError(false);
     }
   };
 
-  const handleConfirmPasswordBlur = (e) => {
-    if (e.target.value === "" || e.target.value !== password) {
+  /**
+   * Keeps track of whether the confirm password form is in focus or not
+   * @param {*} event
+   * if the confirm password form is empty or does not have the same value as password form when its out of focus,
+   * updates the state of ConfirmPasswordError to true, otherwise false
+   */
+  const handleConfirmPasswordBlur = (event) => {
+    if (event.target.value === '' || event.target.value !== password) {
       setConfirmPasswordError(true);
     } else {
       setConfirmPasswordError(false);
     }
   };
 
+  /**
+   * Keeps track of the changes inside the confirm password form
+   * @param {*} event
+   * if the current value inside the confirm password form is valid (not empty), updates the state of ConfirmPasswordError to false
+   */
   const handleConfirmPasswordChange = (event) => {
     setConfirmPassword(event.target.value);
-    if (event.target.value !== "") {
+    if (event.target.value !== '') {
       setConfirmPasswordError(false);
     }
   };
@@ -82,17 +122,17 @@ export default function Register() {
   // Ensure stay logged in
   const router = useRouter();
   React.useEffect(() => {
-    const token = localStorage.getItem("token") || null;
+    const token = localStorage.getItem('token') || null;
     if (token !== null) {
       const expiryTime = jwtDecode(token).exp;
       const currentTime = Date.now() / 1000;
 
       if (expiryTime < currentTime) {
-        localStorage.removeItem("token");
-        toast.error("Session expired, please log in again");
-        router.push("/login");
+        localStorage.removeItem('token');
+        toast.error('Session expired, please log in again');
+        router.push('/login');
       } else {
-        router.push("/courses");
+        router.push('/courses');
       }
       return;
     }
@@ -101,10 +141,10 @@ export default function Register() {
   // backend stuff starts here
   const register = async () => {
     if (password !== confirmPassword) {
-      alert("Passwords do not match");
+      alert('Passwords do not match');
     } else {
       const response = await fetch(`http://localhost:${port}/api/auth/signup`, {
-        method: "POST",
+        method: 'POST',
         body: JSON.stringify({
           name,
           email,
@@ -112,19 +152,19 @@ export default function Register() {
           confirmPassword,
         }),
         headers: {
-          "Content-type": "application/json",
+          'Content-type': 'application/json',
         },
       });
 
       if (response.ok) {
-        toast.success("User signed up successfully", {
-          position: "bottom-center",
+        toast.success('User signed up successfully', {
+          position: 'bottom-center',
           pauseOnHover: false,
         });
-        router.push("/login");
+        router.push('/login');
       } else {
-        toast.error("Something went wrong, please try again", {
-          position: "bottom-center",
+        toast.error('Something went wrong, please try again', {
+          position: 'bottom-center',
           pauseOnHover: false,
         });
       }
@@ -242,8 +282,8 @@ export default function Register() {
                 <Link
                   href="/login"
                   style={{
-                    textDecoration: "underline",
-                    color: "#1d4ed8",
+                    textDecoration: 'underline',
+                    color: '#1d4ed8',
                   }}
                 >
                   Sign in

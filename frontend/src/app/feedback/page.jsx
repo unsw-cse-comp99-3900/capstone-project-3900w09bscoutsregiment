@@ -13,14 +13,24 @@ export default function sendFeedback() {
   const [feedbackError, setFeedbackError] = useState(false);
   const form = useRef();
 
-  const handleEmailBlur = (e) => {
-    if (e.target.validity.typeMismatch || e.target.value === '') {
+  /**
+   * Keeps track of whether the email form is in focus or not
+   * @param {*} event
+   * if the form is empty or is not a valid email when its out of focus, updates the state of EmailError to true, otherwise false
+   */
+  const handleEmailBlur = (event) => {
+    if (event.target.validity.typeMismatch || event.target.value === '') {
       setEmailError(true);
     } else {
       setEmailError(false);
     }
   };
 
+  /**
+   * Keeps track of the changes inside the email form
+   * @param {*} event
+   * if the current value inside the email form is valid, updates the state of EmailError to true
+   */
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
     if (event.target.validity.valid) {
@@ -28,14 +38,24 @@ export default function sendFeedback() {
     }
   };
 
-  const handleNameBlur = (e) => {
-    if (e.target.value === '') {
+  /**
+   * Keeps track of whether the name form is in focus or not
+   * @param {*} event
+   * if the name form is empty or is not a valid name when its out of focus, updates the state of NameError to true, otherwise false
+   */
+  const handleNameBlur = (event) => {
+    if (event.target.validity.typeMismatch || event.target.value === '') {
       setNameError(true);
     } else {
       setNameError(false);
     }
   };
 
+  /**
+   * Keeps track of the changes inside the name form
+   * @param {*} event
+   * if the current value inside the name form is valid, updates the state of NameError to false
+   */
   const handleNameChange = (event) => {
     setName(event.target.value);
     if (event.target.value !== '') {
@@ -43,14 +63,24 @@ export default function sendFeedback() {
     }
   };
 
-  const handleFeedbackBlur = (e) => {
-    if (e.target.value === '') {
+  /**
+   * Keeps track of whether the feedback form is in focus or not
+   * @param {*} event
+   * if the feedback form is empty when its out of focus, updates the state of FeedbackError to true, otherwise false
+   */
+  const handleFeedbackBlur = (event) => {
+    if (event.target.value === '') {
       setFeedbackError(true);
     } else {
       setFeedbackError(false);
     }
   };
 
+  /**
+   * Keeps track of the changes inside the Feedback form
+   * @param {*} event
+   * if the current value inside the Feedback form is valid, updates the state of FeedbackError to false
+   */
   const handleFeedbackChange = (event) => {
     setFeedback(event.target.value);
     if (event.target.value !== '') {
@@ -58,6 +88,10 @@ export default function sendFeedback() {
     }
   };
 
+  /**
+   * Resets the form by clearing all the states connected to the form after submission
+   * This method is not to be confused with form.current.reset which clears all the values inside the form
+   */
   const resetForm = () => {
     setEmail('');
     setName('');
@@ -67,9 +101,18 @@ export default function sendFeedback() {
     setFeedbackError(false);
   };
 
+  /**
+   * Sends an email using EmailJS service
+   * @param {*} e
+   */
   const sendEmail = (e) => {
     e.preventDefault();
 
+    /**
+     * @param {string} service_id (Service ID of the service through which email (Gmail, Outlook, Yahoo, etc.,) should be sent.)
+     * @param {string} template_id (Template ID of the email)
+     * @param {string} user_id (Public key of the account connected to EmailJS)
+     */
     emailjs
       .sendForm('service_er8htcs', 'template_u05rmji', form.current, {
         publicKey: 'T-4nNNwWfnuu31iUv',
@@ -84,6 +127,7 @@ export default function sendFeedback() {
           console.log('FAILED...', error.text);
         }
       );
+    // pop up a toast if feedback is sent
     toast.success('Your feedback is sent, thank you for reaching out to us', {
       position: 'bottom-center',
       pauseOnHover: false,
