@@ -15,6 +15,7 @@ import displayChart from './analysisChart';
 import Image from 'next/image';
 import CourseReasoning from './reasoning/page';
 import { jwtDecode } from 'jwt-decode';
+import { toast } from 'react-toastify';
 
 export default function ListingCourses() {
   const router = useRouter();

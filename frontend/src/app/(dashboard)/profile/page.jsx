@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
+import { toast } from 'react-toastify';
 
 const Profile = () => {
   const [userDetails, setUserDetails] = React.useState({
@@ -29,7 +30,6 @@ const Profile = () => {
         toast.error('Session expired, please log in again');
         router.push('/login');
       }
-      return;
     }
 
     const fetchProfile = async () => {

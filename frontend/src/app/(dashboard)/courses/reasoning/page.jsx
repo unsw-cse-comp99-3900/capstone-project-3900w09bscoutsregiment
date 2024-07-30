@@ -4,6 +4,7 @@ import React from 'react'
 import { useRouter } from 'next/navigation'
 import OpenAI from 'openai';
 import { jwtDecode } from 'jwt-decode';
+import { toast } from 'react-toastify';
 
 const CourseReasoning = ({ CLO, category, keywords, reasoningPopup }) => {  
   // Ensure stay logged in
