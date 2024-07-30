@@ -1,25 +1,26 @@
-'use client';
+"use client";
 
-import React from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import OAuth from '../components/OAuth';
-import { toast } from 'react-toastify';
+import React from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import OAuth from "../components/OAuth";
+import { toast } from "react-toastify";
+import { jwtDecode } from "jwt-decode";
 
 export default function Register() {
-  const [name, setName] = React.useState('');
+  const [name, setName] = React.useState("");
   const [nameError, setNameError] = React.useState(false);
-  const [email, setEmail] = React.useState('');
+  const [email, setEmail] = React.useState("");
   const [emailError, setEmailError] = React.useState(false);
-  const [password, setPassword] = React.useState('');
+  const [password, setPassword] = React.useState("");
   const [passwordError, setPasswordError] = React.useState(false);
-  const [confirmPassword, setConfirmPassword] = React.useState('');
-  const [confirmPasswordError, setConfirmPasswordError] = React.useState('');
+  const [confirmPassword, setConfirmPassword] = React.useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = React.useState("");
   let port = process.env.NEXT_PUBLIC_PORT_NUM;
 
   // form validation
   const handleEmailBlur = (e) => {
-    if (e.target.validity.typeMismatch || e.target.value === '') {
+    if (e.target.validity.typeMismatch || e.target.value === "") {
       setEmailError(true);
     } else {
       setEmailError(false);
@@ -34,7 +35,7 @@ export default function Register() {
   };
 
   const handleNameBlur = (e) => {
-    if (e.target.value === '') {
+    if (e.target.value === "") {
       setNameError(true);
     } else {
       setNameError(false);
@@ -43,13 +44,13 @@ export default function Register() {
 
   const handleNameChange = (event) => {
     setName(event.target.value);
-    if (event.target.value !== '') {
+    if (event.target.value !== "") {
       setNameError(false);
     }
   };
 
   const handlePasswordBlur = (e) => {
-    if (e.target.value === '') {
+    if (e.target.value === "") {
       setPasswordError(true);
     } else {
       setPasswordError(false);
@@ -58,13 +59,13 @@ export default function Register() {
 
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
-    if (event.target.value !== '') {
+    if (event.target.value !== "") {
       setPasswordError(false);
     }
   };
 
   const handleConfirmPasswordBlur = (e) => {
-    if (e.target.value === '' || e.target.value !== password) {
+    if (e.target.value === "" || e.target.value !== password) {
       setConfirmPasswordError(true);
     } else {
       setConfirmPasswordError(false);
@@ -73,7 +74,7 @@ export default function Register() {
 
   const handleConfirmPasswordChange = (event) => {
     setConfirmPassword(event.target.value);
-    if (event.target.value !== '') {
+    if (event.target.value !== "") {
       setConfirmPasswordError(false);
     }
   };
@@ -81,17 +82,17 @@ export default function Register() {
   // Ensure stay logged in
   const router = useRouter();
   React.useEffect(() => {
-    const token = localStorage.getItem('token') || null;
+    const token = localStorage.getItem("token") || null;
     if (token !== null) {
-      const expiryTime = jwtDecode(token).exp
+      const expiryTime = jwtDecode(token).exp;
       const currentTime = Date.now() / 1000;
 
       if (expiryTime < currentTime) {
-        localStorage.removeItem('token');
-        toast.error('Session expired, please log in again');
-        router.push('/login');
+        localStorage.removeItem("token");
+        toast.error("Session expired, please log in again");
+        router.push("/login");
       } else {
-        router.push('/courses');
+        router.push("/courses");
       }
       return;
     }
@@ -100,10 +101,10 @@ export default function Register() {
   // backend stuff starts here
   const register = async () => {
     if (password !== confirmPassword) {
-      alert('Passwords do not match');
+      alert("Passwords do not match");
     } else {
       const response = await fetch(`http://localhost:${port}/api/auth/signup`, {
-        method: 'POST',
+        method: "POST",
         body: JSON.stringify({
           name,
           email,
@@ -111,23 +112,19 @@ export default function Register() {
           confirmPassword,
         }),
         headers: {
-          'Content-type': 'application/json',
+          "Content-type": "application/json",
         },
       });
-      const data = await response.json();
+
       if (response.ok) {
-        localStorage.setItem('token', data.token);
-        toast.success('User signed up successfully', {
-          position: 'bottom-center',
+        toast.success("User signed up successfully", {
+          position: "bottom-center",
           pauseOnHover: false,
         });
-        setTimeout(() => {
-          router.push('/courses');
-        }, 1500);
+        router.push("/login");
       } else {
-        console.error(data.message);
-        toast.error('Something went wrong, please try again', {
-          position: 'bottom-center',
+        toast.error("Something went wrong, please try again", {
+          position: "bottom-center",
           pauseOnHover: false,
         });
       }
@@ -157,7 +154,7 @@ export default function Register() {
                 onChange={handleEmailChange}
                 onBlur={handleEmailBlur}
                 value={email}
-              // multiple
+                // multiple
               />
               {emailError && (
                 <p role="alert" className="text-red-600 font-bold">
@@ -207,7 +204,7 @@ export default function Register() {
             {/* confirm password */}
             <div>
               <input
-                name="password"
+                name="confirm-password"
                 className="input_text"
                 id="confirm-password"
                 type="password"
@@ -225,7 +222,7 @@ export default function Register() {
             {/* submit */}
             <div className="flex items-center justify-between pb-2">
               <button
-                id="submit"
+                id="register-submit-btn"
                 className="bg-primary-theme-lb hover:bg-blue-700 text-white font-bold w-full italic py-2 px-4 pb-3: rounded focus:outline-none focus:shadow-outline"
                 type="button"
                 onClick={register}
@@ -244,7 +241,10 @@ export default function Register() {
                 <p className="text-main-txt"> Already have an account? </p>
                 <Link
                   href="/login"
-                  style={{ textDecoration: 'underline', color: '#1d4ed8' }}
+                  style={{
+                    textDecoration: "underline",
+                    color: "#1d4ed8",
+                  }}
                 >
                   Sign in
                 </Link>
