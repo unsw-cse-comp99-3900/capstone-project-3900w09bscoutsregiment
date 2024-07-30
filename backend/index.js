@@ -7,6 +7,8 @@ import profileRouter from './routes/profile.js';
 import cors from 'cors';
 import courseRouter from './routes/course.js';
 import analyseFns from './controllers/analyseFns.js';
+// import passport from 'passport';
+// import session from 'express-session';
 
 const app = express();
 const port = process.env.NEXT_PUBLIC_PORT_NUM;
@@ -14,6 +16,15 @@ const port = process.env.NEXT_PUBLIC_PORT_NUM;
 // Middleware
 app.use(express.json());
 app.use(cors());
+// app.use(
+//   session({
+//     secret: 'i love this course!!!!',
+//     resave: false,
+//     saveUninitialized: true,
+//   }),
+// );
+// app.use(passport.initialize());
+// app.use(passport.session());
 
 // MongoDB connection
 try {
