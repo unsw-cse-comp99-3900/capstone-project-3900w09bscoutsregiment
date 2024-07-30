@@ -3,16 +3,16 @@ import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 
 const SearchPage = () => {
-  let port = process.env.NEXT_PUBLIC_PORT_NUM;
+    let port = process.env.NEXT_PUBLIC_PORT_NUM;
 
-  const [searchTerm, setSearchTerm] = useState('');
-  const [year, setYear] = useState('2024');
-  const [term, setTerm] = useState('Term 2');
-  const [courses, setCourses] = useState([]);
-  const [filteredCourses, setFilteredCourses] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [coursesPerPage] = useState(10); // Number of courses per page
-  const [selectedCourse, setSelectedCourse] = useState(null);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [year, setYear] = useState("2024");
+    const [term, setTerm] = useState("Term 2");
+    const [courses, setCourses] = useState([]);
+    const [filteredCourses, setFilteredCourses] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [coursesPerPage] = useState(10); // Number of courses per page
+    const [selectedCourse, setSelectedCourse] = useState(null);
 
     useEffect(() => {
         fetchCourses();
@@ -222,6 +222,7 @@ const SearchPage = () => {
                 </h1>
                 <div className="flex justify-center mb-5">
                     <input
+                        name="course-name-input"
                         type="text"
                         placeholder="Searching Using Course Name / Code"
                         value={searchTerm}
@@ -277,6 +278,7 @@ const SearchPage = () => {
                                 {course.term}
                             </span>
                             <button
+                                id={`add-course-${course.code}`}
                                 className="bg-blue-600 text-white p-2 rounded hover:bg-blue-700 transition"
                                 onClick={() => handleAddCourse(course._id)}
                             >
