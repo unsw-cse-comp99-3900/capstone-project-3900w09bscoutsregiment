@@ -5,9 +5,60 @@ import { toast } from "react-toastify";
 
 export default function ChangeEmail() {
     const [oldEmail, setOldEmail] = React.useState("");
+    const [oldEmailError, setOldEmailError] = React.useState(false);
     const [newEmail, setNewEmail] = React.useState("");
-
+    const [newEmailError, setNewEmailError] = React.useState(false);
     let port = process.env.NEXT_PUBLIC_PORT_NUM;
+
+    /**
+     * Keeps track of whether the old email form is in focus or not
+     * @param {*} event
+     * if the form is empty or is not a valid email when its out of focus, updates the state of oldEmailError to true, otherwise false
+     */
+    const handleOldEmailBlur = (event) => {
+        if (event.target.validity.typeMismatch || event.target.value === "") {
+            setOldEmailError(true);
+        } else {
+            setOldEmailError(false);
+        }
+    };
+
+    /**
+     * Keeps track of the changes inside the old email form
+     * @param {*} event
+     * if the current value inside the old email form is valid, updates the state of oldEmailError to false
+     */
+    const handleOldEmailChange = (event) => {
+        setOldEmail(event.target.value);
+        if (event.target.validity.valid) {
+            setOldEmailError(false);
+        }
+    };
+
+    /**
+     * Keeps track of whether the new email form is in focus or not
+     * @param {*} event
+     * if the form is empty or is not a valid email when its out of focus, updates the state of newEmailError to true, otherwise false
+     */
+    const handleNewEmailBlur = (event) => {
+        if (event.target.validity.typeMismatch || event.target.value === "") {
+            setNewEmailError(true);
+        } else {
+            setNewEmailError(false);
+        }
+    };
+
+    /**
+     * Keeps track of the changes inside the new email form
+     * @param {*} event
+     * if the current value inside the new email form is valid, updates the state of newEmailError to false
+     */
+    const handleNewEmailChange = (event) => {
+        setNewEmail(event.target.value);
+        if (event.target.validity.valid) {
+            setNewEmailError(false);
+        }
+    };
 
     const handleUpdateEmail = async () => {
         if (oldEmail === "" || newEmail === "") {
@@ -66,10 +117,19 @@ export default function ChangeEmail() {
                                 id="email-address"
                                 type="text"
                                 placeholder="Enter your old email address"
-                                onChange={(e) => {
-                                    setOldEmail(e.target.value);
-                                }}
+                                onChange={handleOldEmailChange}
+                                onBlur={handleOldEmailBlur}
+                                value={oldEmail}
                             />
+                            {oldEmailError && (
+                                <p
+                                    role="alert"
+                                    className="text-red-600 font-bold"
+                                >
+                                    Please make sure you've entered your old{" "}
+                                    <em>email address</em>
+                                </p>
+                            )}
 
                             <input
                                 name="new-email-address"
@@ -77,10 +137,19 @@ export default function ChangeEmail() {
                                 id="email-address"
                                 type="text"
                                 placeholder="Enter your new email address"
-                                onChange={(e) => {
-                                    setNewEmail(e.target.value);
-                                }}
+                                onChange={handleNewEmailChange}
+                                onBlur={handleNewEmailBlur}
+                                value={newEmail}
                             />
+                            {newEmailError && (
+                                <p
+                                    role="alert"
+                                    className="text-red-600 font-bold"
+                                >
+                                    Please make sure you've entered your new{" "}
+                                    <em>email address</em>
+                                </p>
+                            )}
                         </div>
 
                         {/* Send email */}
