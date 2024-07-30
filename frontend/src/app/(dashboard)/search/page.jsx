@@ -1,8 +1,18 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 const SearchPage = () => {
+    const router = useRouter();
+    React.useEffect(() => {
+        const token = localStorage.getItem("token") || null;
+        if (token === null) {
+            router.push("/");
+            return;
+        }
+    }, []);
+  
     let port = process.env.NEXT_PUBLIC_PORT_NUM;
 
     const [searchTerm, setSearchTerm] = useState("");
