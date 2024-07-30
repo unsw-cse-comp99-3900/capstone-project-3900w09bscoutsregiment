@@ -208,7 +208,6 @@ describe('getKeywords function', () => {
     });
     it(`should give ${sadWords} for "${phrase}", and ${emotions[1]}`, () => {
       for (const w of analyseFns.getKeywords(phrase, emotions[1])) {
-        console.log(w);
         assert.strictEqual(sadWords.includes(w), true);
       }
     });
