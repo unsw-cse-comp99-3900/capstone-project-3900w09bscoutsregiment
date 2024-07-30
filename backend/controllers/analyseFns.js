@@ -167,7 +167,6 @@ const analyseCourses = (courseList) => {
     }
     out.courses.push(courseOut);
   }
-  console.log(out);
   return out;
 };
 
@@ -192,10 +191,6 @@ const makePng = (analysis) => {
       label: c.code + ' (' + termToggle(c.term) + ' ' + c.year + ')',
       data: c.analysis,
     });
-  }
-  console.log(data);
-  for (const d of data.datasets) {
-    console.log(d.data);
   }
   new Chart(ctx, {
     type: 'bar',
@@ -242,7 +237,6 @@ const makePng = (analysis) => {
 };
 
 const makePDF = (analysis) => {
-  console.log('making pdf');
   const headingSize = 24;
   const sub1Size = 20;
   const sub2Size = 16;

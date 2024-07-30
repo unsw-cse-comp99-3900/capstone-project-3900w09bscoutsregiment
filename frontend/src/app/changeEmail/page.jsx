@@ -5,9 +5,60 @@ import { toast } from "react-toastify";
 
 export default function ChangeEmail() {
     const [oldEmail, setOldEmail] = React.useState("");
+    const [oldEmailError, setOldEmailError] = React.useState(false);
     const [newEmail, setNewEmail] = React.useState("");
+    const [newEmailError, setNewEmailError] = React.useState(false);
+    let port = process.env.NEXT_PUBLIC_PORT_NUM;
 
-  let port = process.env.NEXT_PUBLIC_PORT_NUM;
+    /**
+     * Keeps track of whether the old email form is in focus or not
+     * @param {*} event
+     * if the form is empty or is not a valid email when its out of focus, updates the state of oldEmailError to true, otherwise false
+     */
+    const handleOldEmailBlur = (event) => {
+        if (event.target.validity.typeMismatch || event.target.value === "") {
+            setOldEmailError(true);
+        } else {
+            setOldEmailError(false);
+        }
+    };
+
+    /**
+     * Keeps track of the changes inside the old email form
+     * @param {*} event
+     * if the current value inside the old email form is valid, updates the state of oldEmailError to false
+     */
+    const handleOldEmailChange = (event) => {
+        setOldEmail(event.target.value);
+        if (event.target.validity.valid) {
+            setOldEmailError(false);
+        }
+    };
+
+    /**
+     * Keeps track of whether the new email form is in focus or not
+     * @param {*} event
+     * if the form is empty or is not a valid email when its out of focus, updates the state of newEmailError to true, otherwise false
+     */
+    const handleNewEmailBlur = (event) => {
+        if (event.target.validity.typeMismatch || event.target.value === "") {
+            setNewEmailError(true);
+        } else {
+            setNewEmailError(false);
+        }
+    };
+
+    /**
+     * Keeps track of the changes inside the new email form
+     * @param {*} event
+     * if the current value inside the new email form is valid, updates the state of newEmailError to false
+     */
+    const handleNewEmailChange = (event) => {
+        setNewEmail(event.target.value);
+        if (event.target.validity.valid) {
+            setNewEmailError(false);
+        }
+    };
 
     const handleUpdateEmail = async () => {
         if (oldEmail === "" || newEmail === "") {
@@ -49,74 +100,71 @@ export default function ChangeEmail() {
 
     return (
         <div>
-            <div
-                id="top-content"
-                className="text-white w-full bg-primary-theme-db flex justify-start gap-4 px-4 py-4"
-            >
-                <img src="Cotam-logo.png" alt="" className="rounded-md" />
-                <Link
-                    href="/"
-                    className="text-white"
-                    style={{ fontSize: "2rem" }}
-                >
-                    COTAM
-                </Link>
-            </div>
+            <div className="login_background z-10">
+                <div className="min-h-screen flex justify-center items-center ">
+                    <form
+                        name="publish-form"
+                        id="form"
+                        className="justify-center mx-auto w-2/5 space-y-2 p-14 rounded-2xl bg-secondary-bkg shadow-2xl"
+                    >
+                        <div>
+                            <h2 className="block text-primary-theme-lb text-[4rem] font-bold my-4">
+                                Update Email
+                            </h2>
+                            <input
+                                name="old-email-address"
+                                className="shadow appearance-none border rounded w-full py-3 px-2 text-gray-700 placeholder-blue-400 leading-tight focus:outline-none focus:shadow-outline"
+                                id="email-address"
+                                type="text"
+                                placeholder="Enter your old email address"
+                                onChange={handleOldEmailChange}
+                                onBlur={handleOldEmailBlur}
+                                value={oldEmail}
+                            />
+                            {oldEmailError && (
+                                <p
+                                    role="alert"
+                                    className="text-red-600 font-bold"
+                                >
+                                    Please make sure you've entered your old{" "}
+                                    <em>email address</em>
+                                </p>
+                            )}
 
-            <div className="login-background">
-                <form
-                    name="publish-form"
-                    id="form"
-                    className=" w-1/3 justify-center mx-auto pt-3" // POSTIION MUST BE ABOSLUTE
-                >
-                    <div className="mb-5 relative top-32">
-                        <label className="block text-white text-[4rem] font-bold mb-5">
-                            Update Email
-                        </label>
-                        <input
-                            name="old-email-address"
-                            className="shadow appearance-none border rounded w-full py-3 px-2 text-gray-700 placeholder-blue-400 leading-tight focus:outline-none focus:shadow-outline"
-                            id="email-address"
-                            type="text"
-                            placeholder="Enter your old email address"
-                            onChange={(e) => {
-                                setOldEmail(e.target.value);
-                            }}
-                        />
+                            <input
+                                name="new-email-address"
+                                className="shadow appearance-none border rounded w-full py-3 px-2 text-gray-700 placeholder-blue-400 leading-tight focus:outline-none focus:shadow-outline"
+                                id="email-address"
+                                type="text"
+                                placeholder="Enter your new email address"
+                                onChange={handleNewEmailChange}
+                                onBlur={handleNewEmailBlur}
+                                value={newEmail}
+                            />
+                            {newEmailError && (
+                                <p
+                                    role="alert"
+                                    className="text-red-600 font-bold"
+                                >
+                                    Please make sure you've entered your new{" "}
+                                    <em>email address</em>
+                                </p>
+                            )}
+                        </div>
 
-                        <input
-                            name="new-email-address"
-                            className="shadow appearance-none border rounded w-full py-3 px-2 text-gray-700 placeholder-blue-400 leading-tight focus:outline-none focus:shadow-outline"
-                            id="email-address"
-                            type="text"
-                            placeholder="Enter your new email address"
-                            onChange={(e) => {
-                                setNewEmail(e.target.value);
-                            }}
-                        />
-                    </div>
-
-                    {/* Send email */}
-                    <div className="items-center justify-between relative top-32">
-                        <button
-                            id="submit"
-                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold w-1/3 italic py-2 px-4 pb-3: rounded focus:outline-none focus:shadow-outline mb-5"
-                            type="button"
-                            onClick={handleUpdateEmail}
-                        >
-                            Submit
-                        </button>
-                    </div>
-                    <div className="flex items-center justify-center relative top-52">
-                        Return to &nbsp;
-                        <Link
-                            href="/"
-                            className="text-primary-theme-lb underline"
-                        >
-                            Home
-                        </Link>
-                    </div>
-                </form>
+                        {/* Send email */}
+                        <div className="items-center justify-between">
+                            <button
+                                id="submit"
+                                className="bg-primary-theme-lb hover:bg-blue-700 text-white text-lg font-bold w-full italic py-2 mt-3 px-4 pb-3: rounded focus:outline-none focus:shadow-outline"
+                                type="button"
+                                onClick={handleUpdateEmail}
+                            >
+                                Submit
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     );
