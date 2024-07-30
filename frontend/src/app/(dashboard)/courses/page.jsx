@@ -14,6 +14,8 @@ import Link from "next/link";
 import displayChart from "./analysisChart";
 import Image from "next/image";
 import CourseReasoning from "./reasoning/page";
+import { jwtDecode } from 'jwt-decode';
+import { toast } from 'react-toastify';
 
 export default function ListingCourses() {
     const router = useRouter();
@@ -22,6 +24,15 @@ export default function ListingCourses() {
         if (token === null) {
             router.push("/");
             return;
+        } else {
+          const expiryTime = jwtDecode(token).exp
+          const currentTime = Date.now() / 1000;
+
+          if (expiryTime < currentTime) {
+            localStorage.removeItem("token");
+            toast.error("Session expired, please log in again");
+            router.push("/login");
+          }
         }
     }, []);
 
