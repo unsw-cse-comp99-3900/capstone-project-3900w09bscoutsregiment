@@ -3,11 +3,11 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faPlus,
-  faStar,
-  faTrash,
-  faArrowLeft,
-  faArrowRight,
+    faPlus,
+    faStar,
+    faTrash,
+    faArrowLeft,
+    faArrowRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -18,7 +18,6 @@ import { jwtDecode } from "jwt-decode";
 import { toast } from "react-toastify";
 
 export default function ListingCourses() {
-<<<<<<< HEAD
     const router = useRouter();
     React.useEffect(() => {
         const token = localStorage.getItem("token") || null;
@@ -34,282 +33,283 @@ export default function ListingCourses() {
                 toast.error("Session expired, please log in again");
                 router.push("/login");
             }
-=======
-  const router = useRouter();
-  React.useEffect(() => {
-    const token = localStorage.getItem("token") || null;
-    if (token === null) {
-      router.push("/");
-      return;
-    } else {
-      const expiryTime = jwtDecode(token).exp;
-      const currentTime = Date.now() / 1000;
-
-      if (expiryTime < currentTime) {
-        localStorage.removeItem("token");
-        toast.error("Session expired, please log in again");
-        router.push("/login");
-      }
-    }
-  }, []);
-
-  const [searchTerm, setSearchTerm] = useState("");
-  const [courses, setCourses] = useState([]);
-  const [visitedCourses, setVisitedCourses] = useState([]);
-  const [analysisChart, setAnalysisChart] = useState(false);
-  const [breakdown, setBreakdown] = useState(false);
-  const [reasoningPopup, setReasoningPopup] = useState(null);
-  const port = process.env.NEXT_PUBLIC_PORT_NUM;
-
-  useEffect(() => {
-    const fetchUserCourses = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:${port}/api/course/list`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
-        if (!response.ok) {
-          throw new Error("Failed to fetch user courses");
->>>>>>> 48ab968654bf2b6ccf2f7bab2643024cce020a2a
         }
-        const data = await response.json();
-        setCourses(data);
-      } catch (error) {
-        console.error("Error fetching user courses:", error);
-      }
+    }, []);
+
+    const [searchTerm, setSearchTerm] = useState("");
+    const [courses, setCourses] = useState([]);
+    const [visitedCourses, setVisitedCourses] = useState([]);
+    const [analysisChart, setAnalysisChart] = useState(false);
+    const [breakdown, setBreakdown] = useState(false);
+    const [reasoningPopup, setReasoningPopup] = useState(null);
+    const port = process.env.NEXT_PUBLIC_PORT_NUM;
+
+    useEffect(() => {
+        const fetchUserCourses = async () => {
+            try {
+                const response = await fetch(
+                    `http://localhost:${port}/api/course/list`,
+                    {
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${localStorage.getItem(
+                                "token"
+                            )}`,
+                        },
+                    }
+                );
+                if (!response.ok) {
+                    throw new Error("Failed to fetch user courses");
+                }
+                const data = await response.json();
+                setCourses(data);
+            } catch (error) {
+                console.error("Error fetching user courses:", error);
+            }
+        };
+
+        fetchUserCourses();
+    }, []);
+
+    /**
+     * Helper function to help with the search term
+     * This is done by shorten their term
+     * @param {string} term
+     * @returns {string} term
+     */
+    const shortenTerm = (term) => {
+        if (term.includes("Hexamester")) {
+            return term.replace("Hexamester ", "H");
+        }
+        if (term.includes("Semester")) {
+            return term.replace("Semester ", "S");
+        }
+        if (term.includes("Term")) {
+            return term.replace("Term ", "T");
+        }
+
+        return term;
     };
 
-    fetchUserCourses();
-  }, []);
-
-  /**
-   * Helper function to help with the search term
-   * This is done by shorten their term
-   * @param {string} term
-   * @returns {string} term
-   */
-  const shortenTerm = (term) => {
-    if (term.includes("Hexamester")) {
-      return term.replace("Hexamester ", "H");
-    }
-    if (term.includes("Semester")) {
-      return term.replace("Semester ", "S");
-    }
-    if (term.includes("Term")) {
-      return term.replace("Term ", "T");
-    }
-
-    return term;
-  };
-
-  const handleShowDetails = async (course) => {
-    const shortenedTerm = shortenTerm(course.term);
-    try {
-      const response = await fetch(
-        `http://localhost:${port}/api/course/${course.code}/${course.year}/${shortenedTerm}`,
-        {
-          headers: {
-            authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
+    const handleShowDetails = async (course) => {
+        const shortenedTerm = shortenTerm(course.term);
+        try {
+            const response = await fetch(
+                `http://localhost:${port}/api/course/${course.code}/${course.year}/${shortenedTerm}`,
+                {
+                    headers: {
+                        authorization: `Bearer ${localStorage.getItem(
+                            "token"
+                        )}`,
+                    },
+                }
+            );
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            const data = await response.json();
+            return data[0];
+        } catch (error) {
+            console.error("Error fetching course details:", error);
+            return null;
         }
-      );
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      const data = await response.json();
-      return data[0];
-    } catch (error) {
-      console.error("Error fetching course details:", error);
-      return null;
-    }
-  };
+    };
 
-  /**
-   * When a course is click handle the necessary actions
-   * Unselected a course, if previous the course had been selected and
-   * remove them from visitedCourses
-   * Select a course and fetch details of the course that was selected
-   * add them to visitedCourses
-   * @param {course} course
-   */
-  const handleCourseClick = async (course) => {
-    if (
-      visitedCourses.some(
-        (visitedCourse) => visitedCourse.courseId === course.courseId
-      )
-    ) {
-      const newVisitedCourses = visitedCourses.filter(
-        (visitedCourse) => visitedCourse.courseId !== course.courseId
-      );
+    /**
+     * When a course is click handle the necessary actions
+     * Unselected a course, if previous the course had been selected and
+     * remove them from visitedCourses
+     * Select a course and fetch details of the course that was selected
+     * add them to visitedCourses
+     * @param {course} course
+     */
+    const handleCourseClick = async (course) => {
+        if (
+            visitedCourses.some(
+                (visitedCourse) => visitedCourse.courseId === course.courseId
+            )
+        ) {
+            const newVisitedCourses = visitedCourses.filter(
+                (visitedCourse) => visitedCourse.courseId !== course.courseId
+            );
 
-      setVisitedCourses(newVisitedCourses);
+            setVisitedCourses(newVisitedCourses);
 
-      if (newVisitedCourses.length === 0) {
+            if (newVisitedCourses.length === 0) {
+                setAnalysisChart(false);
+                setBreakdown(false);
+            }
+        } else {
+            const fetchedCourse = await handleShowDetails(course);
+            if (fetchedCourse) {
+                const courseWithOutcomes = {
+                    courseId: course.courseId,
+                    title: fetchedCourse.title,
+                    code: fetchedCourse.code,
+                    year: fetchedCourse.year,
+                    term: fetchedCourse.term,
+                    favorite: course.favorite,
+                    colour: course.colour,
+                    outcomes: fetchedCourse.outcomes,
+                    keywords: fetchedCourse.keywords,
+                    info: course.info,
+                };
+                setVisitedCourses([...visitedCourses, courseWithOutcomes]);
+            }
+        }
+    };
+
+    const handleSearchChange = (event) => {
+        setSearchTerm(event.target.value);
+    };
+
+    const handleFavoriteCourse = async (course) => {
+        const endpoint = course.favorite ? "unfavorite" : "favorite";
+        try {
+            await fetch(`http://localhost:${port}/api/course/${endpoint}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+                body: JSON.stringify({ courseId: course.courseId }),
+            });
+            // Refresh course list
+            const updatedCourses = courses.map((c) =>
+                c.courseId === course.courseId
+                    ? { ...c, favorite: !c.favorite }
+                    : c
+            );
+            setCourses(updatedCourses);
+        } catch (error) {
+            console.error(
+                `Error ${
+                    course.favorite ? "unfavoriting" : "favoriting"
+                } course:`,
+                error
+            );
+        }
+    };
+
+    const handleDeleteCourse = async (courseId) => {
+        try {
+            await fetch(`http://localhost:${port}/api/course/delete`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+                body: JSON.stringify({ courseId: courseId }),
+            });
+            // Remove the course from the list
+            setCourses(
+                courses.filter((course) => course.courseId !== courseId)
+            );
+        } catch (error) {
+            console.error("Error deleting course:", error);
+        }
+    };
+
+    /**
+     * Handle the search filter for courses base on their:
+     * title, code, term, and year.
+     * and sort term base on favorite.
+     */
+    const filteredCourses = courses
+        .filter((course) => {
+            const searchTermLower = searchTerm.toLowerCase();
+            return (
+                course.title.toLowerCase().includes(searchTermLower) ||
+                course.code.toLowerCase().includes(searchTermLower) ||
+                course.term.toLowerCase().includes(searchTermLower) ||
+                course.year.toString().includes(searchTermLower)
+            );
+        })
+        .sort((a, b) => b.favorite - a.favorite);
+
+    const getPDF = async () => {
+        const courses = visitedCourses.map((c) => c.courseId);
+        try {
+            const result = await fetch(
+                `http://localhost:${port}/api/course/pdf`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${localStorage.getItem(
+                            "token"
+                        )}`,
+                    },
+                    body: JSON.stringify({ courses: courses }),
+                }
+            );
+            const blob = await result.blob();
+            const objectURL = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = objectURL;
+            link.setAttribute("download", "file.pdf");
+            document.body.appendChild(link);
+            link.click();
+        } catch (error) {
+            console.error("Error fetching pdf:", error);
+        }
+    };
+
+    const showAnalysis = () => {
+        // getPDF();
+        setAnalysisChart(true);
+        setBreakdown(false);
+    };
+
+    const hideAnalysis = () => {
         setAnalysisChart(false);
         setBreakdown(false);
-      }
-    } else {
-      const fetchedCourse = await handleShowDetails(course);
-      if (fetchedCourse) {
-        const courseWithOutcomes = {
-          courseId: course.courseId,
-          title: fetchedCourse.title,
-          code: fetchedCourse.code,
-          year: fetchedCourse.year,
-          term: fetchedCourse.term,
-          favorite: course.favorite,
-          colour: course.colour,
-          outcomes: fetchedCourse.outcomes,
-          keywords: fetchedCourse.keywords,
-          info: course.info,
-        };
-        setVisitedCourses([...visitedCourses, courseWithOutcomes]);
-      }
-    }
-  };
+    };
 
-  const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
-  };
+    const showBreakdown = () => {
+        setBreakdown(true);
+    };
 
-  const handleFavoriteCourse = async (course) => {
-    const endpoint = course.favorite ? "unfavorite" : "favorite";
-    try {
-      await fetch(`http://localhost:${port}/api/course/${endpoint}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify({ courseId: course.courseId }),
-      });
-      // Refresh course list
-      const updatedCourses = courses.map((c) =>
-        c.courseId === course.courseId ? { ...c, favorite: !c.favorite } : c
-      );
-      setCourses(updatedCourses);
-    } catch (error) {
-      console.error(
-        `Error ${course.favorite ? "unfavoriting" : "favoriting"} course:`,
-        error
-      );
-    }
-  };
+    const hideBreakdown = () => {
+        setBreakdown(false);
+        showAnalysis();
+    };
 
-  const handleDeleteCourse = async (courseId) => {
-    try {
-      await fetch(`http://localhost:${port}/api/course/delete`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify({ courseId: courseId }),
-      });
-      // Remove the course from the list
-      setCourses(courses.filter((course) => course.courseId !== courseId));
-    } catch (error) {
-      console.error("Error deleting course:", error);
-    }
-  };
+    const showPopup = (courseId, indexCLO) => {
+        setReasoningPopup({ courseId, indexCLO });
+    };
 
-  /**
-   * Handle the search filter for courses base on their:
-   * title, code, term, and year.
-   * and sort term base on favorite.
-   */
-  const filteredCourses = courses
-    .filter((course) => {
-      const searchTermLower = searchTerm.toLowerCase();
-      return (
-        course.title.toLowerCase().includes(searchTermLower) ||
-        course.code.toLowerCase().includes(searchTermLower) ||
-        course.term.toLowerCase().includes(searchTermLower) ||
-        course.year.toString().includes(searchTermLower)
-      );
-    })
-    .sort((a, b) => b.favorite - a.favorite);
+    const hidePopup = () => {
+        setReasoningPopup(null);
+    };
 
-  const getPDF = async () => {
-    const courses = visitedCourses.map((c) => c.courseId);
-    try {
-      const result = await fetch(`http://localhost:${port}/api/course/pdf`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify({ courses: courses }),
-      });
-      const blob = await result.blob();
-      const objectURL = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = objectURL;
-      link.setAttribute("download", "file.pdf");
-      document.body.appendChild(link);
-      link.click();
-    } catch (error) {
-      console.error("Error fetching pdf:", error);
-    }
-  };
+    const highlightKeywords = (outcome, keyword) => {
+        const words = outcome
+            .split(" ")
+            .map((x) => x.replace(/\W/g, "").toLowerCase());
+        const keywords = keyword.map((x) => x.toLowerCase());
 
-  const showAnalysis = () => {
-    // getPDF();
-    setAnalysisChart(true);
-    setBreakdown(false);
-  };
+        return words.map((word, index) => {
+            if (keywords.includes(word)) {
+                return (
+                    <span
+                        key={index}
+                        className="bg-blue-800 text-white font-bold"
+                    >
+                        {word}
+                    </span>
+                );
+            } else {
+                return <span key={index}> {word} </span>;
+            }
+        });
+    };
 
-  const hideAnalysis = () => {
-    setAnalysisChart(false);
-    setBreakdown(false);
-  };
+    const findCourseFromId = (courseId, visitedCourse) => {
+        return visitedCourse.find((course) => course.courseId === courseId);
+    };
 
-  const showBreakdown = () => {
-    setBreakdown(true);
-  };
-
-  const hideBreakdown = () => {
-    setBreakdown(false);
-    showAnalysis();
-  };
-
-  const showPopup = (courseId, indexCLO) => {
-    setReasoningPopup({ courseId, indexCLO });
-  };
-
-  const hidePopup = () => {
-    setReasoningPopup(null);
-  };
-
-  const highlightKeywords = (outcome, keyword) => {
-    const words = outcome
-      .split(" ")
-      .map((x) => x.replace(/\W/g, "").toLowerCase());
-    const keywords = keyword.map((x) => x.toLowerCase());
-
-    return words.map((word, index) => {
-      if (keywords.includes(word)) {
-        return (
-          <span key={index} className="bg-blue-800 text-white font-bold">
-            {word}
-          </span>
-        );
-      } else {
-        return <span key={index}> {word} </span>;
-      }
-    });
-  };
-
-  const findCourseFromId = (courseId, visitedCourse) => {
-    return visitedCourse.find((course) => course.courseId === courseId);
-  };
-
-  // console.log(reasoningPopup)
+    // console.log(reasoningPopup)
 
     return (
         <div className="flex h-full w-full">
@@ -577,76 +577,90 @@ export default function ListingCourses() {
                         </>
                     )}
 
-          {visitedCourses.length !== 0 && !analysisChart && (
-            <button
-              id="analysis-btn"
-              className="mt-5 p-2.5 bg-blue-600 text-white border-none rounded cursor-pointer hover:bg-blue-700"
-              onClick={() => showAnalysis()}
-            >
-              Analyse Course
-            </button>
-          )}
-        </div>
-      </div>
-      {reasoningPopup && (
-        <div className="fixed flex justify-center items-center min-h-screen w-full bg-opacity-50 bg-gray-500">
-          <div className="bg-white p-10 rounded-xl space-y-3 w-[50rem]">
-            <h2 className="font-bold text-lg text-center text-xl">
-              {
-                findCourseFromId(reasoningPopup.courseId, visitedCourses)
-                  .outcomes[reasoningPopup.indexCLO]
-              }
-            </h2>
-            <hr className="border-2" />
-            <p>
-              <span className="font-bold">Category: </span>
-              {
-                findCourseFromId(reasoningPopup.courseId, visitedCourses)
-                  .keywords[reasoningPopup.indexCLO].category
-              }
-            </p>
-            {findCourseFromId(reasoningPopup.courseId, visitedCourses).keywords[
-              reasoningPopup.indexCLO
-            ].words.length === 0 ? (
-              <span></span>
-            ) : (
-              <p className="font-bold">Matched Keywords: </p>
+                    {visitedCourses.length !== 0 && !analysisChart && (
+                        <button
+                            id="analysis-btn"
+                            className="mt-5 p-2.5 bg-blue-600 text-white border-none rounded cursor-pointer hover:bg-blue-700"
+                            onClick={() => showAnalysis()}
+                        >
+                            Analyse Course
+                        </button>
+                    )}
+                </div>
+            </div>
+            {reasoningPopup && (
+                <div className="fixed flex justify-center items-center min-h-screen w-full bg-opacity-50 bg-gray-500">
+                    <div className="bg-white p-10 rounded-xl space-y-3 w-[50rem]">
+                        <h2 className="font-bold text-lg text-center text-xl">
+                            {
+                                findCourseFromId(
+                                    reasoningPopup.courseId,
+                                    visitedCourses
+                                ).outcomes[reasoningPopup.indexCLO]
+                            }
+                        </h2>
+                        <hr className="border-2" />
+                        <p>
+                            <span className="font-bold">Category: </span>
+                            {
+                                findCourseFromId(
+                                    reasoningPopup.courseId,
+                                    visitedCourses
+                                ).keywords[reasoningPopup.indexCLO].category
+                            }
+                        </p>
+                        {findCourseFromId(
+                            reasoningPopup.courseId,
+                            visitedCourses
+                        ).keywords[reasoningPopup.indexCLO].words.length ===
+                        0 ? (
+                            <span></span>
+                        ) : (
+                            <p className="font-bold">Matched Keywords: </p>
+                        )}
+                        <ul>
+                            {findCourseFromId(
+                                reasoningPopup.courseId,
+                                visitedCourses
+                            ).keywords[reasoningPopup.indexCLO].words.map(
+                                (word, index) => (
+                                    <li className="list-disc ml-10" key={index}>
+                                        {word}
+                                    </li>
+                                )
+                            )}
+                        </ul>
+                        <p className="font-bold">Reasoning:</p>
+                        <CourseReasoning
+                            CLO={
+                                findCourseFromId(
+                                    reasoningPopup.courseId,
+                                    visitedCourses
+                                ).outcomes[reasoningPopup.indexCLO]
+                            }
+                            category={
+                                findCourseFromId(
+                                    reasoningPopup.courseId,
+                                    visitedCourses
+                                ).keywords[reasoningPopup.indexCLO].category
+                            }
+                            keywords={
+                                findCourseFromId(
+                                    reasoningPopup.courseId,
+                                    visitedCourses
+                                ).keywords[reasoningPopup.indexCLO].words
+                            }
+                            reasoningPopup={reasoningPopup}
+                        />
+                        <button
+                            className="mt-5 p-2.5 bg-blue-600 text-white border-none rounded cursor-pointer hover:bg-blue-700"
+                            onClick={hidePopup}
+                        >
+                            Close
+                        </button>
+                    </div>
+                </div>
             )}
-            <ul>
-              {findCourseFromId(
-                reasoningPopup.courseId,
-                visitedCourses
-              ).keywords[reasoningPopup.indexCLO].words.map((word, index) => (
-                <li className="list-disc ml-10" key={index}>
-                  {word}
-                </li>
-              ))}
-            </ul>
-            <p className="font-bold">Reasoning:</p>
-            <CourseReasoning
-              CLO={
-                findCourseFromId(reasoningPopup.courseId, visitedCourses)
-                  .outcomes[reasoningPopup.indexCLO]
-              }
-              category={
-                findCourseFromId(reasoningPopup.courseId, visitedCourses)
-                  .keywords[reasoningPopup.indexCLO].category
-              }
-              keywords={
-                findCourseFromId(reasoningPopup.courseId, visitedCourses)
-                  .keywords[reasoningPopup.indexCLO].words
-              }
-              reasoningPopup={reasoningPopup}
-            />
-            <button
-              className="mt-5 p-2.5 bg-blue-600 text-white border-none rounded cursor-pointer hover:bg-blue-700"
-              onClick={hidePopup}
-            >
-              Close
-            </button>
-          </div>
         </div>
-      )}
-    </div>
-  );
+    );
 }
