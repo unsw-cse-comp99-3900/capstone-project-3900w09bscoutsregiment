@@ -1,4 +1,3 @@
-
 export const validIdString = (id) => {
   if (!(typeof id === 'string' || id instanceof String)) {
     return false;

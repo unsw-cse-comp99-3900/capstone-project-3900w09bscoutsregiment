@@ -1,31 +1,38 @@
-// context/ThemeContext.js
+// context/ThemeContext.jsx
 "use client";
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect } from "react";
 
 const ThemeContext = createContext();
-
+/**
+ * This function allows to set the state of the thene throguout all pages
+ *
+ * @param {*} param0
+ * @returns State to set themes and toggle between them
+ */
 export const ThemeProvider = ({ children }) => {
-  const [theme, setTheme] = useState('light');
+    const [theme, setTheme] = useState("light");
 
-  useEffect(() => {
-    // Check localStorage for the theme on component mount
-    const storedTheme = localStorage.getItem('theme') || 'light';
-    setTheme(storedTheme);
-    document.documentElement.className = storedTheme;
-  }, []);
+    useEffect(() => {
+        // Ensure this runs only on the client side
+        const storedTheme = localStorage.getItem("theme") || "light";
+        setTheme(storedTheme);
+        document.documentElement.className = storedTheme;
+    }, []);
 
-  const toggleTheme = (newTheme) => {
-    console.log(newTheme);
-    setTheme(newTheme);
-    localStorage.setItem('theme', newTheme);
-    document.documentElement.className = newTheme;
-  };
+    useEffect(() => {
+        localStorage.setItem("theme", theme);
+        document.documentElement.className = theme;
+    }, [theme]);
 
-  return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
-      {children}
-    </ThemeContext.Provider>
-  );
+    const toggleTheme = (newTheme) => {
+        setTheme(newTheme);
+    };
+
+    return (
+        <ThemeContext.Provider value={{ theme, toggleTheme }}>
+            {children}
+        </ThemeContext.Provider>
+    );
 };
 
 export const useTheme = () => useContext(ThemeContext);

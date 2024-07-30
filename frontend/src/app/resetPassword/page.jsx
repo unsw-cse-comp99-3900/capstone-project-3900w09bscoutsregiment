@@ -90,35 +90,20 @@ export default function ResetPassword() {
 
   const handleResetPassword = async () => {
     if (oldPassword === '' || newPassword === '' || confirmPassword === '') {
-      alert('Please input all fields');
+      toast.error('You have to input all fields', {
+        position: 'bottom-right',
+        pauseOnHover: false,
+      });
+      return;
     }
-
-    if (newPassword !== confirmPassword) {
-      alert('New passwords do not match');
-    } else {
-      const res = await fetch(
-        `http://localhost:${port}/api/profile/update/resetpassword`,
-        {
-          method: 'PUT',
-          body: JSON.stringify({
-            oldPassword,
-            newPassword,
-          }),
-          headers: {
-            'Content-type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        }
-      );
-      const data = await res.json();
-      if (res.ok) {
-        toast.success('Password resetted successfully', {
-          position: 'bottom-center',
-          pauseOnHover: false,
-        });
-      }
-      console.log(data);
+    const data = await res.json();
+    if (res.ok) {
+      toast.success('Password resetted successfully', {
+        position: 'bottom-center',
+        pauseOnHover: false,
+      });
     }
+    console.log(data);
   };
   return (
     <div>

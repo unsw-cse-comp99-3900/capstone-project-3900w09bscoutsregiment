@@ -11,5 +11,5 @@ COPY . .
 #ENV PORT=8080
 
 EXPOSE 3000
-
-CMD ["npm", "run", "dev"]
+# bUILD THEN RUN DEV?
+CMD ["npm", "run", "dev"] 

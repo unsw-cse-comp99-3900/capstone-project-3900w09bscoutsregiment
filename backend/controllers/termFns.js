@@ -18,11 +18,11 @@ termMap.set('Term 3', 'T3');
 termMap.set('Semester 1', 'S1');
 termMap.set('Semester 2', 'S2');
 termMap.set('Hexamester 1', 'H1');
-termMap.set('Hexamester 2', 'H1');
-termMap.set('Hexamester 3', 'H1');
-termMap.set('Hexamester 4', 'H1');
-termMap.set('Hexamester 5', 'H1');
-termMap.set('Hexamester 6', 'H1');
+termMap.set('Hexamester 2', 'H2');
+termMap.set('Hexamester 3', 'H3');
+termMap.set('Hexamester 4', 'H4');
+termMap.set('Hexamester 5', 'H5');
+termMap.set('Hexamester 6', 'H6');
 termMap.set('Summer', 'Summer');
 
 // checks if two terms are equal regardless of being long or sort form
@@ -46,6 +46,5 @@ export const termToggle = (term) => {
 
 // checks that a term is valid and in small form
 export const termIsSmall = (term) => {
-  return (term.length == 2 && termMap.has(term));
-}
-
+  return term.length == 2 && termMap.has(term);
+};

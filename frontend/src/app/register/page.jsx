@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import OAuth from '../components/OAuth';
 import { toast } from 'react-toastify';
+import { jwtDecode } from 'jwt-decode';
 
 export default function Register() {
   const [name, setName] = React.useState('');
@@ -15,7 +16,7 @@ export default function Register() {
   const [passwordError, setPasswordError] = React.useState(false);
   const [confirmPassword, setConfirmPassword] = React.useState('');
   const [confirmPasswordError, setConfirmPasswordError] = React.useState('');
-  let port = 5000; // change later
+  let port = process.env.NEXT_PUBLIC_PORT_NUM;
 
   /**
    * Keeps track of whether the email form is in focus or not
@@ -123,7 +124,16 @@ export default function Register() {
   React.useEffect(() => {
     const token = localStorage.getItem('token') || null;
     if (token !== null) {
-      router.push('/courses');
+      const expiryTime = jwtDecode(token).exp;
+      const currentTime = Date.now() / 1000;
+
+      if (expiryTime < currentTime) {
+        localStorage.removeItem('token');
+        toast.error('Session expired, please log in again');
+        router.push('/login');
+      } else {
+        router.push('/courses');
+      }
       return;
     }
   }, []);
@@ -145,20 +155,14 @@ export default function Register() {
           'Content-type': 'application/json',
         },
       });
-      const data = await response.json();
+
       if (response.ok) {
-        localStorage.setItem('token', data.token);
         toast.success('User signed up successfully', {
           position: 'bottom-center',
           pauseOnHover: false,
         });
-
-        // without a time delay, the toast notification will not show up as the application instantly routes user to the dashboard page
-        setTimeout(() => {
-          router.push('/courses');
-        }, 1500);
+        router.push('/login');
       } else {
-        console.error(data.message);
         toast.error('Something went wrong, please try again', {
           position: 'bottom-center',
           pauseOnHover: false,
@@ -240,7 +244,7 @@ export default function Register() {
             {/* confirm password */}
             <div>
               <input
-                name="password"
+                name="confirm-password"
                 className="input_text"
                 id="confirm-password"
                 type="password"
@@ -258,7 +262,7 @@ export default function Register() {
             {/* submit */}
             <div className="flex items-center justify-between pb-2">
               <button
-                id="submit"
+                id="register-submit-btn"
                 className="bg-primary-theme-lb hover:bg-blue-700 text-white font-bold w-full italic py-2 px-4 pb-3: rounded focus:outline-none focus:shadow-outline"
                 type="button"
                 onClick={register}
@@ -277,7 +281,10 @@ export default function Register() {
                 <p className="text-main-txt"> Already have an account? </p>
                 <Link
                   href="/login"
-                  style={{ textDecoration: 'underline', color: '#1d4ed8' }}
+                  style={{
+                    textDecoration: 'underline',
+                    color: '#1d4ed8',
+                  }}
                 >
                   Sign in
                 </Link>

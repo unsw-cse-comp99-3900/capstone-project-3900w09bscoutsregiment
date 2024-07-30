@@ -12,13 +12,16 @@ WORKDIR /app
 
 COPY package*.json ./
 
+RUN rm -rf node_modules
+RUN rm -rf package-lock.json
+
 RUN npm install 
 
 COPY . .
 
 #ENV PORT=8080
 
-EXPOSE 5000
+EXPOSE 5100
 
 # RUN npm rebuild canvas
 

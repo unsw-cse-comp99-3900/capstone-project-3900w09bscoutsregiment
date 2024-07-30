@@ -37,17 +37,13 @@ profileRouter.get('/details', authMiddleware, async (req, res) => {
   try {
     return res.status(200).json({ email: user.email, name: user.name });
   } catch {
-    return res.status(500).json({message: 'Error retrieving user profile'})
+    return res.status(500).json({ message: 'Error retrieving user profile' });
   }
 });
 
 // Update email
 profileRouter.put('/update/email', authMiddleware, async (req, res) => {
   const { oldEmail, newEmail } = req.body;
-
-  if (!newEmail) {
-    return res.status(400).json({ message: 'New Email is needed' });
-  }
 
   try {
     const user = await User.findById(req.userId);
@@ -72,7 +68,6 @@ profileRouter.put('/update/resetpassword', authMiddleware, async (req, res) => {
 
   try {
     const user = await User.findById(req.userId);
-    console.log(req.userId)
 
     if (!user) {
       return res.status(400).json({ message: 'This user does not exist' });
@@ -93,7 +88,6 @@ profileRouter.put('/update/resetpassword', authMiddleware, async (req, res) => {
 
     return res.status(200).json({ message: 'Password updated successfully' });
   } catch (error) {
-    console.log(error);
     return res
       .status(500)
       .json({ message: 'Error occured while updating passwords' });
