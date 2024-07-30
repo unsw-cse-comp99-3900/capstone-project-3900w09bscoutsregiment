@@ -566,11 +566,7 @@ export default function ListingCourses() {
                                         </button>
                                         <button
                                             className="mt-5 p-2.5 bg-blue-600 text-white border-none rounded cursor-pointer hover:bg-blue-700"
-                                            onClick={
-                                                {
-                                                    /* Add your download handle */
-                                                }
-                                            }
+                                            onClick={getPDF}
                                         >
                                             Download PDF
                                         </button>

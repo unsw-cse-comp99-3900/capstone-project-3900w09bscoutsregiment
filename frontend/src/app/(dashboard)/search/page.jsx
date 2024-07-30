@@ -1,8 +1,28 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+import { jwtDecode } from 'jwt-decode';
 
 const SearchPage = () => {
+  const router = useRouter();
+  React.useEffect(() => {
+      const token = localStorage.getItem("token") || null;
+      if (token === null) {
+          router.push("/");
+          return;
+      } else {
+        const expiryTime = jwtDecode(token).exp
+        const currentTime = Date.now() / 1000;
+
+        if (expiryTime < currentTime) {
+          localStorage.removeItem("token");
+          toast.error("Session expired, please log in again");
+          router.push("/login");
+        }
+      }
+  }, []);
+  
     let port = process.env.NEXT_PUBLIC_PORT_NUM;
 
     const [searchTerm, setSearchTerm] = useState("");
