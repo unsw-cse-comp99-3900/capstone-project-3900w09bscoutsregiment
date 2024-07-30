@@ -92,7 +92,6 @@ const SearchPage = () => {
     };
 
     const handleAddCourse = async (courseId) => {
-        console.log("addCourse");
         try {
             const response = await fetch(
                 `http://localhost:${port}/api/course/add`,
@@ -108,7 +107,6 @@ const SearchPage = () => {
                 }
             );
             if (response.ok) {
-                console.log("Course added successfully");
                 toast.success("Course added successfully", {
                     position: "bottom-center",
                     pauseOnHover: false,
