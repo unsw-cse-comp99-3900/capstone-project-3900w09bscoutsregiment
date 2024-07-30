@@ -293,221 +293,271 @@ export default function ListingCourses() {
 
   // console.log(reasoningPopup)
 
-  return (
-    <div className="flex h-full w-full">
-      <div className="flex w-full">
-        <div className="flex-1 flex flex-col bg-gray-100 p-5 border-r border-gray-300">
-          <header className="flex items-center p-5 pt-12 justify-center">
-            <input
-              type="text"
-              className="flex-grow p-2.5 mr-2.5 rounded border border-gray-300 text-black"
-              placeholder="Search"
-              value={searchTerm}
-              onChange={handleSearchChange}
-            />
-          </header>
-          <button className="flex items-center justify-center w-full my-2.5 p-2.5 bg-blue-600 text-white border-none rounded cursor-pointer transition duration-300 hover:bg-blue-700">
-            <FontAwesomeIcon icon={faPlus} />
-            <Link href="/search" className="ml-2.5">
-              Add Course
-            </Link>
-          </button>
-          {/* Show list of user's courses */}
-          <div className="flex flex-col gap-2.5 p-2.5">
-            {filteredCourses.length === 0 ? (
-              <div className="flex items-center justify-center h-full">
-                <div className="flex flex-col items-center justify-center text-center">
-                  <h2>Empty, No Courses</h2>
-                  <p>Click on the Add Course Button to find courses</p>
-                  <p>to add to the list</p>
-                </div>
-              </div>
-            ) : (
-              filteredCourses.map((course) => (
-                <div
-                  key={course.courseId}
-                  onClick={() => handleCourseClick(course)}
-                  className={`flex justify-between items-center p-2.5 rounded border border-gray-300 cursor-pointer transition duration-300 ${
-                    visitedCourses.some((vc) => vc.courseId === course.courseId)
-                      ? "bg-blue-200"
-                      : ""
-                  }`}
-                >
-                  <div className="flex flex-col">
-                    <div className="font-bold">{course.code}</div>
-                    <div>{course.title}</div>
-                    <div>{course.term}</div>
-                    <div>{course.year}</div>
-                  </div>
-                  <div className="flex gap-1.5">
-                    <button
-                      className="bg-none border-none cursor-pointer text-gray-500 hover:text-black"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleFavoriteCourse(course);
-                      }}
-                    >
-                      <FontAwesomeIcon
-                        icon={faStar}
-                        className={course.favorite ? "text-yellow-300" : ""}
-                      />
+    return (
+        <div className="flex h-full w-full">
+            <div className="flex w-full">
+                <div className="flex-1 flex flex-col bg-gray-100 p-5 border-r border-gray-300">
+                    <header className="flex items-center p-5 pt-12 justify-center">
+                        <input
+                            type="text"
+                            className="flex-grow p-2.5 mr-2.5 rounded border border-gray-300 text-black"
+                            placeholder="Search"
+                            value={searchTerm}
+                            onChange={handleSearchChange}
+                        />
+                    </header>
+                    <button className="flex items-center justify-center w-full my-2.5 p-2.5 bg-blue-600 text-white border-none rounded cursor-pointer transition duration-300 hover:bg-blue-700">
+                        <FontAwesomeIcon icon={faPlus} />
+                        <Link href="/search" className="ml-2.5">
+                            Add Course
+                        </Link>
                     </button>
-                    <button
-                      className="bg-none border-none cursor-pointer text-gray-500 hover:text-black"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDeleteCourse(course.courseId);
-                      }}
-                    >
-                      <FontAwesomeIcon icon={faTrash} />
-                    </button>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
-        <div className="flex flex-col items-center p-5 w-full pt-20">
-          {!analysisChart ? (
-            visitedCourses.length !== 0 ? (
-              visitedCourses.map((course, idx) => (
-                <div className="w-full flex flex-wrap gap-5">
-                  <div
-                    key={idx}
-                    className="bg-gray-200 border border-black rounded p-5 flex-grow min-w-[300px]"
-                  >
-                    <div className="mb-2.5 border-b-2 border-black">
-                      <h2>{course.code}</h2>
-                      <h3>{course.title}</h3>
-                      <p>
-                        {course.year} {course.term}
-                      </p>
-                    </div>
-                    <h2>Learning Outcomes:</h2>
-                    <div className="pl-5">
-                      <ol className="list-decimal">
-                        {course.outcomes.map((outcome, index) => (
-                          <li key={index}>{outcome}</li>
-                        ))}
-                      </ol>
-                    </div>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="flex items-center justify-center h-full">
-                <div className="flex flex-col items-center justify-center text-center">
-                  <h2 className="text-main-txt">Select a course to analyse</h2>
-                  <p className="text-main-txt">Nothing is selected</p>
-                </div>
-              </div>
-            )
-          ) : (
-            <>
-              {" "}
-              {/* BETTER to display with DIV , and change listing courses flex   */}
-              {/* <span className=''>  */}
-              {!breakdown ? (
-                <>
-                  {displayChart(visitedCourses)}
-                  <div className="flex gap-5">
-                    <button
-                      className="mt-5 p-2.5 bg-blue-600 text-white border-none rounded cursor-pointer hover:bg-blue-700"
-                      onClick={() => hideAnalysis()}
-                    >
-                      <FontAwesomeIcon icon={faArrowLeft} /> Go Back
-                    </button>
-                    <button
-                      className="mt-5 p-2.5 bg-blue-600 text-white border-none rounded cursor-pointer hover:bg-blue-700"
-                      onClick={getPDF}
-                    >
-                      Download PDF
-                    </button>
-                    <button
-                      className="mt-5 p-2.5 bg-blue-600 text-white border-none rounded cursor-pointer hover:bg-blue-700"
-                      onClick={() => showBreakdown()}
-                    >
-                      <FontAwesomeIcon icon={faArrowRight} /> Break down
-                    </button>
-                  </div>
-                </>
-              ) : (
-                <>
-                  {/* Breakdown courses */}
-                  {visitedCourses.length !== 0 ? (
-                    visitedCourses.map((course, idx) => (
-                      <div className="w-full flex flex-wrap gap-5">
-                        <div
-                          key={idx}
-                          className="bg-gray-200 border border-black rounded p-5 flex-grow min-w-[300px]"
-                        >
-                          <div className="mb-2.5 border-b-2 border-black">
-                            <h2>{course.code}</h2>
-                            <h3>{course.title}</h3>
-                            <p>
-                              {course.year} {course.term}
-                            </p>
-                          </div>
-                          <h2>Learning Outcomes:</h2>
-                          <div className="pl-5">
-                            <ol className="list-decimal">
-                              {course.outcomes.map((outcome, index) => (
-                                <div className="flex justify-between gap-20 items-center">
-                                  <li key={index}>
-                                    {highlightKeywords(
-                                      outcome,
-                                      course.keywords[index].words
-                                    )}
-                                  </li>
-                                  <Image
-                                    src="/assets/icons/details.svg"
-                                    width={30}
-                                    height={30}
-                                    onClick={() =>
-                                      showPopup(course.courseId, index)
-                                    }
-                                    alt="details"
-                                  />
+                    {/* Show list of user's courses */}
+                    <div className="flex flex-col gap-2.5 p-2.5">
+                        {filteredCourses.length === 0 ? (
+                            <div className="flex items-center justify-center h-full">
+                                <div className="flex flex-col items-center justify-center text-center">
+                                    <h2>Empty, No Courses</h2>
+                                    <p>
+                                        Click on the Add Course Button to find
+                                        courses
+                                    </p>
+                                    <p>to add to the list</p>
                                 </div>
-                              ))}
-                            </ol>
-                          </div>
-                        </div>
-                      </div>
-                    ))
-                  ) : (
-                    <div className="flex items-center justify-center h-full">
-                      <div className="flex flex-col items-center justify-center text-center">
-                        <h2 className="text-main-txt">
-                          Select a course to analyse
-                        </h2>
-                        <p className="text-main-txt">Nothing is selected</p>
-                      </div>
+                            </div>
+                        ) : (
+                            filteredCourses.map((course) => (
+                                <div
+                                    key={course.courseId}
+                                    onClick={() => handleCourseClick(course)}
+                                    className={`flex justify-between items-center p-2.5 rounded border border-gray-300 cursor-pointer transition duration-300 ${
+                                        visitedCourses.some(
+                                            (vc) =>
+                                                vc.courseId === course.courseId
+                                        )
+                                            ? "bg-blue-200"
+                                            : ""
+                                    }`}
+                                >
+                                    <div className="flex flex-col">
+                                        <div className="font-bold">
+                                            {course.code}
+                                        </div>
+                                        <div>{course.title}</div>
+                                        <div>{course.term}</div>
+                                        <div>{course.year}</div>
+                                    </div>
+                                    <div className="flex gap-1.5">
+                                        <button
+                                            className="bg-none border-none cursor-pointer text-gray-500 hover:text-black"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleFavoriteCourse(course);
+                                            }}
+                                        >
+                                            <FontAwesomeIcon
+                                                icon={faStar}
+                                                className={
+                                                    course.favorite
+                                                        ? "text-yellow-300"
+                                                        : ""
+                                                }
+                                            />
+                                        </button>
+                                        <button
+                                            className="bg-none border-none cursor-pointer text-gray-500 hover:text-black"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleDeleteCourse(
+                                                    course.courseId
+                                                );
+                                            }}
+                                        >
+                                            <FontAwesomeIcon icon={faTrash} />
+                                        </button>
+                                    </div>
+                                </div>
+                            ))
+                        )}
                     </div>
-                  )}
-                  <div className="flex gap-5">
-                    <button
-                      className="mt-5 p-2.5 bg-blue-600 text-white border-none rounded cursor-pointer hover:bg-blue-700"
-                      onClick={() => hideBreakdown()}
-                    >
-                      <FontAwesomeIcon icon={faArrowLeft} /> Go Back
-                    </button>
-                    <button
-                      className="mt-5 p-2.5 bg-blue-600 text-white border-none rounded cursor-pointer hover:bg-blue-700"
-                      onClick={
-                        {
-                          /* Add your download handle */
-                        }
-                      }
-                    >
-                      Download PDF
-                    </button>
-                  </div>
-                </>
-              )}
-              {/* </span> */}
-            </>
-          )}
+                </div>
+                <div className="flex flex-col items-center p-5 w-full pt-20">
+                    {!analysisChart ? (
+                        visitedCourses.length !== 0 ? (
+                            visitedCourses.map((course, idx) => (
+                                <div className="w-full flex flex-wrap gap-5">
+                                    <div
+                                        key={idx}
+                                        className="bg-gray-200 border border-black rounded p-5 flex-grow min-w-[300px]"
+                                    >
+                                        <div className="mb-2.5 border-b-2 border-black">
+                                            <h2>{course.code}</h2>
+                                            <h3>{course.title}</h3>
+                                            <p>
+                                                {course.year} {course.term}
+                                            </p>
+                                        </div>
+                                        <h2>Learning Outcomes:</h2>
+                                        <div className="pl-5">
+                                            <ol className="list-decimal">
+                                                {course.outcomes.map(
+                                                    (outcome, index) => (
+                                                        <li key={index}>
+                                                            {outcome}
+                                                        </li>
+                                                    )
+                                                )}
+                                            </ol>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))
+                        ) : (
+                            <div className="flex items-center justify-center h-full">
+                                <div className="flex flex-col items-center justify-center text-center">
+                                    <h2 className="text-main-txt">
+                                        Select a course to analyse
+                                    </h2>
+                                    <p className="text-main-txt">
+                                        Nothing is selected
+                                    </p>
+                                </div>
+                            </div>
+                        )
+                    ) : (
+                        <>
+                            {" "}
+                            {/* BETTER to display with DIV , and change listing courses flex   */}
+                            {/* <span className=''>  */}
+                            {!breakdown ? (
+                                <>
+                                    {displayChart(visitedCourses)}
+                                    <div className="flex gap-5">
+                                        <button
+                                            className="mt-5 p-2.5 bg-blue-600 text-white border-none rounded cursor-pointer hover:bg-blue-700"
+                                            onClick={() => hideAnalysis()}
+                                        >
+                                            <FontAwesomeIcon
+                                                icon={faArrowLeft}
+                                            />{" "}
+                                            Go Back
+                                        </button>
+                                        <button
+                                            className="mt-5 p-2.5 bg-blue-600 text-white border-none rounded cursor-pointer hover:bg-blue-700"
+                                            onClick={getPDF}
+                                        >
+                                            Download PDF
+                                        </button>
+                                        <button
+                                            className="mt-5 p-2.5 bg-blue-600 text-white border-none rounded cursor-pointer hover:bg-blue-700"
+                                            onClick={() => showBreakdown()}
+                                        >
+                                            <FontAwesomeIcon
+                                                icon={faArrowRight}
+                                            />{" "}
+                                            Break down
+                                        </button>
+                                    </div>
+                                </>
+                            ) : (
+                                <>
+                                    {/* Breakdown courses */}
+                                    {visitedCourses.length !== 0 ? (
+                                        visitedCourses.map((course, idx) => (
+                                            <div className="w-full flex flex-wrap gap-5">
+                                                <div
+                                                    key={idx}
+                                                    className="bg-gray-200 border border-black rounded p-5 flex-grow min-w-[300px]"
+                                                >
+                                                    <div className="mb-2.5 border-b-2 border-black">
+                                                        <h2>{course.code}</h2>
+                                                        <h3>{course.title}</h3>
+                                                        <p>
+                                                            {course.year}{" "}
+                                                            {course.term}
+                                                        </p>
+                                                    </div>
+                                                    <h2>Learning Outcomes:</h2>
+                                                    <div className="pl-5">
+                                                        <ol className="list-decimal">
+                                                            {course.outcomes.map(
+                                                                (
+                                                                    outcome,
+                                                                    index
+                                                                ) => (
+                                                                    <div className="flex justify-between gap-20 items-center">
+                                                                        <li
+                                                                            key={
+                                                                                index
+                                                                            }
+                                                                        >
+                                                                            {highlightKeywords(
+                                                                                outcome,
+                                                                                course
+                                                                                    .keywords[
+                                                                                    index
+                                                                                ]
+                                                                                    .words
+                                                                            )}
+                                                                        </li>
+                                                                        <Image
+                                                                            src="/assets/icons/details.svg"
+                                                                            width={
+                                                                                30
+                                                                            }
+                                                                            height={
+                                                                                30
+                                                                            }
+                                                                            onClick={() =>
+                                                                                showPopup(
+                                                                                    course.courseId,
+                                                                                    index
+                                                                                )
+                                                                            }
+                                                                            alt="details"
+                                                                        />
+                                                                    </div>
+                                                                )
+                                                            )}
+                                                        </ol>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div className="flex items-center justify-center h-full">
+                                            <div className="flex flex-col items-center justify-center text-center">
+                                                <h2 className="text-main-txt">
+                                                    Select a course to analyse
+                                                </h2>
+                                                <p className="text-main-txt">
+                                                    Nothing is selected
+                                                </p>
+                                            </div>
+                                        </div>
+                                    )}
+                                    <div className="flex gap-5">
+                                        <button
+                                            className="mt-5 p-2.5 bg-blue-600 text-white border-none rounded cursor-pointer hover:bg-blue-700"
+                                            onClick={() => hideBreakdown()}
+                                        >
+                                            <FontAwesomeIcon
+                                                icon={faArrowLeft}
+                                            />{" "}
+                                            Go Back
+                                        </button>
+                                        <button
+                                            className="mt-5 p-2.5 bg-blue-600 text-white border-none rounded cursor-pointer hover:bg-blue-700"
+                                            onClick={getPDF}
+                                        >
+                                            Download PDF
+                                        </button>
+                                    </div>
+                                </>
+                            )}
+                            {/* </span> */}
+                        </>
+                    )}
 
           {visitedCourses.length !== 0 && !analysisChart && (
             <button
