@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
+import { jwtDecode } from "jwt-decode";
 
 const Helps = () => {
   // Ensure stay logged in
@@ -12,34 +13,38 @@ const Helps = () => {
     if (token === null) {
       router.push("/");
       return;
+    } else {
+      const expiryTime = jwtDecode(token).exp
+      const currentTime = Date.now() / 1000;
+
+      if (expiryTime < currentTime) {
+        localStorage.removeItem('token');
+        toast.error('Session expired, please log in again');
+        router.push('/login');
+      }
+      return;
     }
   }, []);
 
   return (
     <div className="bg-main-bkg pt-12">
-      <div className="bg-blue-100 p-20 flex flex-col items-center justify-center">
-        <span className="font-semibold text-4xl">How can we help?</span>
-        <input
-          type="text"
-          placeholder="Search FAQs"
-          className="w-8/12 p-4 m-4 border border-gray-300 rounded-md"
-        />
+      <div className="bg-blue-100 p-8 flex flex-col items-center justify-center">
+        <span className="font-semibold text-3xl">Common queries</span>
       </div>
       <div className="pt-5 flex flex-col items-center justify-center text-main-txt">
-        <span className="font-semibold text-3xl">Common queries</span>
         <ul className="py-5">
-          <li className="option_menu">
+          <Link href="help/search-courses-question" className="option_menu">
             <span>How do I search all the courses ?</span>
             <span>&gt;</span>
-          </li>
-          <li className="option_menu">
+          </Link>
+          <Link href="help/blooms-taxonomy-question" className="option_menu">
             <span>What is bloom's taxonomy and how will it help us ?</span>
             <span>&gt;</span>
-          </li>
-          <li className="option_menu">
+          </Link>
+          <Link href="help/cotam-question" className="option_menu">
             <span>What is COTAM and who developed it ?</span>
             <span>&gt;</span>
-          </li>
+          </Link>
         </ul>
       </div>
 

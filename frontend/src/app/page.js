@@ -14,6 +14,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import React from 'react';
 import { useRouter } from 'next/navigation';
+import { jwtDecode } from 'jwt-decode';
 
 /**
  * Function that builds the main page of the app when the STATE is NOT logged in
@@ -25,7 +26,16 @@ export default function Home() {
   React.useEffect(() => {
     const token = localStorage.getItem('token');
     if (token !== null) {
-      router.push('/courses');
+      const expiryTime = jwtDecode(token).exp
+      const currentTime = Date.now() / 1000;
+
+      if (expiryTime < currentTime) {
+        localStorage.removeItem('token');
+        toast.error('Session expired, please log in again');
+        router.push('/login');
+      } else {
+        router.push('/courses');
+      }
       return;
     }
   }, []);

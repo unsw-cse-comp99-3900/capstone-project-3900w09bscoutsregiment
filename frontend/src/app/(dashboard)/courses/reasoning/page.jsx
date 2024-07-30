@@ -3,6 +3,7 @@
 import React from 'react'
 import { useRouter } from 'next/navigation'
 import OpenAI from 'openai';
+import { jwtDecode } from 'jwt-decode';
 
 const CourseReasoning = ({ CLO, category, keywords, reasoningPopup }) => {  
   // Ensure stay logged in
@@ -12,6 +13,18 @@ const CourseReasoning = ({ CLO, category, keywords, reasoningPopup }) => {
     if (token === null) {
       router.push('/');
       return
+    } else {
+      const expiryTime = jwtDecode(token).exp
+      const currentTime = Date.now() / 1000;
+
+      if (expiryTime < currentTime) {
+        localStorage.removeItem('token');
+        toast.error('Session expired, please log in again');
+        router.push('/login');
+      } else {
+        router.push('/courses');
+      }
+      return;
     }
   }, [])
 

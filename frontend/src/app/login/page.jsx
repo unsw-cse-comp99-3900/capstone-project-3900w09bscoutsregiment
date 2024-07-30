@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import OAuth from '../components/OAuth';
 import { toast } from 'react-toastify';
+import { jwtDecode } from 'jwt-decode';
 
 export default function Login() {
   const [email, setEmail] = React.useState('');
@@ -17,7 +18,16 @@ export default function Login() {
   React.useEffect(() => {
     const token = localStorage.getItem('token') || null;
     if (token !== null) {
-      router.push('/courses');
+      const expiryTime = jwtDecode(token).exp
+      const currentTime = Date.now() / 1000;
+
+      if (expiryTime < currentTime) {
+        localStorage.removeItem('token');
+        toast.error('Session expired, please log in again');
+        router.push('/login');
+      } else {
+        router.push('/courses');
+      }
       return;
     }
   }, []);

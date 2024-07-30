@@ -83,7 +83,16 @@ export default function Register() {
   React.useEffect(() => {
     const token = localStorage.getItem('token') || null;
     if (token !== null) {
-      router.push('/courses');
+      const expiryTime = jwtDecode(token).exp
+      const currentTime = Date.now() / 1000;
+
+      if (expiryTime < currentTime) {
+        localStorage.removeItem('token');
+        toast.error('Session expired, please log in again');
+        router.push('/login');
+      } else {
+        router.push('/courses');
+      }
       return;
     }
   }, []);
