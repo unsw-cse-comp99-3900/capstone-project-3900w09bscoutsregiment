@@ -27,7 +27,6 @@ courseRouter.get('/:code/:year/:term', async (req, res) => {
     const words = analyseFns.getKeywords(o, a);
     c.keywords.push({ category: a, words: words });
   }
-  console.log(c);
   res.json([c]);
 });
 
@@ -55,7 +54,6 @@ courseRouter.get('/all', async (req, res) => {
   }
   query.select(['_id', 'title', 'code', 'term', 'year']);
   const courses = await query.exec();
-  console.log(courses);
   res.json(courses);
 });
 
@@ -146,7 +144,6 @@ courseRouter.post('/add', async (req, res) => {
       .json({ message: 'Provided courseId is not a course in the db' });
   }
   const userList = await User.findOne({ _id: userId }, 'courses').exec();
-  console.log(userList);
   if (userList.courses.find((x) => x.courseId == courseId) != undefined) {
     console.log('user already has');
     return res.status(400).json({ message: 'User already added course' });
@@ -160,7 +157,6 @@ courseRouter.post('/add', async (req, res) => {
     { _id: userId },
     { courses: userList.courses },
   ).exec();
-  console.log(result);
   res.send('ok');
 });
 
@@ -175,7 +171,6 @@ courseRouter.post('/delete', async (req, res) => {
       .json({ message: 'courseId is not a valid ObjectId' });
   }
   const userList = await User.findOne({ _id: userId }, 'courses').exec();
-  console.log(userList.courses);
   const newList = new Array();
   for (const e of userList.courses) {
     if (e.courseId.toString() != courseId) {
@@ -186,7 +181,6 @@ courseRouter.post('/delete', async (req, res) => {
     { _id: userId },
     { courses: newList },
   ).exec();
-  console.log(result);
   res.send('ok');
 });
 
@@ -221,7 +215,6 @@ courseRouter.post('/favorite', async (req, res) => {
     { _id: userId },
     { courses: userList.courses },
   ).exec();
-  console.log(result);
   res.send('ok');
 });
 
@@ -256,7 +249,6 @@ courseRouter.post('/unfavorite', async (req, res) => {
     { _id: userId },
     { courses: userList.courses },
   ).exec();
-  console.log(result);
   res.send('ok');
 });
 
@@ -264,7 +256,6 @@ courseRouter.post('/pdf', async (req, res) => {
   const userId = req.userId;
   const courses = req.body.courses;
   // const courses = [ '66794f6696723a5b858c8654', '66794fc19e0ec7e1bda06b7e' ];
-  console.log(courses);
   if (courses == undefined) {
     res.status(400).json({ message: 'Did not provide courses' });
     return;
