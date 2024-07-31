@@ -58,7 +58,7 @@ profileRouter.put('/update/email', authMiddleware, async (req, res) => {
   } catch (error) {
     return res
       .status(500)
-      .json({ message: `Error occured while updating email` });
+      .json({ message: `Error occured while updating email. Email may already be in use.` });
   }
 });
 

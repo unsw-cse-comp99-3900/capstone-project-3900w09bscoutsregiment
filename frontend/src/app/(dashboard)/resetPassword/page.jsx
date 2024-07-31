@@ -10,8 +10,7 @@ export default function ResetPassword() {
   const [newPasswordError, setNewPasswordError] = React.useState(false);
   const [confirmPassword, setConfirmPassword] = React.useState('');
   const [confirmPasswordError, setConfirmPasswordError] = React.useState('');
-  let port = 5000;
-
+  let port = process.env.NEXT_PUBLIC_PORT_NUM;
   /**
    * Keeps track of whether the old password form is in focus or not
    * @param {*} event
@@ -87,7 +86,6 @@ export default function ResetPassword() {
       setConfirmPasswordError(false);
     }
   };
-
   const handleResetPassword = async () => {
     if (oldPassword === '' || newPassword === '' || confirmPassword === '') {
       toast.error('You have to input all fields', {
@@ -96,15 +94,43 @@ export default function ResetPassword() {
       });
       return;
     }
-    const data = await res.json();
-    if (res.ok) {
-      toast.success('Password resetted successfully', {
-        position: 'bottom-center',
+
+    if (newPassword !== confirmPassword) {
+      toast.error('New password is not the same as confirm password', {
+        position: 'bottom-right',
         pauseOnHover: false,
       });
+    } else {
+      const res = await fetch(
+        `http://localhost:${port}/api/profile/update/resetpassword`,
+        {
+          method: 'PUT',
+          body: JSON.stringify({
+            oldPassword,
+            newPassword,
+          }),
+          headers: {
+            'Content-type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        }
+      );
+
+      const data = await res.json();
+      if (res.status === 200) {
+        toast.success(data.message, {
+          position: 'bottom-center',
+          pauseOnHover: false,
+        });
+      } else {
+        toast.error(data.message, {
+          position: 'bottom-center',
+          pauseOnHover: false,
+        });
+      }
     }
-    console.log(data);
   };
+
   return (
     <div>
       <div className="login_background">
