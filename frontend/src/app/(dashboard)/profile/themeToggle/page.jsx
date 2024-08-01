@@ -4,8 +4,13 @@ import { useTheme } from '../../../context/ThemeContext';
 import Image from 'next/image';
 import Link from "next/link";
 
-// import 'flowbite';
-
+/**
+ * This is the page for the theme toggle
+ * uses hook from ThemeContext to toggle between themes which is
+ * under the Context Directory
+ * avaialble themes are light, dark and color-blind
+ * @returns ThemeToggle component
+ */
 const ThemeToggle = () => {
   const { theme, toggleTheme } = useTheme();
   const isActive = (currentTheme) => theme === currentTheme;
@@ -26,18 +31,21 @@ const ThemeToggle = () => {
                 <div className="p-4 md:p-5 space-y-4">
                   <div className='flex flex-row space-x-8'>
                     <button
+                      id="light-theme-btn"
                       className={`border w-1/4 ${isActive('light') ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-500'}`}
                       onClick={() => toggleTheme('light')}
                     >
                       Light Theme
                     </button>
                     <button
+                      id="dark-theme-btn"
                       className={`border w-1/4 ${isActive('dark') ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-500'}`}
                       onClick={() => toggleTheme('dark')}
                     >
                       Dark Theme
                     </button>
                     <button
+                      id="color-blind-theme-btn"
                       className={`border w-1/4 ${isActive('color-blind') ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-500'}`}
                       onClick={() => toggleTheme('color-blind')}
                     >
