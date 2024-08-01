@@ -49,14 +49,13 @@ export default function Home() {
                             We will help you find a pathway
                         </p>
                     </div>
-                    <div className="p-1">
+                    <div className="p-0">
                         <Image
                             src="/homepage/images/clip.svg"
                             alt="Example3"
-                            className="p-0 m-0 scale-150"
+                            className="p-0 m-0 scale-125"
                             width={500}
                             height={500}
-                            style={{ width: "auto", height: "auto" }}
                             priority
                         />
                     </div>

@@ -11,7 +11,7 @@ const ThemeContext = createContext();
  */
 export const ThemeProvider = ({ children }) => {
     const [theme, setTheme] = useState("light");
-
+    // Set the theme from the local storage
     useEffect(() => {
         // Ensure this runs only on the client side
         const storedTheme = localStorage.getItem("theme") || "light";
@@ -19,11 +19,12 @@ export const ThemeProvider = ({ children }) => {
         document.documentElement.className = storedTheme;
     }, []);
 
+    // Set the theme in the local storage
     useEffect(() => {
         localStorage.setItem("theme", theme);
         document.documentElement.className = theme;
     }, [theme]);
-
+    // Toggle the theme
     const toggleTheme = (newTheme) => {
         setTheme(newTheme);
     };
