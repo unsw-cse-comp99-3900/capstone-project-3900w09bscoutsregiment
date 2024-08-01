@@ -9,19 +9,37 @@ describe('"/" route', (done) => {
     .expect(200, done);
 });
 
-describe('login test', (done) => {
-  const agent = request.agent(app);
+describe('api/auth/login route', (done) => {
 
   it('should login', (done) => {
-    agent
-    .post('/api/auth/login')
-    .send({ email: 'tester@gmail.com', password: 'tester' })
-    .expect('Content-Type', /json/)
-    .expect(200, done);
+    request(app)
+      .post('/api/auth/login')
+      .send({ email: 'tester@gmail.com', password: 'tester' })
+      .expect('Content-Type', /json/)
+      .expect(200);
   });
 });
 
-describe('login test', () => {
+describe('/COMP1511/2024/T1 test', (done) => {
+  it('shouldn\'t work without login', (done) => {
+    request(app)
+      .get('/api/course/COMP1511/2024/T1')
+      .expect('Content-Type', /json/)
+      .expect(200, done);
+  });
+  it('should work with login', () => {
+    // request(app)
+    //   .post('/api/auth/login')
+    //   .send({ email: 'tester@gmail.com', password: 'tester' })
+    //   .expect('Content-Type', /json/)
+    //   .expect(200)
+    //   .then(res => {
+    //   });
+    request(app)
+      .get('/api/course/COMP1511/2024/T1')
+      .expect('Content-Type', /json/)
+      .expect(200)
+  });
 });
 
 setTimeout(() => {
