@@ -15,9 +15,6 @@ RUN npm install
 # Copy all the code needed to run the app
 COPY . .
 
-# Ensure that the .next directory is rebuilt when the image is built
-RUN rm -rf .next
-
 # Expose the port the app runs on
 EXPOSE 3000
 

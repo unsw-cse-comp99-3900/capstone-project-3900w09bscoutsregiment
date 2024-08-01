@@ -4,6 +4,8 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { jwtDecode } from "jwt-decode";
+import { toast } from 'react-toastify';
 
 /**
  * This is the Profile page, 
@@ -25,6 +27,15 @@ const Profile = () => {
     if (token === null) {
       router.push("/");
       return;
+    } else {
+      const expiryTime = jwtDecode(token).exp
+      const currentTime = Date.now() / 1000;
+
+      if (expiryTime < currentTime) {
+        localStorage.removeItem('token');
+        toast.error('Session expired, please log in again');
+        router.push('/login');
+      }
     }
 
     const fetchProfile = async () => {
