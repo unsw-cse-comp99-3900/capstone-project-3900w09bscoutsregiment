@@ -3,9 +3,9 @@
 import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import OAuth from "../components/OAuth";
 import { toast } from "react-toastify";
 import { jwtDecode } from "jwt-decode";
+import GoogleAuth from "../Components/GoogleAuth";
 
 export default function Login() {
     const [email, setEmail] = React.useState("");
@@ -83,7 +83,8 @@ export default function Login() {
         }
     }, []);
 
-    // backend stuff
+    // function that sends a request to the backend
+    // so a user can be logged in
     const login = async () => {
         const response = await fetch(
             `http://localhost:${port}/api/auth/login`,
@@ -109,8 +110,7 @@ export default function Login() {
                 router.push("/courses");
             }, 800);
         } else {
-            console.error(data.message);
-            toast.error("Login details are incorrect, please try again", {
+            toast.error(data.message, {
                 position: "bottom-center",
                 pauseOnHover: false,
             });
@@ -194,7 +194,7 @@ export default function Login() {
                         </div>
                         {/* other login options */}
                         <div className="flex items-center justify-evenly">
-                            {/* <OAuth></OAuth> */}
+                            <GoogleAuth></GoogleAuth>
                         </div>
                         {/* forgot password */}
                         <div className="pt-8 flex items-center justify-center">

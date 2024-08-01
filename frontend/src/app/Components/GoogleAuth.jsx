@@ -5,10 +5,12 @@ import { app } from "../firebase";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 
-const OAuth = () => {
+const GoogleAuth = () => {
     const router = useRouter();
     let port = process.env.NEXT_PUBLIC_PORT_NUM;
 
+    // function that sends a request to the backend
+    // to log a user in using google
     const handleGoogleLogin = async () => {
         try {
             const provider = new GoogleAuthProvider();
@@ -43,7 +45,6 @@ const OAuth = () => {
                 });
             }
         } catch (error) {
-            console.log(error);
             toast.error("Could not log in with Google :(", {
                 position: "bottom-right",
                 pauseOnHover: false,
@@ -53,8 +54,7 @@ const OAuth = () => {
 
     return (
         <Button
-            href={`http://localhost:${port}/api/auth/google`}
-            // onClick={handleGoogleLogin}
+            onClick={handleGoogleLogin}
             color="secondary"
             variant="secondary"
             className="text-xs overflow-hidden border-2 rounded-lg shadow"
@@ -89,4 +89,4 @@ const OAuth = () => {
     );
 };
 
-export default OAuth;
+export default GoogleAuth;

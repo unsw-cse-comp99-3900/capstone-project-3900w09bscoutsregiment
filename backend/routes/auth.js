@@ -3,8 +3,9 @@ dotenv.config();
 import express from 'express';
 import User from '../model/User.js';
 import jwt from 'jsonwebtoken';
-// import { OAuth2Client } from 'google-auth-library';
-// import passport from 'passport';
+import { initializeApp, cert } from 'firebase-admin/app';
+import { readFile } from 'fs/promises';
+import { getAuth } from 'firebase-admin/auth';
 
 const authRouter = express.Router();
 
@@ -66,62 +67,48 @@ authRouter.post('/login', async (req, res) => {
   }
 });
 
-// authRouter.get(
-//   '/google',
-//   passport.authenticate('google', { scope: ['profile', 'email'] }),
-// );
+// variables needed for google log in
+const serviceAccountPath =
+  'C:/Users/alixa/OneDrive - UNSW/Desktop/project-3656360145323654996-firebase-adminsdk-ocy8i-aff61e3a71.json';
 
-// authRouter.get(
-//   '/google/callback',
-//   passport.authenticate('google', { failureRedirect: '/login' }),
-//   (req, res) => {
-//     res.redirect('/courses');
-//   },
-// );
+const serviceAccount = JSON.parse(
+  await readFile(new URL(`file://${serviceAccountPath}`), 'utf8'),
+);
 
-// const client = new OAuth2Client(
-//   '308194862827-fd19uj11slbj2su5tuvsm73ffrj138uo.apps.googleusercontent.com',
-// );
+initializeApp({
+  credential: cert(serviceAccount),
+});
 
-// authRouter.post('/oauth/google', async (req, res) => {
-//   const { token } = req.body;
+const admin = getAuth();
 
-//   try {
-//     const ticket = await client.verifyIdToken({
-//       idToken: token,
-//       audience:
-//         '308194862827-fd19uj11slbj2su5tuvsm73ffrj138uo.apps.googleusercontent.com',
-//     });
+// route that logs a user in with google
+authRouter.post('/oauth/google', async (req, res) => {
+  const { token } = req.body;
 
-//     console.log('ticket has been created');
+  try {
+    const decodedToken = await admin.verifyIdToken(token);
 
-//     const payload = ticket.getPayload();
-//     console.log('got payload');
+    const { uID, email, name } = decodedToken;
 
-//     const { sub, email, name } = payload;
+    let user = await User.findOne({ googleId: uID });
 
-//     console.log('extracted sub, email, name');
+    if (!user) {
+      user = new User({
+        googleId: uID,
+        email,
+        name,
+      });
+      await user.save();
+    }
 
-//     let user = await User.findOne({ googleId: sub });
+    const jwtToken = jwt.sign({ id: user._id }, JWT_SECRET_KEY, {
+      expiresIn: '1h',
+    });
 
-//     if (!user) {
-//       user = new User({
-//         googleId: sub,
-//         email,
-//         name,
-//       });
-//       await user.save();
-//     }
-
-//     const jwtToken = jwt.sign({ id: user._id }, JWT_SECRET_KEY, {
-//       expiresIn: '1h',
-//     });
-
-//     return res.json({ token: jwtToken });
-//   } catch (error) {
-//     console.log(error);
-//     return res.status(500).json({ message: 'Server error' });
-//   }
-// });
+    return res.json({ token: jwtToken });
+  } catch (error) {
+    return res.status(500).json({ message: 'Server error' });
+  }
+});
 
 export default authRouter;
