@@ -70,7 +70,7 @@ export default function ChangeEmail() {
         }
 
         const response = await fetch(
-            `http://localhost:${port}/api/profile/update/email`,
+            `http://localhost:${port}/api/auth/update/email`,
             {
                 method: "PUT",
                 body: JSON.stringify({
