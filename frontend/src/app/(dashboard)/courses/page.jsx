@@ -162,7 +162,12 @@ export default function ListingCourses() {
     const handleSearchChange = (event) => {
         setSearchTerm(event.target.value);
     };
-
+    
+    /**
+     * Favorite a course and bring on top of the list of courses
+     * Or unfavorite a course and it is not on top of the list
+     * @param {course} course 
+     */
     const handleFavoriteCourse = async (course) => {
         const endpoint = course.favorite ? "unfavorite" : "favorite";
         try {
@@ -204,6 +209,10 @@ export default function ListingCourses() {
             // Remove the course from the list
             setCourses(
                 courses.filter((course) => course.courseId !== courseId)
+            );
+            // Remove the course from visitedCourses
+            setVisitedCourses(
+                visitedCourses.filter((course) => course.courseId !== courseId)
             );
         } catch (error) {
             console.error("Error deleting course:", error);
@@ -308,8 +317,6 @@ export default function ListingCourses() {
     const findCourseFromId = (courseId, visitedCourse) => {
         return visitedCourse.find((course) => course.courseId === courseId);
     };
-
-    // console.log(reasoningPopup)
 
     return (
         <div className="flex h-full w-full">
