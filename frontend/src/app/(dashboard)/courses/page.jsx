@@ -162,7 +162,12 @@ export default function ListingCourses() {
     const handleSearchChange = (event) => {
         setSearchTerm(event.target.value);
     };
-
+    
+    /**
+     * Favorite a course and bring on top of the list of courses
+     * Or unfavorite a course and it is not on top of the list
+     * @param {course} course 
+     */
     const handleFavoriteCourse = async (course) => {
         const endpoint = course.favorite ? "unfavorite" : "favorite";
         try {
@@ -204,6 +209,10 @@ export default function ListingCourses() {
             // Remove the course from the list
             setCourses(
                 courses.filter((course) => course.courseId !== courseId)
+            );
+            // Remove the course from visitedCourses
+            setVisitedCourses(
+                visitedCourses.filter((course) => course.courseId !== courseId)
             );
         } catch (error) {
             console.error("Error deleting course:", error);
@@ -256,7 +265,6 @@ export default function ListingCourses() {
     };
 
     const showAnalysis = () => {
-        // getPDF();
         setAnalysisChart(true);
         setBreakdown(false);
     };
@@ -309,8 +317,6 @@ export default function ListingCourses() {
         return visitedCourse.find((course) => course.courseId === courseId);
     };
 
-    // console.log(reasoningPopup)
-
     return (
         <div className="flex h-full w-full">
             <div className="flex w-full">
@@ -335,12 +341,12 @@ export default function ListingCourses() {
                         {filteredCourses.length === 0 ? (
                             <div className="flex items-center justify-center h-full">
                                 <div className="flex flex-col items-center justify-center text-center">
-                                    <h2>Empty, No Courses</h2>
+                                    <h2>Empty, No Courses.</h2>
                                     <p>
-                                        Click on the Add Course Button to find
+                                        Click the "Add Course" Button to find
                                         courses
                                     </p>
-                                    <p>to add to the list</p>
+                                    <p>to that can be added to the list</p>
                                 </div>
                             </div>
                         ) : (
@@ -433,12 +439,12 @@ export default function ListingCourses() {
                         ) : (
                             <div className="flex items-center justify-center h-full">
                                 <div className="flex flex-col items-center justify-center text-center">
-                                    <h2 className="text-main-txt">
-                                        Select a course to analyse
-                                    </h2>
                                     <p className="text-main-txt">
                                         Nothing is selected
                                     </p>
+                                    <h2 className="text-main-txt">
+                                        Select a course to analyse
+                                    </h2>
                                 </div>
                             </div>
                         )

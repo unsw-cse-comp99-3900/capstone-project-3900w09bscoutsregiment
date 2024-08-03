@@ -64,7 +64,10 @@ const SearchPage = () => {
             console.error("Error fetching courses:", error);
         }
     };
-
+    
+    /**
+     * Filter the courses based on their search option
+     */
     const filterCourses = () => {
         let filtered = courses;
 
@@ -90,7 +93,11 @@ const SearchPage = () => {
         setFilteredCourses(filtered);
         setCurrentPage(1); // Reset to the first page whenever filters change
     };
-
+    
+    /**
+     * Add a course to the user's personal list of courses in the backend
+     * @param {*} courseId 
+     */
     const handleAddCourse = async (courseId) => {
         try {
             const response = await fetch(
@@ -276,7 +283,7 @@ const SearchPage = () => {
                         </select>
                     </div>
                 </div>
-                <h2 className="text-main-txt font-bold text-xl">Results :</h2>
+                <h2 className="text-main-txt font-bold text-xl">Showing {currentCourses.length} results out of {filteredCourses.length} :</h2>
                 <div className="border-t-2 border-primary-theme-lb pt-2">
                     {currentCourses.map((course) => (
                         <div
