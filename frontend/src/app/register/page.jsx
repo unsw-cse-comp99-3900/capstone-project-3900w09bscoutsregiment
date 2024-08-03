@@ -3,9 +3,9 @@
 import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import OAuth from "../components/OAuth";
 import { toast } from "react-toastify";
 import { jwtDecode } from "jwt-decode";
+import GoogleAuth from "../Components/GoogleAuth";
 
 export default function Register() {
     const [name, setName] = React.useState("");
@@ -138,7 +138,8 @@ export default function Register() {
         }
     }, []);
 
-    // backend stuff starts here
+    // function to send a request to the backend
+    // so a user can be registered
     const register = async () => {
         if (password !== confirmPassword) {
             alert("Passwords do not match");
@@ -293,7 +294,7 @@ export default function Register() {
                                 <hr className="custom-login-hr "></hr>
                             </div>
                             <div className="flex items-center justify-evenly">
-                                {/* <OAuth></OAuth> */}
+                                <GoogleAuth></GoogleAuth>
                             </div>
                             <div className="pt-2 flex items-center justify-center gap-2">
                                 <p className="text-main-txt">
