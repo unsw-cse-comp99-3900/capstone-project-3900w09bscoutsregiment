@@ -342,12 +342,12 @@ export default function ListingCourses() {
                         {filteredCourses.length === 0 ? (
                             <div className="flex items-center justify-center h-full">
                                 <div className="flex flex-col items-center justify-center text-center">
-                                    <h2>Empty, No Courses</h2>
+                                    <h2>Empty, No Courses.</h2>
                                     <p>
-                                        Click on the Add Course Button to find
+                                        Click the "Add Course" Button to find
                                         courses
                                     </p>
-                                    <p>to add to the list</p>
+                                    <p>to that can be added to the list</p>
                                 </div>
                             </div>
                         ) : (
@@ -440,12 +440,12 @@ export default function ListingCourses() {
                         ) : (
                             <div className="flex items-center justify-center h-full">
                                 <div className="flex flex-col items-center justify-center text-center">
-                                    <h2 className="text-main-txt">
-                                        Select a course to analyse
-                                    </h2>
                                     <p className="text-main-txt">
                                         Nothing is selected
                                     </p>
+                                    <h2 className="text-main-txt">
+                                        Select a course to analyse
+                                    </h2>
                                 </div>
                             </div>
                         )
