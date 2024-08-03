@@ -64,7 +64,6 @@ export default function Home() {
               className="p-0 m-0 scale-150"
               width={500}
               height={500}
-              style={{ width: "auto", height: "auto" }}
               priority
             />
           </div>
