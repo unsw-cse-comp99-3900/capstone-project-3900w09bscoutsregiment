@@ -10,8 +10,7 @@ import bcrypt from 'bcryptjs';
 
 const authRouter = express.Router();
 
-const JWT_SECRET_KEY =
-  'a64574ab370ef9fb3f5d5b21ed91f092a8f51713b84f34be67641d14e2b9c83f18860d21caf5dcfed5e04d216cbef38f07c75d3de60098b7af42351d21c7f408';
+const JWT_SECRET_KEY = process.env.NEXT_PUBLIC_JWT_SECRET_KEY;;
 
 // Manual Signup
 authRouter.post('/signup', async (req, res) => {
@@ -58,7 +57,6 @@ authRouter.post('/login', async (req, res) => {
     if (!doPasswordsMatch) {
       return res.status(400).json({ message: 'Incorrect password' });
     }
-
     const token = jwt.sign({ id: user._id }, JWT_SECRET_KEY, {
       expiresIn: '1h',
     });
