@@ -22,6 +22,7 @@ courseRouter.get('/:code/:year/:term', async (req, res) => {
   }
   const c = course[0];
   c.keywords = new Array();
+  // Generate the analysis that will be used for the frontend charts
   for (const o of c.outcomes) {
     const a = analyseFns.analyseOutcome(o);
     const words = analyseFns.getKeywords(o, a);
@@ -93,6 +94,7 @@ courseRouter.get('/list', async (req, res) => {
   ).exec();
   const output = new Array();
   for (const course of courseList) {
+    // Get the user facing details of the course
     const tempCourse = user.courses.find(
       (elem) => elem.courseId.toString() == course._id.toString(),
     );
@@ -149,6 +151,8 @@ courseRouter.post('/add', async (req, res) => {
     console.log('user already has');
     return res.status(400).json({ message: 'User already added course' });
   }
+  // If everything exists and is valid, add the course to the users 
+  // list
   userList.courses.push({
     courseId: courseId,
     colour: '02b0f5',
@@ -256,7 +260,6 @@ courseRouter.post('/unfavorite', async (req, res) => {
 courseRouter.post('/pdf', async (req, res) => {
   const userId = req.userId;
   const courses = req.body.courses;
-  // const courses = [ '66794f6696723a5b858c8654', '66794fc19e0ec7e1bda06b7e' ];
   if (courses == undefined) {
     res.status(400).json({ message: 'Did not provide courses' });
     return;
@@ -278,20 +281,10 @@ courseRouter.post('/pdf', async (req, res) => {
   const query = Course.find({ $or: orList });
   query.select(['_id', 'code', 'term', 'year', 'outcomes']);
   const results = await query.exec();
-  // analyseFns.makePDF(analyseFns.analyseCourses(results));
-  // res.set('Content-Disposition', 'attachment; filename=/usr/report.pdf');
-  // res.set('Content-Type', 'application/pdf');
   const pdf = analyseFns.makePDF(analyseFns.analyseCourses(results));
   res.attachment();
   res.type('pdf');
   pdf.pipe(res);
 });
-
-// courseRouter.post('/analyse', async (req, res) => {
-//   const courses = req.body.courses;
-//   // maybe check input is ok
-//   const analysis = analyseFns.analyseCourses(courses);
-//   return res.json(analysis);
-// });
 
 export default courseRouter;
