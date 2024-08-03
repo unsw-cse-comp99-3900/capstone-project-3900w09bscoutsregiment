@@ -276,7 +276,7 @@ const SearchPage = () => {
                         </select>
                     </div>
                 </div>
-                <h2 className="text-main-txt font-bold text-xl">Results :</h2>
+                <h2 className="text-main-txt font-bold text-xl">Showing {currentCourses.length} results out of {filteredCourses.length} :</h2>
                 <div className="border-t-2 border-primary-theme-lb pt-2">
                     {currentCourses.map((course) => (
                         <div
