@@ -25,7 +25,7 @@ authRouter.post('/signup', async (req, res) => {
     const userExists = await User.findOne({ email });
 
     if (userExists) {
-      return res.status(400).json({ message: 'User already exists' });
+      return res.status(401).json({ message: 'User already exists' });
     }
 
     const user = await User.create({ name, email, password });
@@ -48,13 +48,15 @@ authRouter.post('/login', async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(400).json({ message: 'Invalid email or password' });
+      return res
+        .status(400)
+        .json({ message: 'User with this email doesnt exist' });
     }
 
     const doPasswordsMatch = await user.matchPassword(password);
 
     if (!doPasswordsMatch) {
-      return res.status(400).json({ message: 'Invalid email or password' });
+      return res.status(400).json({ message: 'Incorrect password' });
     }
 
     const token = jwt.sign({ id: user._id }, JWT_SECRET_KEY, {
@@ -205,13 +207,13 @@ authRouter.put('/update/resetpassword', authMiddleware, async (req, res) => {
     const user = await User.findById(req.userId);
 
     if (!user) {
-      return res.status(400).json({ message: 'This user does not exist' });
+      return res.status(401).json({ message: 'This user does not exist' });
     }
 
     const isOldPasswordCorrect = await user.matchPassword(oldPassword);
 
     if (!isOldPasswordCorrect) {
-      return res.status(400).json({ message: 'Invalid old password' });
+      return res.status(401).json({ message: 'Invalid old password' });
     }
 
     const salt = await bcrypt.genSalt(10);
