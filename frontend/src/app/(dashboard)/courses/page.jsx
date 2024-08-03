@@ -265,7 +265,6 @@ export default function ListingCourses() {
     };
 
     const showAnalysis = () => {
-        // getPDF();
         setAnalysisChart(true);
         setBreakdown(false);
     };
