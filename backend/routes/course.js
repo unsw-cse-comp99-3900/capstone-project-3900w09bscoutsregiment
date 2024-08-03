@@ -3,7 +3,7 @@ import Course from '../model/Course.js';
 import User from '../model/User.js';
 import { termEq, termToggle, termIsSmall } from '../controllers/termFns.js';
 import { validIdString } from '../controllers/idFns.js';
-import { authMiddleware } from './profile.js';
+import { authMiddleware } from './auth.js';
 import analyseFns from '../controllers/analyseFns.js';
 
 const courseRouter = express.Router();
