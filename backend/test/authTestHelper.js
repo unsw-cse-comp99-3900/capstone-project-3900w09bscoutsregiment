@@ -1,83 +1,112 @@
-// import request from 'sync-request';
+const port = 5100;
+const SERVER_URL = `http://localhost:${port}`;
 
-// const port = process.env.NEXT_PUBLIC_PORT_NUM || 5100;
-// const SERVER_URL = `http://localhost:${port}`;
+export async function requestAuthRegister(
+  email,
+  name,
+  password,
+  confirmPassword,
+) {
+  let data;
+  try {
+    const response = await fetch(`${SERVER_URL}/api/auth/signup`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email,
+        name,
+        password,
+        confirmPassword,
+      }),
+    });
 
-// export function requestAuthRegister(email, name, password, confirmPassword) {
-//   const res = request(
-//     'POST',
-//     SERVER_URL + '/auth/register/v3',
-//     {
-//       json: {
-//         email: email,
-//         password: password,
-//         nameFirst: nameFirst,
-//         nameLast: nameLast,
-//       },
-//       timeout: 100
-//     }
-//   );
-//   return { status: res.statusCode, returnObj: JSON.parse(res.getBody() as string) };
-// }
+    data = await response.json();
 
-// export function requestAuthLogin(email: string, password: string) {
-//   const res = request(
-//     'POST',
-//     SERVER_URL + '/auth/login/v3',
-//     {
-//       json: {
-//         email: email,
-//         password: password,
+    return { status: response.status };
+  } catch (error) {
+    return { status: 500, message: data.message };
+  }
+}
 
-//       },
-//       timeout: 100
-//     }
-//   );
-//   return { status: res.statusCode, returnObj: JSON.parse(res.getBody() as string) };
-// }
+export async function requestAuthLogin(email, password) {
+  let data;
+  try {
+    const response = await fetch(`${SERVER_URL}/api/auth/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    });
 
-// export function requestAuthLogout(token: string) {
-//   const res = request(
-//     'POST',
-//     SERVER_URL + '/auth/logout/v2',
-//     {
-//       headers: {
-//         token: token,
+    data = await response.json();
 
-//       },
-//       timeout: 100
-//     }
-//   );
-//   return { status: res.statusCode, returnObj: JSON.parse(res.getBody() as string) };
-// }
+    if (response.status == 400) {
+      return { status: response.status, message: data.message };
+    }
 
-// export function requestAuthPasswordResetRequest(email: string) {
-//   const res = request(
-//     'POST',
-//     SERVER_URL + '/auth/passwordreset/request/v1',
-//     {
-//       json: {
-//         email: email,
+    return { status: response.status, token: data.token };
+  } catch (error) {
+    return { status: 500, message: data.message };
+  }
+}
 
-//       },
-//       timeout: 100
-//     }
-//   );
-//   return { status: res.statusCode, returnObj: JSON.parse(res.getBody() as string) };
-// }
+export async function requestChangeEmail(oldEmail, newEmail, token) {
+  let data;
+  try {
+    const response = await fetch(`${SERVER_URL}/api/auth/update/email`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        oldEmail,
+        newEmail,
+      }),
+    });
 
-// export function requestAuthPasswordResetResest(resetCode: string, newPassword: string) {
-//   const res = request(
-//     'POST',
-//     SERVER_URL + '/auth/passwordreset/reset/v1',
-//     {
-//       json: {
-//         resetCode: resetCode,
-//         newPassword: newPassword
+    data = await response.json();
+    if (response.status == 400) {
+      return { status: response.status, message: data.message };
+    }
 
-//       },
-//       timeout: 100
-//     }
-//   );
-//   return { status: res.statusCode, returnObj: JSON.parse(res.getBody() as string) };
-// }
+    return { status: response.status, message: data.message };
+  } catch (error) {
+    return { status: 500 };
+  }
+}
+
+export async function requestChangePassword(oldPassword, newPassword, token) {
+  let data;
+  try {
+    const response = await fetch(
+      `${SERVER_URL}/api/auth/update/resetpassword`,
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          oldPassword,
+          newPassword,
+        }),
+      },
+    );
+
+    data = await response.json();
+    if (response.status == 400) {
+      return { status: response.status, message: data.message };
+    }
+
+    return { status: response.status, message: data.message };
+  } catch (error) {
+    return { status: 500 };
+  }
+}
