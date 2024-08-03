@@ -63,25 +63,24 @@ authRouter.post('/login', async (req, res) => {
 
     return res.json({ token });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ message: 'Server error' });
   }
 });
 
 // variables needed for google log in
 // we need to change this path so everyone can use google log in
-const serviceAccountPath =
-  'C:/Users/alixa/OneDrive - UNSW/Desktop/project-3656360145323654996-firebase-adminsdk-ocy8i-aff61e3a71.json';
+// const serviceAccountPath =
+//   'C:/Users/alixa/OneDrive - UNSW/Desktop/project-3656360145323654996-firebase-adminsdk-ocy8i-aff61e3a71.json';
 
-const serviceAccount = JSON.parse(
-  await readFile(new URL(`file://${serviceAccountPath}`), 'utf8'),
-);
+// const serviceAccount = JSON.parse(
+//   await readFile(new URL(`file://${serviceAccountPath}`), 'utf8'),
+// );
 
-initializeApp({
-  credential: cert(serviceAccount),
-});
+// initializeApp({
+//   credential: cert(serviceAccount),
+// });
 
-const admin = getAuth();
+// const admin = getAuth();
 
 // route that logs a user in with google
 authRouter.post('/oauth/google', async (req, res) => {
@@ -125,24 +124,34 @@ export const authMiddleware = async (req, res, next) => {
     return res.status(401).json({ message: 'No token provided' });
   }
 
-  try {
-    // first try to verify as a firebase token incase they logged in
-    // via google
-    const decodedToken = await admin.verifyIdToken(token);
-    req.userId = decodedToken.uid;
-    req.authType = 'firebase';
-    next();
-  } catch (error) {
-    // else user logged in manually, so try JWT verification
-    try {
-      const decoded = jwt.verify(token, JWT_SECRET_KEY);
-      req.userId = decoded.id;
-      req.authType = 'jwt';
-      next();
-    } catch (jwtError) {
+  jwt.verify(token, JWT_SECRET_KEY, (err, decoded) => {
+    if (err) {
       return res.status(401).json({ message: 'Failed to authenticate token' });
     }
-  }
+
+    // set userId so thats its in the request object
+    req.userId = decoded.id;
+    next();
+  });
+
+  // try {
+  //   // first try to verify as a firebase token incase they logged in
+  //   // via google
+  //   const decodedToken = await admin.verifyIdToken(token);
+  //   req.userId = decodedToken.uid;
+  //   req.authType = 'firebase';
+  //   next();
+  // } catch (error) {
+  //   // else user logged in manually, so try JWT verification
+  //   try {
+  //     const decoded = jwt.verify(token, JWT_SECRET_KEY);
+  //     req.userId = decoded.id;
+  //     req.authType = 'jwt';
+  //     next();
+  //   } catch (jwtError) {
+  //     return res.status(401).json({ message: 'Failed to authenticate token' });
+  //   }
+  // }
 };
 
 // Get username, email
